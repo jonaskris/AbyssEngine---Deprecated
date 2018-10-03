@@ -46,7 +46,7 @@ public class Renderer {
         //canvas = new OpenGL(PIXEL_WIDTH, PIXEL_HEIGHT);
 
         window = new JFrame(TITLE);
-        content = new OpenGL();
+        content = new OpenGL(WINDOW_WIDTH, WINDOW_HEIGHT);
         window.setLayout(new BorderLayout());
         window.add(content, BorderLayout.CENTER);
         window.setContentPane(content);
