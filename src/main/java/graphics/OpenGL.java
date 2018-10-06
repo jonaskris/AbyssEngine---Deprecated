@@ -1,14 +1,23 @@
 package graphics;
 
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GLAutoDrawable;
-import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.util.GLBuffers;
+import graphics.shaders.Semantics;
 import input.KeyboardInput;
 import input.KeyboardObserver;
 import input.MouseInput;
 import input.MouseObserver;
+
+import com.jogamp.opengl.util.GLBuffers;
+import com.jogamp.opengl.util.glsl.ShaderCode;
+import com.jogamp.opengl.util.glsl.ShaderProgram;
+
+import java.nio.IntBuffer;
+import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
+
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -18,13 +27,37 @@ import java.util.ArrayList;
 public class OpenGL extends GLJPanel implements GLEventListener, MouseObserver, KeyboardObserver {
     private static OpenGL instance = null;
 
-    public static GL2 gl = null;
-    public static GLU glu = null;
+    public static GL3 gl = null;
+    //public static GLU glu = null;
 
     double[] testPos = new double[]{0.0d, 0.0d, 0.0d};
     double[] testPosCam = new double[]{0.0d, 500.0d, 0.0d};
     double[] testWH = new double[]{32.0d, 32.0d};
     double testSpeed = 1;
+
+    private float[] vertexData = new float[]{
+           -1, -1, 1, 0, 0,
+            0, 2, 0, 0, 1,
+            1, -1, 0, 1, 0
+    };
+
+    private short[] elementData = new short[]{0, 2, 1};
+
+    private interface Buffer {
+        int VERTEX = 0;
+        int ELEMENT = 1;
+        int GLOBAL_MATRICES = 2;
+        int MAX = 3;
+    }
+
+    // Buffers
+        private IntBuffer bufferName = GLBuffers.newDirectIntBuffer(Buffer.MAX);
+        private IntBuffer vertexArrayName = GLBuffers.newDirectIntBuffer(1);
+
+        private FloatBuffer clearColor = GLBuffers.newDirectFloatBuffer(4);
+        private FloatBuffer clearDepth = GLBuffers.newDirectFloatBuffer(1);
+
+        private FloatBuffer matBuffer = GLBuffers.newDirectFloatBuffer(16);
 
 
     private OpenGL(int VIEWPORT_WIDTH, int VIEWPORT_HEIGHT){
@@ -90,14 +123,50 @@ public class OpenGL extends GLJPanel implements GLEventListener, MouseObserver, 
     }
 
     public void init(GLAutoDrawable glAutoDrawable) {
-        gl = glAutoDrawable.getGL().getGL2();
-        glu = new GLU();
-        gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        gl = glAutoDrawable.getGL().getGL3();
+        //glu = new GLU();
+        //gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         //gl.glShadeModel(GL2.GL_SMOOTH);
         //gl.glClearDepth(1.0f);
-        gl.glEnable(GL2.GL_DEPTH_TEST);
+        //gl.glEnable(GL2.GL_DEPTH_TEST);
         //gl.glDepthFunc(GL2.GL_LEQUAL);
         //gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);
+
+        initBuffers();
+        initVertexArray();
+        initShaders();
+        gl.glEnable(GL.GL_DEPTH_TEST);
+
+    }
+
+    private void initBuffers(){
+        FloatBuffer vertexBuffer = GLBuffers.newDirectFloatBuffer(vertexData);
+        ShortBuffer elementBuffer = GLBuffers.newDirectShortBuffer(elementData);
+
+        gl.glGenBuffers(Buffer.MAX, bufferName);
+
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, bufferName.get(Buffer.VERTEX));
+        gl.glBufferData(gl.GL_ARRAY_BUFFER, vertexBuffer.capacity() * Float.BYTES, vertexBuffer, gl.GL_STATIC_DRAW);
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
+
+        gl.glBindBuffer(gl.GL_ELEMENT_ARRAY_BUFFER, bufferName.get(Buffer.ELEMENT));
+        gl.glBufferData(gl.GL_ELEMENT_ARRAY_BUFFER, elementBuffer.capacity() * Short.BYTES, elementBuffer, gl.GL_STATIC_DRAW);
+        gl.glBindBuffer(gl.GL_ELEMENT_ARRAY_BUFFER, 0);
+
+
+        gl.glBindBuffer(gl.GL_UNIFORM_BUFFER, bufferName.get(Buffer.GLOBAL_MATRICES));
+        gl.glBufferData(gl.GL_UNIFORM_BUFFER, 16 * Float.BYTES * 2, null, gl.GL_STREAM_DRAW);
+        gl.glBindBuffer(gl.GL_UNIFORM_BUFFER, 0);
+
+        gl.glBindBufferBase(gl.GL_UNIFORM_BUFFER, Semantics.Uniform.GLOBAL_MATRICES, bufferName.get(Buffer.GLOBAL_MATRICES));
+    }
+
+    private void initVertexArray(){
+
+    }
+
+    private void initShaders(){
+
     }
 
     public void dispose(GLAutoDrawable glAutoDrawable) {
@@ -105,7 +174,8 @@ public class OpenGL extends GLJPanel implements GLEventListener, MouseObserver, 
     }
 
     public void display(GLAutoDrawable glAutoDrawable) {
-        if(getPressed(KeyEvent.VK_D )){
+        // GL2
+        /*if(getPressed(KeyEvent.VK_D )){
             testPos[0] += testSpeed;
 
         } else if(getPressed(KeyEvent.VK_A)){
@@ -134,26 +204,28 @@ public class OpenGL extends GLJPanel implements GLEventListener, MouseObserver, 
         gl.glPushMatrix();
         glu.gluLookAt(testPos[0] + testPosCam[0], testPos[1] + testPosCam[1], testPos[2] + testPosCam[2], testPos[0], testPos[1], testPos[2], 0, 0, -1);
 
-        // X axis, blue.
-        gl.glColor4d(0.0d, 0.0d,1.0d,1.0d);
-        gl.glBegin(gl.GL_LINES);
+        if(DevSettings.drawAxii) {
+            // X axis, blue.
+            gl.glColor4d(0.0d, 0.0d, 1.0d, 1.0d);
+            gl.glBegin(gl.GL_LINES);
             gl.glVertex3d(0.0d, 0.0d, 0.0d);
             gl.glVertex3d(32.0d, 0.0d, 0.0d);
-        gl.glEnd();
+            gl.glEnd();
 
-        // Y axis, green.
-        gl.glColor4d(0.0d, 1.0d,0.0d,1.0d);
-        gl.glBegin(gl.GL_LINES);
+            // Y axis, green.
+            gl.glColor4d(0.0d, 1.0d, 0.0d, 1.0d);
+            gl.glBegin(gl.GL_LINES);
             gl.glVertex3d(0.0d, 0.0d, 0.0d);
             gl.glVertex3d(0.0d, 32.0d, 0.0d);
-        gl.glEnd();
+            gl.glEnd();
 
-        // Z axis, red.
-        gl.glColor4d(1.0d, 0.0d,0.0d,1.0d);
-        gl.glBegin(gl.GL_LINES);
+            // Z axis, red.
+            gl.glColor4d(1.0d, 0.0d, 0.0d, 1.0d);
+            gl.glBegin(gl.GL_LINES);
             gl.glVertex3d(0.0d, 0.0d, 0.0d);
             gl.glVertex3d(0.0d, 0.0d, 32.0d);
-        gl.glEnd();
+            gl.glEnd();
+        }
 
         gl.glColor4d(1.0d, 1.0d, 1.0d, 1.0d);
         gl.glBegin(gl.GL_QUADS);
@@ -164,17 +236,26 @@ public class OpenGL extends GLJPanel implements GLEventListener, MouseObserver, 
         gl.glEnd();
 
         gl.glPopMatrix();
-        gl.glFlush();
+        gl.glFlush();*/
+
+
     }
 
     public void reshape(GLAutoDrawable glAutoDrawable, int i, int i1, int i2, int i3) {
+        // GL2
         //gl.glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-        gl.glMatrixMode(GL2.GL_PROJECTION);
+        /*gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
 
         glu.gluPerspective(45.0f, 1920.0d/1080.0d, 0.1, 10000.0);
         gl.glMatrixMode(GL2.GL_MODELVIEW);
-        gl.glLoadIdentity();
+        gl.glLoadIdentity();*/
+        //glu.gluPerspective(45.0f, 1920.0d/1080.0d, 0.1, 10000.0);
+
+
+
+
+
 
     }
 }

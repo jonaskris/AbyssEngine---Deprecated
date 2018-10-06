@@ -11,7 +11,6 @@ import entities.components.PComponent;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
 
 
 import static com.jogamp.nativewindow.WindowClosingProtocol.WindowClosingMode.DISPOSE_ON_CLOSE;

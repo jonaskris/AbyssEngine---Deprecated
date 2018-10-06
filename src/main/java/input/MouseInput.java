@@ -86,4 +86,10 @@ public class MouseInput implements MouseInputListener, MouseMotionListener, Mous
             addObserver(o, types[i]);
         }
     }
+
+    public static void removeObserver(MouseObserver o){
+        for(int i = 0; i < observers.length; i++){
+            observers[i].remove(o);
+        }
+    }
 }

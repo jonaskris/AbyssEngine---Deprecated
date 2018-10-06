@@ -64,6 +64,10 @@ public class KeyboardInput implements KeyListener {
         }
     }
 
+    public static void removeObserver(KeyboardObserver o){
+        observers.remove(o);
+    }
+
     private static KeyEvent createFakeKeyEventPressed(int keyCode){
         return new KeyEvent(keyEventSource, KeyEvent.KEY_PRESSED, 0, 0, keyCode, KeyEvent.CHAR_UNDEFINED);
     }
