@@ -8,8 +8,31 @@
     <artifactId>abysswalker</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <!-- https://mvnrepository.com/artifact/com.io7m.bundles/org.jogamp.jogl -->
+    <!--<properties>
+        <maven.compiler.source>10.0.1</maven.compiler.source>
+        <maven.compiler.target>10.0.1</maven.compiler.target>
+    </properties>*/ -->
+
+    <!--<build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.7.0</version>
+                <configuration>
+                    <release>10.0.1</release>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>-->
+
     <dependencies>
+        <!--<dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+        </dependency>-->
+
+        <!-- https://mvnrepository.com/artifact/com.io7m.bundles/org.jogamp.jogl -->
         <dependency>
             <groupId>com.io7m.bundles</groupId>
            <artifactId>org.jogamp.jogl</artifactId>

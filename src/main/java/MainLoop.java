@@ -1,4 +1,6 @@
 import graphics.Renderer;
+import input.KeyboardInput;
+import input.MouseInput;
 //import scenes.SceneManager;
 
 public class MainLoop {

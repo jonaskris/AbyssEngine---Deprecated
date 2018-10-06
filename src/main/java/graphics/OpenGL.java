@@ -5,32 +5,88 @@ import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.glu.GLU;
+import input.KeyboardInput;
+import input.KeyboardObserver;
+import input.MouseInput;
+import input.MouseObserver;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-public class OpenGL extends GLJPanel implements GLEventListener, KeyListener {
+public class OpenGL extends GLJPanel implements GLEventListener, MouseObserver, KeyboardObserver {
+    private static OpenGL instance = null;
+
     public static GL2 gl = null;
     public static GLU glu = null;
-
-    private static int WINDOW_WIDTH;
-    private static int WINDOW_HEIGHT;
-
 
     double[] testPos = new double[]{0.0d, 0.0d, 0.0d};
     double[] testPosCam = new double[]{0.0d, 500.0d, 0.0d};
     double[] testWH = new double[]{32.0d, 32.0d};
-    double speed = 1;
+    double testSpeed = 1;
 
 
-    public OpenGL(int WINDOW_WIDTH, int WINDOW_HEIGHT){
-        //setPreferredSize(new Dimension(WINDOW_HEIGHT, WINDOW_WIDTH));
+    private OpenGL(int VIEWPORT_WIDTH, int VIEWPORT_HEIGHT){
+        setPreferredSize(new Dimension(VIEWPORT_WIDTH, VIEWPORT_HEIGHT));
         addGLEventListener(this);
-        addKeyListener(this);
 
-        this.WINDOW_WIDTH = WINDOW_WIDTH;
-        this.WINDOW_HEIGHT = WINDOW_HEIGHT;
+        KeyboardInput.initSingleton(instance);
+        KeyboardInput ki = KeyboardInput.getInstance();
+
+        MouseInput.initSingleton();
+        MouseInput mi = MouseInput.getInstance();
+
+        addKeyListener(ki);
+        addMouseListener(mi);
+        addMouseMotionListener(mi);
+        addMouseWheelListener(mi);
+    }
+
+    public static void initSingleton(int WINDOW_WIDTH, int WINDOW_HEIGHT){
+        if(instance == null){
+            instance = new OpenGL(WINDOW_WIDTH, WINDOW_HEIGHT);
+            MouseInput.addObserver(instance, new MouseInput.type[]{MouseInput.type.CLICK, MouseInput.type.ENTER, MouseInput.type.EXIT});
+            KeyboardInput.addObserver(instance);
+        }
+    }
+
+    public static OpenGL getInstance(){
+        return instance;
+    }
+
+    public void notify(MouseEvent e, MouseInput.type t) {
+        switch(t){
+            case CLICK:
+                System.out.println("Clicked! x: " + e.getX() + ", y:" + e.getY());
+                break;
+            case ENTER:
+                System.out.println("Entered!");
+                break;
+            case EXIT:
+                System.out.println("Exited!");
+                break;
+        }
+    }
+
+    ArrayList<Integer> pressed = new ArrayList<Integer>();
+
+    public void notify(KeyEvent e, KeyboardInput.type t) {
+        switch(t){
+            case PRESSED:
+                pressed.add(e.getKeyCode());
+                break;
+            case RELEASED:
+                pressed.remove((Integer)e.getKeyCode());
+                break;
+        }
+    }
+
+    private boolean getPressed(int keycode){
+        if(pressed.contains(keycode)){
+            return true;
+        }
+        return false;
     }
 
     public void init(GLAutoDrawable glAutoDrawable) {
@@ -49,76 +105,65 @@ public class OpenGL extends GLJPanel implements GLEventListener, KeyListener {
     }
 
     public void display(GLAutoDrawable glAutoDrawable) {
-
-
-
         if(getPressed(KeyEvent.VK_D )){
-            testPos[0] += speed;
+            testPos[0] += testSpeed;
 
         } else if(getPressed(KeyEvent.VK_A)){
-            testPos[0] -= speed;
-
+            testPos[0] -= testSpeed;
         }
 
         if(getPressed(KeyEvent.VK_W )){
-            testPos[2] += speed;
+            testPos[2] -= testSpeed;
         } else if(getPressed(KeyEvent.VK_S)){
-            testPos[2] -= speed;
+            testPos[2] += testSpeed;
         }
 
         if(getPressed(KeyEvent.VK_RIGHT )){
-            testPosCam[0] += speed;
+            testPosCam[0] += testSpeed;
         } else if(getPressed(KeyEvent.VK_LEFT)){
-            testPosCam[0] -= speed;
+            testPosCam[0] -= testSpeed;
         }
 
         if(getPressed(KeyEvent.VK_UP )){
-            testPosCam[2] += speed;
+            testPosCam[2] -= testSpeed;
         } else if(getPressed(KeyEvent.VK_DOWN)){
-            testPosCam[2] -= speed;
+            testPosCam[2] += testSpeed;
         }
 
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
         gl.glPushMatrix();
+        glu.gluLookAt(testPos[0] + testPosCam[0], testPos[1] + testPosCam[1], testPos[2] + testPosCam[2], testPos[0], testPos[1], testPos[2], 0, 0, -1);
 
-        //glu.gluLookAt(0, 10, 0, 0, 0, 0, 1, 0, 0);
-        gl.glScaled(-1.0d, 1.0d, 1.0d);
-        glu.gluLookAt(testPos[0] + testPosCam[0], testPos[1] + testPosCam[1], testPos[2] + testPosCam[2], testPos[0], testPos[1], testPos[2], 0, 0, 1);
-
-        //gl.glScaled(1920.0d, 1080.0d, 0.0d);
-
-
-        // X, blue.
+        // X axis, blue.
         gl.glColor4d(0.0d, 0.0d,1.0d,1.0d);
         gl.glBegin(gl.GL_LINES);
-        gl.glVertex3d(0.0d, 0.0d, 0.0d);
-        gl.glVertex3d(32.0d, 0.0d, 0.0d);
+            gl.glVertex3d(0.0d, 0.0d, 0.0d);
+            gl.glVertex3d(32.0d, 0.0d, 0.0d);
         gl.glEnd();
 
-        // Y, green.
+        // Y axis, green.
         gl.glColor4d(0.0d, 1.0d,0.0d,1.0d);
         gl.glBegin(gl.GL_LINES);
-        gl.glVertex3d(0.0d, 0.0d, 0.0d);
-        gl.glVertex3d(0.0d, 32.0d, 0.0d);
+            gl.glVertex3d(0.0d, 0.0d, 0.0d);
+            gl.glVertex3d(0.0d, 32.0d, 0.0d);
         gl.glEnd();
 
-        // Z, red.
+        // Z axis, red.
         gl.glColor4d(1.0d, 0.0d,0.0d,1.0d);
         gl.glBegin(gl.GL_LINES);
-        gl.glVertex3d(0.0d, 0.0d, 0.0d);
-        gl.glVertex3d(0.0d, 0.0d, 32.0d);
+            gl.glVertex3d(0.0d, 0.0d, 0.0d);
+            gl.glVertex3d(0.0d, 0.0d, 32.0d);
         gl.glEnd();
 
         gl.glColor4d(1.0d, 1.0d, 1.0d, 1.0d);
         gl.glBegin(gl.GL_QUADS);
-        gl.glVertex3d((-1/2.0d * testWH[0]) + testPos[0], 0.0d + testPos[1], (-1/2.0d * testWH[1]) + testPos[2]); //Bottom left
-        gl.glVertex3d((1/2.0d * testWH[0]) + testPos[0], 0.0d + testPos[1], (-1/2.0d * testWH[1]) + testPos[2]);  //Bottom right
-        gl.glVertex3d((1/2.0d * testWH[0]) + testPos[0], 0.0d + testPos[1], (1/2.0d * testWH[1]) + testPos[2]);   //Top right
-        gl.glVertex3d((-1/2.0d * testWH[0]) + testPos[0], 0.0d + testPos[1], (1/2.0d * testWH[1]) + testPos[2]);  //Top left
+            gl.glVertex3d((-1/2.0d * testWH[0]) + testPos[0], 0.0d + testPos[1], (-1/2.0d * testWH[1]) + testPos[2]); //Bottom left
+            gl.glVertex3d((1/2.0d * testWH[0]) + testPos[0], 0.0d + testPos[1], (-1/2.0d * testWH[1]) + testPos[2]);  //Bottom right
+            gl.glVertex3d((1/2.0d * testWH[0]) + testPos[0], 0.0d + testPos[1], (1/2.0d * testWH[1]) + testPos[2]);   //Top right
+            gl.glVertex3d((-1/2.0d * testWH[0]) + testPos[0], 0.0d + testPos[1], (1/2.0d * testWH[1]) + testPos[2]);  //Top left
         gl.glEnd();
 
         gl.glPopMatrix();
-
         gl.glFlush();
     }
 
@@ -131,30 +176,5 @@ public class OpenGL extends GLJPanel implements GLEventListener, KeyListener {
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
 
-    }
-
-    ArrayList<Integer> pressedKeys = new ArrayList<Integer>();
-
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    public void keyPressed(KeyEvent e) {
-        //System.out.println(e.getKeyCode());
-
-        if(!pressedKeys.contains(e.getKeyCode())){
-            pressedKeys.add(e.getKeyCode());
-        }
-    }
-
-    public void keyReleased(KeyEvent e) {
-        pressedKeys.remove((Integer)e.getKeyCode());
-    }
-
-    public boolean getPressed(Integer k){
-        if(pressedKeys.contains(k)){
-            return true;
-        }
-        return false;
     }
 }
