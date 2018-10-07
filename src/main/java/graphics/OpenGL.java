@@ -3,16 +3,15 @@ package graphics;
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.math.FloatUtil;
 import com.jogamp.opengl.util.GLBuffers;
-import graphics.shaders.Semantics;
+import com.jogamp.opengl.util.glsl.ShaderCode;
+import com.jogamp.opengl.util.glsl.ShaderState;
+import graphics.shaders.ShaderLoader;
 import input.KeyboardInput;
 import input.KeyboardObserver;
 import input.MouseInput;
 import input.MouseObserver;
-
-import com.jogamp.opengl.util.GLBuffers;
-import com.jogamp.opengl.util.glsl.ShaderCode;
-import com.jogamp.opengl.util.glsl.ShaderProgram;
 
 import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
@@ -24,40 +23,35 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-public class OpenGL extends GLJPanel implements GLEventListener, MouseObserver, KeyboardObserver {
+public class OpenGL extends GLJPanel implements GLEventListener{
     private static OpenGL instance = null;
+    private ShaderState st;
 
-    public static GL3 gl = null;
-    //public static GLU glu = null;
+    private static GL3 gl = null;
+    private static GLU glu = null;
+
+    private final String vertexShaderPath = "src/main/java/graphics/shaders/shader.vert";
+    private final String fragmentShaderPath = "src/main/java/graphics/shaders/shader.frag";
 
     double[] testPos = new double[]{0.0d, 0.0d, 0.0d};
     double[] testPosCam = new double[]{0.0d, 500.0d, 0.0d};
     double[] testWH = new double[]{32.0d, 32.0d};
     double testSpeed = 1;
 
-    private float[] vertexData = new float[]{
-           -1, -1, 1, 0, 0,
-            0, 2, 0, 0, 1,
-            1, -1, 0, 1, 0
-    };
+    private int shaderProgram;
 
-    private short[] elementData = new short[]{0, 2, 1};
-
-    private interface Buffer {
-        int VERTEX = 0;
-        int ELEMENT = 1;
-        int GLOBAL_MATRICES = 2;
-        int MAX = 3;
-    }
+    // Data
+        float[] vertexData = new float[]{
+                -1.0f, -1.0f, 0.0f,
+                1.0f, -1.0f, 0.0f,
+                0.0f, 1.0f, 0.0f
+        };
 
     // Buffers
-        private IntBuffer bufferName = GLBuffers.newDirectIntBuffer(Buffer.MAX);
-        private IntBuffer vertexArrayName = GLBuffers.newDirectIntBuffer(1);
+        IntBuffer buffers = IntBuffer.allocate(1);
+        IntBuffer vertexArray = IntBuffer.allocate(1);
+        FloatBuffer vertexBuffer = FloatBuffer.wrap(vertexData);
 
-        private FloatBuffer clearColor = GLBuffers.newDirectFloatBuffer(4);
-        private FloatBuffer clearDepth = GLBuffers.newDirectFloatBuffer(1);
-
-        private FloatBuffer matBuffer = GLBuffers.newDirectFloatBuffer(16);
 
 
     private OpenGL(int VIEWPORT_WIDTH, int VIEWPORT_HEIGHT){
@@ -79,8 +73,8 @@ public class OpenGL extends GLJPanel implements GLEventListener, MouseObserver, 
     public static void initSingleton(int WINDOW_WIDTH, int WINDOW_HEIGHT){
         if(instance == null){
             instance = new OpenGL(WINDOW_WIDTH, WINDOW_HEIGHT);
-            MouseInput.addObserver(instance, new MouseInput.type[]{MouseInput.type.CLICK, MouseInput.type.ENTER, MouseInput.type.EXIT});
-            KeyboardInput.addObserver(instance);
+            //MouseInput.addObserver(instance, new MouseInput.type[]{MouseInput.type.CLICK, MouseInput.type.ENTER, MouseInput.type.EXIT});
+            //KeyboardInput.addObserver(instance);
         }
     }
 
@@ -88,6 +82,7 @@ public class OpenGL extends GLJPanel implements GLEventListener, MouseObserver, 
         return instance;
     }
 
+    /*
     public void notify(MouseEvent e, MouseInput.type t) {
         switch(t){
             case CLICK:
@@ -121,10 +116,11 @@ public class OpenGL extends GLJPanel implements GLEventListener, MouseObserver, 
         }
         return false;
     }
+    */
 
     public void init(GLAutoDrawable glAutoDrawable) {
         gl = glAutoDrawable.getGL().getGL3();
-        //glu = new GLU();
+        glu = new GLU();
         //gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         //gl.glShadeModel(GL2.GL_SMOOTH);
         //gl.glClearDepth(1.0f);
@@ -132,41 +128,25 @@ public class OpenGL extends GLJPanel implements GLEventListener, MouseObserver, 
         //gl.glDepthFunc(GL2.GL_LEQUAL);
         //gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);
 
-        initBuffers();
         initVertexArray();
         initShaders();
+        initBuffers();
+
         gl.glEnable(GL.GL_DEPTH_TEST);
-
     }
-
-    private void initBuffers(){
-        FloatBuffer vertexBuffer = GLBuffers.newDirectFloatBuffer(vertexData);
-        ShortBuffer elementBuffer = GLBuffers.newDirectShortBuffer(elementData);
-
-        gl.glGenBuffers(Buffer.MAX, bufferName);
-
-        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, bufferName.get(Buffer.VERTEX));
-        gl.glBufferData(gl.GL_ARRAY_BUFFER, vertexBuffer.capacity() * Float.BYTES, vertexBuffer, gl.GL_STATIC_DRAW);
-        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
-
-        gl.glBindBuffer(gl.GL_ELEMENT_ARRAY_BUFFER, bufferName.get(Buffer.ELEMENT));
-        gl.glBufferData(gl.GL_ELEMENT_ARRAY_BUFFER, elementBuffer.capacity() * Short.BYTES, elementBuffer, gl.GL_STATIC_DRAW);
-        gl.glBindBuffer(gl.GL_ELEMENT_ARRAY_BUFFER, 0);
-
-
-        gl.glBindBuffer(gl.GL_UNIFORM_BUFFER, bufferName.get(Buffer.GLOBAL_MATRICES));
-        gl.glBufferData(gl.GL_UNIFORM_BUFFER, 16 * Float.BYTES * 2, null, gl.GL_STREAM_DRAW);
-        gl.glBindBuffer(gl.GL_UNIFORM_BUFFER, 0);
-
-        gl.glBindBufferBase(gl.GL_UNIFORM_BUFFER, Semantics.Uniform.GLOBAL_MATRICES, bufferName.get(Buffer.GLOBAL_MATRICES));
-    }
-
     private void initVertexArray(){
-
+        gl.glGenVertexArrays(1, vertexArray);
+        gl.glBindVertexArray(vertexArray.get(0));
+    }
+    private void initBuffers(){
+        gl.glGenBuffers(1, buffers);
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, buffers.get(0));
+        gl.glBufferData(gl.GL_ARRAY_BUFFER, 4 * 3 * 3, vertexBuffer, gl.GL_STATIC_DRAW);
     }
 
     private void initShaders(){
-
+        shaderProgram = ShaderLoader.loadShaders(gl, vertexShaderPath, fragmentShaderPath);
+        gl.glUseProgram(shaderProgram);
     }
 
     public void dispose(GLAutoDrawable glAutoDrawable) {
@@ -200,7 +180,6 @@ public class OpenGL extends GLJPanel implements GLEventListener, MouseObserver, 
             testPosCam[2] += testSpeed;
         }
 
-        gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
         gl.glPushMatrix();
         glu.gluLookAt(testPos[0] + testPosCam[0], testPos[1] + testPosCam[1], testPos[2] + testPosCam[2], testPos[0], testPos[1], testPos[2], 0, 0, -1);
 
@@ -239,6 +218,15 @@ public class OpenGL extends GLJPanel implements GLEventListener, MouseObserver, 
         gl.glFlush();*/
 
 
+        gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
+
+        gl.glEnableVertexAttribArray(0);
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, buffers.get(0));
+        gl.glVertexAttribPointer(0, 3, gl.GL_FLOAT, false, 0, 0);
+
+        gl.glDrawArrays(gl.GL_TRIANGLES, 0, 3);
+        gl.glDisableVertexAttribArray(0);
+
     }
 
     public void reshape(GLAutoDrawable glAutoDrawable, int i, int i1, int i2, int i3) {
@@ -247,15 +235,24 @@ public class OpenGL extends GLJPanel implements GLEventListener, MouseObserver, 
         /*gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
 
-        glu.gluPerspective(45.0f, 1920.0d/1080.0d, 0.1, 10000.0);
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();*/
         //glu.gluPerspective(45.0f, 1920.0d/1080.0d, 0.1, 10000.0);
 
+        /*
+        float[] ortho = new float[16];
+        FloatUtil.makeOrtho(ortho, 0, false, -1, 1, -1, 1, 1, -1);
+        for (int j = 0; j < 16; j++) {
+            matBuffer.put(j, ortho[j]);
+        }
+        gl.glBindBuffer(gl.GL_UNIFORM_BUFFER, bufferName.get(Buffer.GLOBAL_MATRICES));
+        gl.glBufferSubData(gl.GL_UNIFORM_BUFFER, 0, 16 * Float.BYTES, matBuffer);
+        gl.glBindBuffer(gl.GL_UNIFORM_BUFFER, 0);
 
-
-
-
-
+        */
+        //gl.glViewport(i, i1, i2, i3);
+        //glu.gluPerspective(45.0f, 1920.0d/1080.0d, 0.1, 10000.0);
     }
 }
+
+
