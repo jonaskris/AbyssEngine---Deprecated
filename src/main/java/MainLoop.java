@@ -43,10 +43,10 @@ public class MainLoop {
 
             fps = 1000000000/(timeTaken);
 
-            if(counter % 3000 == 0) {
+            /*if(counter % 3000 == 0) {
                 System.out.println("fps: " + fps);
                 System.out.println("deltaTime: " + deltaTime);
-            }
+            }*/
         }
     }
 
