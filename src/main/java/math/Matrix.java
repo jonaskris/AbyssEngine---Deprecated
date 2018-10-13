@@ -23,7 +23,7 @@ public class Matrix {
         }
     }
 
-    public Matrix(int width, int height){
+    public Matrix(int height, int width){
         matrix = new float[height][width];
     }
 
@@ -45,7 +45,7 @@ public class Matrix {
         }
     }
 
-    public void set(int column, int row, float value){
+    public void set(int row, int column, float value){
         matrix[row][column] = value;
     }
 
@@ -62,7 +62,7 @@ public class Matrix {
         return new Vector(values);
     }
 
-    public float get(int column, int row){
+    public float get(int row, int column){
         return matrix[row][column];
     }
 
@@ -71,7 +71,7 @@ public class Matrix {
     }
 
     public int[] size(){
-        return new int[]{matrix[0].length, matrix.length};
+        return new int[]{matrix.length, matrix[0].length};
     }
 
     public String toString(){
@@ -111,6 +111,31 @@ public class Matrix {
         return true;
     }
 
+    public Matrix multiply(Matrix that){ // Todo
+        int[] thisSize = this.size();
+        int[] thatSize = that.size();
+        if(thisSize[1] != thatSize[0]){
+            throw new IllegalArgumentException("To multiply two matrices, the first one must have the same amount of columns as the other has rows.");
+        }
+
+        Matrix returnMatrix = new Matrix(thisSize[0], thatSize[1]);
+        int[] returnMatrixSize = returnMatrix.size();
+
+        for(int i = 0; i < returnMatrixSize[0]; i++){
+            for(int j = 0; j < returnMatrixSize[1]; j++){
+                float value = 0;
+
+                for(int h = 0; h < returnMatrixSize[0]; h++){
+                    value += this.get(i, h) * that.get(h, j);
+                }
+
+                returnMatrix.set(i, j, value);
+            }
+        }
+
+        return returnMatrix;
+    }
+
     public Matrix multiply(float value){
         float[][] newMatrixValues = new float[matrix.length][matrix[0].length];
 
@@ -123,18 +148,10 @@ public class Matrix {
         return new Matrix(newMatrixValues);
     }
 
-    public Matrix dot(Matrix that){ // Todo
-        return null;
-    }
-
-    public Matrix cross(Matrix that){ // Todo
-        return null;
-    }
-
     public float determinant(){
         int[] size = size();
         if(size[0] != size[1]){
-            throw new IllegalArgumentException("A matrix must be quadratic to calculate the determinant!");
+            throw new IllegalArgumentException("A matrix must be square to calculate the determinant!");
         }
 
         if(size[0] == 2){
@@ -148,22 +165,50 @@ public class Matrix {
         }
     }
 
+    public static Matrix newScalarMatrix(int size, float scale){
+        return newIdentityMatrix(size).multiply(scale);
+    }
+
+    public static Matrix newIdentityMatrix(int size){
+        Matrix returnMatrix = new Matrix(size, size);
+
+        for(int i = 0; i < size; i++){
+            returnMatrix.set(i, i, 1.0f);
+        }
+        return returnMatrix;
+    }
+
+    public static Matrix newRotationMatrix3DX(float rotation){ // Todo
+        return null;
+    }
+
+    public static Matrix newRotationMatrix3DY(float rotation){ // Todo
+        return null;
+    }
+
+    public static Matrix newRotationMatrix3DZ(float rotation){ // Todo
+        return null;
+    }
+
     public static void main(String[] args) {
-        /*Matrix a = new Matrix(4, 3);
+        Matrix a = new Matrix(3, 3);
 
         a.set(0, 0, 1.0f);
-        a.set(1, 0, 2.0f);
-        a.set(2, 0, 3.0f);
-        a.set(3, 0, 4.0f);
+        a.set(0, 1, 2.0f);
+        a.set(0, 2, 3.0f);
 
-        a.set(0, 1, 5.0f);
-        a.set(1, 1, 6.0f);
-        a.set(2, 1, 7.0f);
-        a.set(3, 1, 8.0f);
+        a.set(1, 0, 4.0f);
+        a.set(1, 1, 5.0f);
+        a.set(1, 2, 6.0f);
 
-        a.set(0, 2, 9.0f);
-        a.set(1, 2, 10.0f);
-        a.set(2, 2, 11.0f);
-        a.set(3, 2, 12.0f);*/
+        a.set(2, 0, 7.0f);
+        a.set(2, 1, 8.0f);
+        a.set(2, 2, 9.0f);
+
+
+
+        System.out.println(a);
+        System.out.println(a.multiply(Matrix.newIdentityMatrix(3)));
+
     }
 }

@@ -59,13 +59,13 @@ public class Vector {
         return true;
     }
 
-    public Vector add(Vector values){
-        if(values.size() != size()){
+    public Vector add(Vector that){
+        if(that.size() != size()){
             throw new IllegalArgumentException("Values must be the same length as the vector!");
         }
         float[] newVectorValues = new float[size()];
         for(int i = 0; i < newVectorValues.length; i++){
-            newVectorValues[i] = vector[i] + values.get(i);
+            newVectorValues[i] = this.get(i) + that.get(i);
         }
         return new Vector(newVectorValues);
     }
@@ -73,7 +73,7 @@ public class Vector {
     public Vector add(float value){
         float[] newVectorValues = new float[size()];
         for(int i = 0; i < newVectorValues.length; i++){
-            newVectorValues[i] = vector[i] + value;
+            newVectorValues[i] = this.get(i) + value;
         }
         return new Vector(newVectorValues);
     }
@@ -102,6 +102,16 @@ public class Vector {
         return returnValue;
     }
 
+    public Vector cross(Vector that){
+        if(this.size() != 3 || that.size() != 3){
+            throw new IllegalArgumentException("Vector crossproduct is only defined for 3 dimensions");
+        }
+
+        return new Vector(new float[]{this.get(1) * that.get(2) - this.get(2) * that.get(1),
+                -(this.get(0) * that.get(2) - this.get(2) * that.get(0)),
+                this.get(0) * that.get(1) - this.get(1) * that.get(0)});
+    }
+
     public double magnitude(){
         float foo = 0;
 
@@ -113,12 +123,19 @@ public class Vector {
     }
 
     public static void main(String[] args) {
-        Vector a = new Vector(4);
+        Vector a = new Vector(3);
 
-        a.set(0, 1.0f);
-        a.set(1, 2.0f);
-        a.set(2, 3.0f);
+        a.set(0, 2.0f);
+        a.set(1, 1.0f);
+        a.set(2, 1.0f);
 
+
+        Vector b = new Vector(3);
+        b.set(0, 4.0f);
+        b.set(1, 2.0f);
+        b.set(2, 2.0f);
+
+        System.out.println(b.cross(a));
     }
 
 }
