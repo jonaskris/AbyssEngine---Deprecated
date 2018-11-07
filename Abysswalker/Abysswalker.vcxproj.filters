@@ -93,6 +93,12 @@
     <ClCompile Include="graphics\buffers\VertexArray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="math\mat3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\WorldScene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphics\Renderer.h">
@@ -185,9 +191,18 @@
     <ClInclude Include="graphics\buffers\VertexArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="math\mat3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\WorldScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="graphics\shaders\basic.vert" />
     <None Include="graphics\shaders\basic.frag" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="notes.txt" />
   </ItemGroup>
 </Project>

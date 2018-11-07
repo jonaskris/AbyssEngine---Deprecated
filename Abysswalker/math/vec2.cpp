@@ -1,19 +1,16 @@
 #include "vec2.h"
 #include "vec3.h"
 
-vec2::vec2()
-	: x(0.0f), y(0.0f)
-{
-}
-
 vec2::vec2(float scalar)
-	: x(scalar), y(scalar)
 {
+	this->x = scalar;
+	this->y = scalar;
 }
 
-vec2::vec2(float x, float y)
-	: x(x), y(y)
+vec2::vec2(const float& x, const float& y)
 {
+	this->x = x;
+	this->y = y;
 }
 
 vec2::vec2(const vec3& vector)

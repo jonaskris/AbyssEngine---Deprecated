@@ -3,6 +3,4 @@
 
 class GComponent: public Component
 {
-public:
 };
-
