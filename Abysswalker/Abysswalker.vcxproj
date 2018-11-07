@@ -146,6 +146,7 @@
     <ClCompile Include="input\observers\MouseEnterObserver.cpp" />
     <ClCompile Include="input\observers\MousePositionObserver.cpp" />
     <ClCompile Include="input\observers\MouseScrollObserver.cpp" />
+    <ClCompile Include="math\mat3.cpp" />
     <ClCompile Include="math\mat4.cpp" />
     <ClCompile Include="scenes\Scene.cpp" />
     <ClCompile Include="entities\components\SComponent.cpp" />
@@ -154,6 +155,7 @@
     <ClCompile Include="math\vec3.cpp" />
     <ClCompile Include="math\vec4.cpp" />
     <ClCompile Include="graphics\buffers\VertexArray.cpp" />
+    <ClCompile Include="scenes\WorldScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphics\buffers\Buffer.h" />
@@ -166,6 +168,7 @@
     <ClInclude Include="entities\components\gComponent\GTComponent.h" />
     <ClInclude Include="graphics\shaders\Shader.h" />
     <ClInclude Include="graphics\buffers\IndexBuffer.h" />
+    <ClInclude Include="math\mat3.h" />
     <ClInclude Include="utils\FileUtils.h" />
     <ClInclude Include="graphics\Renderer.h" />
     <ClInclude Include="entities\components\PComponent.h" />
@@ -186,10 +189,14 @@
     <ClInclude Include="math\vec3.h" />
     <ClInclude Include="math\vec4.h" />
     <ClInclude Include="graphics\buffers\VertexArray.h" />
+    <ClInclude Include="scenes\WorldScene.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="graphics\shaders\basic.frag" />
     <None Include="graphics\shaders\basic.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="notes.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

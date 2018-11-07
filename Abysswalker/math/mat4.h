@@ -5,9 +5,6 @@
 #include "vec3.h"
 #include "vec4.h"
 
-//struct vec4;
-//struct vec3;
-
 struct mat4
 {
 	union {
@@ -16,11 +13,15 @@ struct mat4
 	};
 
 	mat4();
+	mat4(const mat4& other);
 	static mat4 identity();
 
-	mat4& multiply(const mat4& other);
-	friend mat4 operator*(mat4 left, const mat4& right);
+	mat4 multiply(const mat4& other);
+	friend mat4 operator*(const mat4& left, const mat4& right);
 	mat4& operator*=(const mat4& other);
+
+	vec4 multiply(const vec4& vector) const;
+	friend vec4 operator*(const mat4& left, const vec4& right);
 
 
 	static mat4 orthographic(float left, float right, float bottom, float top, float near, float far);

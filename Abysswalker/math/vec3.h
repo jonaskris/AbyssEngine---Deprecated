@@ -13,7 +13,7 @@ struct vec3
 {
 	float x, y, z;
 
-	vec3();
+	vec3() = default;
 	vec3(float scalar);
 	vec3(float x, float y, float z);
 	vec3(const vec2& other);

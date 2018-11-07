@@ -7,6 +7,13 @@ mat4::mat4()
 	}
 }
 
+mat4::mat4(const mat4& other)
+{
+	for (int i = 0; i < 4 * 4; i++) {
+		elements[i] = other.elements[i];
+	}
+}
+
 mat4 mat4::identity() 
 {
 	mat4 returnMatrix;
@@ -22,7 +29,8 @@ mat4 mat4::identity()
 	return returnMatrix;
 }
 
-mat4& mat4::multiply(const mat4& other) {
+mat4 mat4::multiply(const mat4& other) 
+{
 	for (int y = 0; y < 4; y++) 
 	{
 		for (int x = 0; x < 4; x++) 
@@ -38,14 +46,40 @@ mat4& mat4::multiply(const mat4& other) {
 	return *this;
 }
 
-mat4 operator*(mat4 left, const mat4& right) 
+vec4 mat4::multiply(const vec4& vector) const
+{
+	vec4 returnVector;
+
+	float x = vector.x;
+	float y = vector.y;
+	float z = vector.z;
+	float w = vector.w;
+
+	returnVector.x = x * elements[0] + x * elements[4] + x * elements[8]  + x * elements[12];
+	returnVector.y = y * elements[1] + y * elements[5] + y * elements[9]  + y * elements[13];
+	returnVector.z = z * elements[2] + z * elements[6] + z * elements[10] + z * elements[14];
+	returnVector.w = w * elements[3] + w * elements[7] + w * elements[11] + w * elements[15];
+
+	return returnVector;
+}
+
+vec4 operator*(const mat4& left, const vec4& right)
 {
 	return left.multiply(right);
 }
 
-mat4& mat4::operator*=(const mat4& other) 
+mat4 operator*(const mat4& left, const mat4& right)
 {
-	return multiply(other);
+	mat4 returnMatrix(left);
+	returnMatrix.multiply(right);
+	
+	return returnMatrix;
+}
+
+mat4& mat4::operator*=(const mat4& other)
+{	
+	mat4* p = &multiply(other);
+	return *p;
 }
 
 mat4 mat4::orthographic(float left, float right, float bottom, float top, float near, float far)

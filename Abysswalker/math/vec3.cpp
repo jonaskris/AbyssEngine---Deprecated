@@ -3,11 +3,6 @@
 #include "vec4.h"
 #include "mat4.h"
 
-vec3::vec3()
-	: x(0.0f), y(0.0f), z(0.0f)
-{
-}
-
 vec3::vec3(float scalar)
 	: x(scalar), y(scalar), z(scalar)
 {
