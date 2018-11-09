@@ -2,13 +2,20 @@
 
 layout (location = 0) out vec4 out_Color;
 
-uniform vec4 in_Color;
-uniform vec2 light_position;
+//uniform vec2 light_position;
 
-in vec4 pos;
+in DATA
+{
+	vec4 position;
+	vec4 color;
+	vec2 uv;
+} fs_in;
+
+uniform sampler2D tex0;
 
 void main()
 {
-	float intensity = 0.2 / length(pos.xy - light_position);
-	out_Color = in_Color * intensity;
+	//float intensity = 1.0 / length(fs_in.position.xy - light_position);
+	//out_Color = fs_in.color;
+	out_Color = texture(tex0, fs_in.uv) * fs_in.color;
 }

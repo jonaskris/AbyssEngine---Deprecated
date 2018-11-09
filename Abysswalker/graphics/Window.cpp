@@ -11,10 +11,6 @@ Window::Window(const char *title, int width, int height)
 	this->width = width;
 	this->height = height;
 
-	if (!glfwInit())
-	{
-		std::cout << "Failed to initialize GLFW!" << std::endl;
-	}
 	window = glfwCreateWindow(width, height, title, NULL, NULL);
 	if (!window)
 	{
@@ -46,6 +42,7 @@ void Window::update() const
 	if (error != GL_NO_ERROR) {
 		std::cout << "OpenGL Error: " << error << std::endl;
 	}
+
 	glfwPollEvents();
 	glfwSwapBuffers(window);
 }

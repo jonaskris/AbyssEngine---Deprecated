@@ -7,14 +7,14 @@ Scene::~Scene()
 	}
 }
 
-std::vector<Entity>* Scene::getEntities()
+std::vector<Entity*>* Scene::getEntities()
 {
 	return &entities;
 }
 
 void Scene::addEntity(Entity* e)
 {
-	entities.push_back(*e);
+	entities.push_back(e);
 }
 
 void Scene::addEntities(std::vector<Entity*>& entities)

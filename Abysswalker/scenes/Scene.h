@@ -6,7 +6,7 @@
 class Scene
 {
 protected:
-	std::vector<Entity> entities;
+	std::vector<Entity*> entities;
 	Shader* shader;
 	void addEntity(Entity* e);
 	void addEntities(std::vector<Entity*>& entities);
@@ -16,5 +16,5 @@ protected:
 public:
 	virtual ~Scene();
 
-	std::vector<Entity>* getEntities();
+	std::vector<Entity*>* getEntities();
 };

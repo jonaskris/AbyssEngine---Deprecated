@@ -7,7 +7,7 @@
 WorldScene::WorldScene()
 {
 
-	std::cout << "BOI" << std::endl;
+	/*std::cout << "BOI" << std::endl;
 	mat4 ortho = mat4::orthographic(-8.0f, 8.0f, 4.5f, -4.5f, -1.0f, 1.0f);
 
 	Shader* shader = new Shader("../graphics/shaders/basic.vert", "../graphics/shaders/basic.frag");
@@ -17,7 +17,7 @@ WorldScene::WorldScene()
 
 	setShader(shader);
 
-	std::cout << "Shader: " << getShader() << std::endl;
+	std::cout << "Shader: " << getShader() << std::endl;*/
 }
 
 WorldScene::~WorldScene()

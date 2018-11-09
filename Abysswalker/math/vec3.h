@@ -15,6 +15,7 @@ struct vec3
 
 	vec3() = default;
 	vec3(float scalar);
+	vec3(const vec3& other);
 	vec3(float x, float y, float z);
 	vec3(const vec2& other);
 	vec3(float x, float y);
@@ -35,6 +36,11 @@ struct vec3
 	vec3& multiply(const vec3& other);
 	vec3& divide(const vec3& other);
 
+	vec3& add(const vec2& other);
+	vec3& subtract(const vec2& other);
+	vec3& multiply(const vec2& other);
+	vec3& divide(const vec2& other);
+
 	vec3& add(float other);
 	vec3& subtract(float other);
 	vec3& multiply(float other);
@@ -42,15 +48,20 @@ struct vec3
 
 	vec3& multiply(const mat4& transform) const;
 
-	friend vec3 operator+(vec3 left, const vec3& right);
-	friend vec3 operator-(vec3 left, const vec3& right);
-	friend vec3 operator*(vec3 left, const vec3& right);
-	friend vec3 operator/(vec3 left, const vec3& right);
-
-	friend vec3 operator+(vec3 left, float right);
-	friend vec3 operator-(vec3 left, float right);
-	friend vec3 operator*(vec3 left, float right);
-	friend vec3 operator/(vec3 left, float right);
+	friend vec3 operator+(const vec3& left, const vec3& right);
+	friend vec3 operator-(const vec3& left, const vec3& right);
+	friend vec3 operator*(const vec3& left, const vec3& right);
+	friend vec3 operator/(const vec3& left, const vec3& right);
+		  
+	friend vec3 operator+(const vec3& left, const vec2& right);
+	friend vec3 operator-(const vec3& left, const vec2& right);
+	friend vec3 operator*(const vec3& left, const vec2& right);
+	friend vec3 operator/(const vec3& left, const vec2& right);
+		  
+	friend vec3 operator+(const vec3& left, const float& right);
+	friend vec3 operator-(const vec3& left, const float& right);
+	friend vec3 operator*(const vec3& left, const float& right);
+	friend vec3 operator/(const vec3& left, const float& right);
 
 	bool operator==(const vec3& other) const;
 	bool operator!=(const vec3& other) const;

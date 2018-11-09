@@ -1,116 +1,112 @@
-#include "shader.h"
-#include <vector>
-#include <iostream>
+#include "Shader.h"
+#include "../../utils/FileUtils.h"
+#include <string>
 
-Shader::Shader(const char* vertPath, const char* fragPath)
+Shader* Shader::shaders[shaderPathsSize] = {};
+
+bool Shader::initialized = false;
+const char* Shader::shaderPaths[Shader::shaderPathsSize] = 
 {
-	this->vertPath = vertPath;
-	this->fragPath = fragPath;
-	shaderID = load();
+	"graphics/shaders/basic.vert", "graphics/shaders/basic.frag"
+};
+
+Shader::Shader(const char* path, Shader::Type type)
+{
+	this->path = path;
+	this->type = type;
+	load();
 }
 
 Shader::~Shader()
 {
-	glDeleteProgram(shaderID);
+	glDeleteShader(shaderID);
 }
 
-GLuint Shader::getShaderID() {
+GLuint Shader::getShaderID()
+{
 	return shaderID;
 }
 
-void Shader::enable() const
+void Shader::load()
 {
-	glUseProgram(shaderID);
-}
+	switch (type) {
+	case Shader::Type::VERTEX:
+		shaderID = glCreateShader(GL_VERTEX_SHADER);
+		break;
+	case Shader::Type::FRAGMENT:
+		shaderID = glCreateShader(GL_FRAGMENT_SHADER);
+		break;
+	}
 
-void Shader::disable() const
-{
-	glUseProgram(0);
-}
+	std::string sourceString = read_file(path);
+	if (sourceString == "") {
+		std::cout << "Failed to read shader, perhaps the path is wrong?" << std::endl;
+		return;
+	}
+	const char* source = sourceString.c_str();
 
-GLuint Shader::load()
-{
-	GLuint program = glCreateProgram();
-	GLuint vertex = glCreateShader(GL_VERTEX_SHADER);
-	GLuint fragment = glCreateShader(GL_FRAGMENT_SHADER);
-
-	std::string vertSourceString = FileUtils::read_file(vertPath);
-	std::string fragSourceString = FileUtils::read_file(fragPath);
-
-	const char* vertSource = vertSourceString.c_str();
-	const char* fragSource = fragSourceString.c_str();
-
-	glShaderSource(vertex, 1, &vertSource, NULL);
-	glCompileShader(vertex);
+	glShaderSource(shaderID, 1, &source, NULL);
+	glCompileShader(shaderID);
 
 	GLint result;
-	glGetShaderiv(vertex, GL_COMPILE_STATUS, &result);
+	glGetShaderiv(shaderID, GL_COMPILE_STATUS, &result);
 	if (result == GL_FALSE) {
 		GLint length;
-		glGetShaderiv(vertex, GL_INFO_LOG_LENGTH, &length);
+		glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &length);
 		std::vector<char> error(length);
-		glGetShaderInfoLog(vertex, length, &length, &error[0]);
-		std::cout << "Failed to compile vertex shader!" << std::endl << &error[0] << std::endl;
-		glDeleteShader(vertex);
-		return 0;
+		glGetShaderInfoLog(shaderID, length, &length, &error[0]);
+		std::cout << "Failed to compile shader : " << path << "!" << std::endl << &error[0] << std::endl;
+		glDeleteShader(shaderID);
+		return;
+	}
+}
+
+Shader* Shader::getShader(unsigned short index)
+{
+	if (index >= shaderPathsSize) {
+		std::cout << "Shader " << index << " does not exist! Only programs from 0 to " << shaderPathsSize / 2 << " are defined." << std::endl;
 	}
 
-	glShaderSource(fragment, 1, &fragSource, NULL);
-	glCompileShader(fragment);
-	glGetShaderiv(fragment, GL_COMPILE_STATUS, &result);
-	if (result == GL_FALSE) {
-		GLint length;
-		glGetShaderiv(fragment, GL_INFO_LOG_LENGTH, &length);
-		std::vector<char> error(length);
-		glGetShaderInfoLog(fragment, length, &length, &error[0]);
-		std::cout << "Failed to compile fragment shader!" << std::endl << &error[0] << std::endl;
-		glDeleteShader(fragment);
-		return 0;
+	return shaders[index];
+}
+
+void Shader::initShaders()
+{
+	
+	if (initialized) {
+		return;
 	}
+	for (int i = 0; i < shaderPathsSize; i++) {
+		std::string shaderPath = shaderPaths[i];
+		std::string shaderPathExtension = shaderPath.substr(shaderPath.find(".") + 1);
+		
+		Type shaderType;
+		if (shaderPathExtension == "vert") {
+			shaderType = Shader::Type::VERTEX;
+		} else if (shaderPathExtension == "frag") {
+			shaderType = Shader::Type::FRAGMENT;
+		} else if (shaderPathExtension == "geom") {
+			shaderType = Shader::Type::GEOMETRY;
+			std::cout << "The engine doesen't support geometry shaders!";
+			continue;
+		} else if (shaderPathExtension == "tesc") {
+			shaderType = Shader::Type::TESSELATION_CONTROL;
+			std::cout << "The engine doesen't support tesselation control shaders!";
+				continue;
+		} else if (shaderPathExtension == "tese") {
+			shaderType = Shader::Type::TESSELATION_EVALUATION;
+			std::cout << "The engine doesen't support tesselation evaluation shaders!";
+				continue;
+		} else if (shaderPathExtension == "comp") {
+			shaderType = Shader::Type::COMPUTE;
+			std::cout << "The engine doesen't support compute shaders!";
+				continue;
+		} else {
+			std::cout << "Failed to interpret shader type of shader '" << shaderPath << "'. Interpreted extension: '" << shaderPathExtension << "'." << std::endl;
+			continue;
+		}
 
-	glAttachShader(program, vertex);
-	glAttachShader(program, fragment);
-
-	glLinkProgram(program);
-	glValidateProgram(program);
-
-	glDeleteShader(vertex);
-	glDeleteShader(fragment);
-
-	return program;
-}
-
-GLint Shader::getUniformLocation(const GLchar* name)
-{
-	return glGetUniformLocation(shaderID, name);
-}
-
-void Shader::setUniform1f(const GLchar* name, float value)
-{
-	glUniform1f(getUniformLocation(name), value);
-}
-
-void Shader::setUniform1i(const GLchar* name, int value)
-{
-	glUniform1i(getUniformLocation(name), value);
-}
-
-void Shader::setUniform2f(const GLchar* name, const vec2& vector)
-{
-	glUniform2f(getUniformLocation(name), vector.x, vector.y);
-}
-
-void Shader::setUniform3f(const GLchar* name, const vec3& vector)
-{
-	glUniform3f(getUniformLocation(name), vector.x, vector.y, vector.z);
-}
-
-void Shader::setUniform4f(const GLchar* name, const vec4& vector)
-{
-	glUniform4f(getUniformLocation(name), vector.x, vector.y, vector.z, vector.w);
-}
-
-void Shader::setUniformMat4(const GLchar* name, const mat4& matrix)
-{
-	glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, matrix.elements);
+		shaders[i] = new Shader(shaderPaths[i], shaderType);
+	}
+	initialized = true;
 }

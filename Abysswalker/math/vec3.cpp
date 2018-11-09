@@ -4,8 +4,17 @@
 #include "mat4.h"
 
 vec3::vec3(float scalar)
-	: x(scalar), y(scalar), z(scalar)
 {
+	this->x = scalar;
+	this->y = scalar;
+	this->z = scalar;
+}
+
+vec3::vec3(const vec3& other)
+{
+	this->x = other.x;
+	this->y = other.y;
+	this->z = other.z;
 }
 
 vec3::vec3(float x, float y, float z)
@@ -104,6 +113,38 @@ vec3& vec3::divide(const vec3& other)
 	return *this;
 }
 
+vec3& vec3::add(const vec2& other)
+{
+	x += other.x;
+	y += other.y;
+
+	return *this;
+}
+
+vec3& vec3::subtract(const vec2& other)
+{
+	x -= other.x;
+	y -= other.y;
+
+	return *this;
+}
+
+vec3& vec3::multiply(const vec2& other)
+{
+	x *= other.x;
+	y *= other.y;
+
+	return *this;
+}
+
+vec3& vec3::divide(const vec2& other)
+{
+	x /= other.x;
+	y /= other.y;
+
+	return *this;
+}
+
 vec3& vec3::add(float other)
 {
 	x += other;
@@ -149,44 +190,76 @@ vec3& vec3::multiply(const mat4& transform) const
 	);
 }
 
-vec3 operator+(vec3 left, const vec3& right)
+vec3 operator+(const vec3& left, const vec3& right)
 {
-	return left.add(right);
+	vec3 returnVector(left);
+	return returnVector.add(right);
 }
 
-vec3 operator-(vec3 left, const vec3& right)
+vec3 operator-(const vec3& left, const vec3& right)
 {
-	return left.subtract(right);
+	vec3 returnVector(left);
+	return returnVector.subtract(right);
 }
 
-vec3 operator*(vec3 left, const vec3& right)
+vec3 operator*(const vec3& left, const vec3& right)
 {
-	return left.multiply(right);
+	vec3 returnVector(left);
+	return returnVector.multiply(right);
 }
 
-vec3 operator/(vec3 left, const vec3& right)
+vec3 operator/(const vec3& left, const vec3& right)
 {
-	return left.divide(right);
+	vec3 returnVector(left);
+	return returnVector.divide(right);
 }
 
-vec3 operator+(vec3 left, float right)
+vec3 operator+(const vec3& left, const vec2& right)
 {
-	return left.add(right);
+	vec3 returnVector(left);
+	return returnVector.add(right);
 }
 
-vec3 operator-(vec3 left, float right)
+vec3 operator-(const vec3& left, const vec2& right)
 {
-	return left.subtract(right);
+	vec3 returnVector(left);
+	return returnVector.subtract(right);
 }
 
-vec3 operator*(vec3 left, float right)
+vec3 operator*(const vec3& left, const vec2& right)
 {
-	return left.multiply(right);
+	vec3 returnVector(left);
+	return returnVector.multiply(right);
 }
 
-vec3 operator/(vec3 left, float right)
+vec3 operator/(const vec3& left, const vec2& right)
 {
-	return left.divide(right);
+	vec3 returnVector(left);
+	return returnVector.divide(right);
+}
+
+vec3 operator+(const vec3& left, const float& right)
+{
+	vec3 returnVector(left);
+	return returnVector.add(right);
+}
+
+vec3 operator-(const vec3& left, const float& right)
+{
+	vec3 returnVector(left);
+	return returnVector.subtract(right);
+}
+
+vec3 operator*(const vec3& left, const float& right)
+{
+	vec3 returnVector(left);
+	return returnVector.multiply(right);
+}
+
+vec3 operator/(const vec3& left, const float& right)
+{
+	vec3 returnVector(left);
+	return returnVector.divide(right);
 }
 
 vec3& vec3::operator+=(const vec3& other)
