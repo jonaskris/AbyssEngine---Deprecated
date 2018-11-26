@@ -1,26 +1,16 @@
 #pragma once
 #include <string>
-#include <FreeImage.h>
+#include <iostream>
 #include <GL/glew.h>
+#include "lodepng/lodepng.h"
 
-inline BYTE* load_image(const char* filename, GLsizei* width, GLsizei* height)
+inline void load_image(std::string& filename, unsigned int& width, unsigned int& height, size_t& in_size, std::vector<unsigned char>& pixels)
 {
-	FREE_IMAGE_FORMAT fif = FIF_UNKNOWN;
-	FIBITMAP *dib = nullptr;
-	fif = FreeImage_GetFileType(filename, 0);
-	if (fif == FIF_UNKNOWN)
-		fif = FreeImage_GetFIFFromFilename(filename);
-	if (fif == FIF_UNKNOWN)
-		return nullptr;
+	unsigned int error = lodepng::decode(pixels, width, height, filename);
 
-	if (FreeImage_FIFSupportsReading(fif))
-		dib = FreeImage_Load(fif, filename);
-	if (!dib)
-		return nullptr;
+	if (error) {
+		std::cout << "decoder error " << error << ": " << lodepng_error_text(error) << std::endl;
+	}
 
-	BYTE* result = FreeImage_GetBits(dib);
-	*width = FreeImage_GetWidth(dib);
-	*height = FreeImage_GetHeight(dib);
-
-	return result;
+	//free(image);
 }

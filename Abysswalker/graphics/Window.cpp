@@ -1,7 +1,7 @@
+#include <iostream>
 #include "Window.h"
 #include "../input/listeners/KeyboardListener.h"
 #include "../input/listeners/MouseListener.h"
-#include <iostream>
 
 void windowResize(GLFWwindow * window, int width, int height);
 

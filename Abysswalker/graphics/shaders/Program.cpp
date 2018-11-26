@@ -1,7 +1,11 @@
-#include "Program.h"
 #include <vector>
 #include <iostream>
-
+#include "Program.h"
+#include "Shader.h"
+#include "../../math/mat4.h"
+#include "../../math/vec2.h"
+#include "../../math/vec3.h"
+#include "../../math/vec4.h"
 
 Program* Program::programs[Type::MAX] = {};
 bool Program::initialized = false;

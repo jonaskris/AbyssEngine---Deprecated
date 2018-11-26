@@ -1,8 +1,8 @@
 #pragma once
-#include "Component.h"
-#include "../../math/vec2.h"
-#include "../../math/mat3.h"
 #include <vector>
+#include "Component.h"
+
+struct vec3;
 
 class CComponent: public Component
 {
@@ -19,7 +19,4 @@ public:
 
 	float* indices;
 	unsigned int indicesLength;
-
-	void multiply(mat3 transform);
-
 };

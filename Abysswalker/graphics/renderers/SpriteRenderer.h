@@ -1,12 +1,9 @@
 #pragma once
 #include <vector>
+#include <gl/glew.h>
 #include "../../entities/components/gComponent/GSSComponent.h"
-#include "../../math/mat4.h"
-#include "../shaders/Program.h"
-#include "../buffers/Buffer.h"
-#include "../buffers/IndexBuffer.h"
 
-#define RENDERER_MAX_SPRITES	10000
+#define RENDERER_MAX_SPRITES	50000
 #define RENDERER_VERTEX_SIZE	sizeof(GSSComponent::VertexData)
 #define RENDERER_SPRITE_SIZE	RENDERER_VERTEX_SIZE * 4
 #define RENDERER_BUFFER_SIZE	RENDERER_SPRITE_SIZE * RENDERER_MAX_SPRITES
@@ -17,6 +14,9 @@
 #define SHADER_COLOR_INDEX				1
 #define SHADER_UV_INDEX					2
 
+struct mat4;
+class Program;
+
 class SpriteRenderer // todo: make into singleton
 {
 private:
@@ -25,8 +25,6 @@ private:
 	static GSSComponent::VertexData* VERTEX_DATA;
 	static GLuint* IBO_DATA;						// RENDERER_INDICES_SIZE is max size of IBO_DATA
 	static GLsizei IBO_COUNT;						// IBO_COUNT is how much data is actually in IBO_DATA, used when drawing
-
-
 public:
 	static void init();
 	static void render(std::vector<GSSComponent*>* components, const mat4& viewMatrix, Program* program);

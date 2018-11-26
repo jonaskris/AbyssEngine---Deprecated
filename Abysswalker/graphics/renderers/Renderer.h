@@ -1,10 +1,8 @@
 #pragma once
-#include "../Window.h"
 #include <vector>
-#include "../shaders/Shader.h"
-#include "../../scenes/Scene.h"
-#include "../../entities/components/gComponent/GSSComponent.h"
-#include <vector>
+
+class Window;
+class GSSComponent;
 
 class Renderer
 {

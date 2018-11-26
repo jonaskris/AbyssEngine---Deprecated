@@ -1,6 +1,6 @@
 #include "SpriteRenderer.h"
-#include <gl/glew.h>
-#include "../buffers/IndexBuffer.h"
+#include "../shaders/Program.h"
+#include "../TextureAtlas.h"
 
 GLuint SpriteRenderer::VAO;
 GLuint SpriteRenderer::IBO;
@@ -23,28 +23,28 @@ void SpriteRenderer::render(std::vector<GSSComponent*>* components, const mat4& 
 		VERTEX_DATA[  i * 4  ].vertex.z = position.z;
 		VERTEX_DATA[  i * 4  ].color = color[0];
 		VERTEX_DATA[  i * 4  ].uv = uv.at(0);
-		std::cout << uv.at(0) << std::endl;
+		//std::cout << uv.at(0) << std::endl;
 
-		VERTEX_DATA[i * 4 + 1].vertex.x = position.x + scale.x;
-		VERTEX_DATA[i * 4 + 1].vertex.y = position.y;
+		VERTEX_DATA[i * 4 + 1].vertex.x = position.x;
+		VERTEX_DATA[i * 4 + 1].vertex.y = position.y + scale.y;
 		VERTEX_DATA[i * 4 + 1].vertex.z = position.z;
 		VERTEX_DATA[i * 4 + 1].color = color[1];
 		VERTEX_DATA[i * 4 + 1].uv = uv.at(1);
-		std::cout << uv.at(1) << std::endl;
+		//std::cout << uv.at(1) << std::endl;
 
 		VERTEX_DATA[i * 4 + 2].vertex.x = position.x + scale.x;
 		VERTEX_DATA[i * 4 + 2].vertex.y = position.y + scale.y;
 		VERTEX_DATA[i * 4 + 2].vertex.z = position.z;
 		VERTEX_DATA[i * 4 + 2].color = color[2];
 		VERTEX_DATA[i * 4 + 2].uv = uv.at(2);
-		std::cout << uv.at(2) << std::endl;
+		//std::cout << uv.at(2) << std::endl;
 
-		VERTEX_DATA[i * 4 + 3].vertex.x = position.x;
-		VERTEX_DATA[i * 4 + 3].vertex.y = position.y + scale.y;
+		VERTEX_DATA[i * 4 + 3].vertex.x = position.x + scale.x;
+		VERTEX_DATA[i * 4 + 3].vertex.y = position.y;
 		VERTEX_DATA[i * 4 + 3].vertex.z = position.z;
 		VERTEX_DATA[i * 4 + 3].color = color[3];
 		VERTEX_DATA[i * 4 + 3].uv = uv.at(3);
-		std::cout << uv.at(3) << std::endl;
+		//std::cout << uv.at(3) << std::endl;
 	}
 
 	IBO_COUNT = components->size() * 6;
@@ -56,7 +56,7 @@ void SpriteRenderer::render(std::vector<GSSComponent*>* components, const mat4& 
 
 	glUseProgram(program->getProgramID());
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, TextureAtlas::getAtlas(TextureAtlas::Atlas::TEST)->getTextureID());
+		glBindTexture(GL_TEXTURE_2D, TextureAtlas::getAtlas(TextureAtlas::Atlas::TESTSHEET)->getTextureID());
 		GLuint texLoc = glGetUniformLocation(program->getProgramID(), "tex");
 		glUniform1i(texLoc, 0);
 
@@ -103,7 +103,7 @@ void SpriteRenderer::init()
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
 		glEnableVertexAttribArray(SHADER_VERTEX_INDEX);
-		glVertexAttribPointer(SHADER_VERTEX_INDEX, 3, GL_FLOAT, GL_TRUE, sizeof(GSSComponent::VertexData), (const GLvoid*)(offsetof(GSSComponent::VertexData, GSSComponent::VertexData::vertex)));
+		glVertexAttribPointer(SHADER_VERTEX_INDEX, 3, GL_FLOAT, GL_FALSE, sizeof(GSSComponent::VertexData), (const GLvoid*)(offsetof(GSSComponent::VertexData, GSSComponent::VertexData::vertex)));
 
 		glEnableVertexAttribArray(SHADER_COLOR_INDEX);
 		glVertexAttribPointer(SHADER_COLOR_INDEX, 4, GL_FLOAT, GL_TRUE, sizeof(GSSComponent::VertexData), (const GLvoid*)(offsetof(GSSComponent::VertexData, GSSComponent::VertexData::color)));
@@ -117,17 +117,4 @@ void SpriteRenderer::init()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, RENDERER_INDICES_SIZE, IBO_DATA, GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-
-	/*buffer->bind();
-
-	glEnableVertexAttribArray(index);
-	glVertexAttribPointer(index, buffer->getComponentCount(), GL_FLOAT, GL_FALSE, 0, 0);
-
-	buffers.push_back(buffer);
-
-	buffer->unbind();
-	unbind();*/
-
-
 }

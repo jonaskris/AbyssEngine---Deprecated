@@ -1,11 +1,11 @@
 #pragma once
 #include "GComponent.h"
-#include "../../../math/mat4.h"
+#include "../../../graphics/TextureAtlas.h"
 #include "../../../math/vec4.h"
 #include "../../../math/vec3.h"
 #include "../../../math/vec2.h"
-#include "../PComponent.h"
-#include "../../../graphics/TextureAtlas.h"
+
+class PComponent;
 
 class GSSComponent : public GComponent
 {
@@ -16,16 +16,16 @@ public:
 		vec2 uv;
 	};
 
-	GSSComponent(PComponent* pComponent, TextureAtlas::Atlas atlas, unsigned short textureID);
+	GSSComponent(PComponent& pComponent, TextureAtlas::Atlas atlas, unsigned short textureID);
 	vec3 position;
 	vec3 rotation;
 	vec2 scale;
 	vec4 color[4]
 	{
-		vec4(0.0f, 0.0f, 0.0f, 1.0f),
-		vec4(0.0f, 0.0f, 0.0f, 1.0f),
-		vec4(0.0f, 0.0f, 0.0f, 1.0f),
-		vec4(0.0f, 0.0f, 0.0f, 1.0f)
+		vec4(1.0f, 1.0f, 1.0f, 1.0f),
+		vec4(1.0f, 1.0f, 1.0f, 1.0f),
+		vec4(1.0f, 1.0f, 1.0f, 1.0f),
+		vec4(1.0f, 1.0f, 1.0f, 1.0f)
 	};
 
 	std::vector<vec2> uv;

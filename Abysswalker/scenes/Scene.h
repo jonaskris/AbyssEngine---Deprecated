@@ -1,7 +1,9 @@
 #pragma once
-#include "../entities/Entity.h"
-#include "../graphics/shaders/Shader.h"
 #include <vector>
+#include "../graphics/shaders/Shader.h"
+
+class Entity;
+class Shader;
 
 class Scene
 {

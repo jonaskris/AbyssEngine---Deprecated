@@ -1,8 +1,9 @@
 #pragma once
 #include <GL/glew.h>
-#include <string>
 #include <vector>
+#include <string>
 #include "../math/vec2.h"
+
 
 #define SPRITE_SIZE 32
 #define TEXTURE_ATLAS_PATH std::string("../Resources/TextureAtlases/")
@@ -10,7 +11,7 @@
 class TextureAtlas
 {
 public:
-	enum Atlas { TEST, MAX };
+	enum Atlas { TESTSHEET, TESTSPRITE, MAX };
 	static void loadAtlases();
 	static void getTextureCoordinates(int index, Atlas type, std::vector<vec2>* textureCoordinates);
 	static TextureAtlas* getAtlas(Atlas type);

@@ -1,8 +1,6 @@
 #include "PComponent.h"
 
-
-
-PComponent::PComponent()
+PComponent::PComponent() : Component(Component::componentType::PComponentType)
 {
 }
 

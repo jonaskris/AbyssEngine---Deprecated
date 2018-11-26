@@ -1,21 +1,18 @@
 #pragma once
 #include <iostream>
 #include <vector>
-#include "../observers/MouseObserver.h"
-#include "../observers/MousePositionObserver.h"
-#include "../observers/MouseEnterObserver.h"
-#include "../observers/MouseButtonObserver.h"
-#include "../observers/MouseScrollObserver.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+class MouseObserver;
+
 namespace MouseListener {
-	enum MOUSELISTENER{POSITION, ENTER, BUTTON, SCROLL};
+	enum MouseListenerType{POSITION, ENTER, BUTTON, SCROLL};
 	static std::vector<MouseObserver*> observers[4];
-	void addObserver(MouseObserver& observer, MOUSELISTENER MOUSELISTENER);
-	void removeObserver(MouseObserver& observer, MOUSELISTENER MOUSELISTENER);
-	bool findObserver(MouseObserver& observer, MOUSELISTENER MOUSELISTENER);
-	int getObserversSize(MOUSELISTENER MOUSELISTENER);
+	void addObserver(MouseObserver& observer, MouseListenerType type);
+	void removeObserver(MouseObserver& observer, MouseListenerType type);
+	bool findObserver(MouseObserver& observer, MouseListenerType type);
+	int getObserversSize(MouseListenerType type);
 	int getObserversSize();
 	void mouse_position_callback(GLFWwindow* window, double xpos, double ypos);
 	void mouse_enter_callback(GLFWwindow* window, int entered);

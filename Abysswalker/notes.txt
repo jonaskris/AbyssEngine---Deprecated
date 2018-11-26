@@ -1,15 +1,3 @@
-To draw something, one needs to:
-1.  Create a VAO (Vertex Array Object), VBO (Vertex Buffer Object) and IBO (Index Buffer Object).
-2.  Add VBO to VAO.
-3.  Create and enable shader.
-4.  Create projection matrix (Orthographic or Projective)
-5.  Set property "pr_matrix" to the projection matrix.
-6.  Clear window.
-7.  Bind VAO and IBO
-8.  Call glDrawElements.
-9.  Unbind IBO AND VAO.
-10. Update window
-
 Code:
 
 		GLfloat vertices[] =

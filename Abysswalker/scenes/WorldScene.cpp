@@ -1,8 +1,4 @@
 #include "WorldScene.h"
-#include "../entities/Entity.h"
-#include "../math/mat4.h"
-#include "../graphics/shaders/Shader.h"
-#include <iostream>
 
 WorldScene::WorldScene()
 {

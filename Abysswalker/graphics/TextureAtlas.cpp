@@ -1,16 +1,14 @@
-#include "TextureAtlas.h"
-#include <FreeImage.h>
-#include <vector>
-#include <string>
-#include "../utils/ImageLoader.h"
 #include <iostream>
+#include "TextureAtlas.h"
+#include "../utils/ImageLoader.h"
 
 TextureAtlas* TextureAtlas::atlases[Atlas::MAX] = {};
 bool TextureAtlas::initialized = false;
 
 const std::string TextureAtlas::atlasPaths[] =
 {
-	"testSheet.png"
+	"testSheet.png",
+	"testSprite.png"
 };
 
 TextureAtlas::TextureAtlas(const std::string& path, unsigned int spriteSize)
@@ -23,15 +21,28 @@ TextureAtlas::TextureAtlas(const std::string& path, unsigned int spriteSize)
 
 void TextureAtlas::load()
 {
-	BYTE* pixels = load_image(path.c_str(), &width, &height);
+	unsigned int width, height;
+	size_t in_size;
+	std::vector<unsigned char> pixels;
+
+	load_image(path, width, height, in_size, pixels);
+
+	this->width = width;
+	this->height = height;
+
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
+	//glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &pixels[0]);
+
+
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	//delete[] pixels
+	//free(pixels);
 }
 
 void TextureAtlas::bind() const
@@ -78,32 +89,12 @@ void TextureAtlas::getTextureCoordinates(int index, std::vector<vec2>* textureCo
 
 	textureCoordinates->clear();
 
+	// Texture coordinates are rotated by 90 degrees, as lodepng loads images in a different rotation than opengl.
+	textureCoordinates->push_back(vec2(xn, ysn));
 	textureCoordinates->push_back(vec2(xn, yn));
 	textureCoordinates->push_back(vec2(xsn, yn));
 	textureCoordinates->push_back(vec2(xsn, ysn));
-	textureCoordinates->push_back(vec2(xn, ysn));
-	/*textureCoordinates[0].x = xsn;
-	textureCoordinates[0].y = yn;
 
-	textureCoordinates[1].x = xsn;
-	textureCoordinates[1].y = ysn;
-
-	textureCoordinates[2].x = xn;
-	textureCoordinates[2].y = ysn;
-
-	textureCoordinates[3].x = xn;
-	textureCoordinates[3].y = yn;*/
-
-
-
-
-	/*double[] coordinates = {
-			xsn, yn,
-			xsn, ysn,
-			xn, ysn,
-			xn, yn,
-	};
-	return coordinates;*/
 }
 
 void TextureAtlas::calculateHPC() {

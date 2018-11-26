@@ -1,11 +1,8 @@
 #include "SComponent.h"
 
-
-
-SComponent::SComponent()
+SComponent::SComponent() : Component(Component::componentType::SComponentType)
 {
 }
-
 
 SComponent::~SComponent()
 {

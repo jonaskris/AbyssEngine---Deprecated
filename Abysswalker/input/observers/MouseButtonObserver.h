@@ -1,5 +1,6 @@
 #pragma once
 #include "MouseObserver.h"
+
 class MouseButtonObserver: public MouseObserver
 {
 public:

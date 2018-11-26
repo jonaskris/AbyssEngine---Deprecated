@@ -1,15 +1,12 @@
-#include <iostream>
+#include <vector>
 #include "Renderer.h"
+#include <GL/glew.h>
 #include "../Window.h"
 #include "../shaders/Program.h"
-#include "../../entities/components/gComponent/GSSComponent.h"
-#include <chrono>
-#include <vector>
-#include "../TextureAtlas.h"
 #include "SpriteRenderer.h"
+#include "../../math/mat4.h"
 
-
-Renderer::Renderer()	// The renderer must be created before any shader is created, as the renderer initializes glfw, which is used by Shader.h
+Renderer::Renderer()
 {
 	width = 1920 / 2;
 	height = 1080 / 2;

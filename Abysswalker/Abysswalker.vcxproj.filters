@@ -102,10 +102,10 @@
     <ClCompile Include="entities\components\gComponent\GSSComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\ImageResource.cpp">
+    <ClCompile Include="graphics\TextureAtlas.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\TextureAtlas.cpp">
+    <ClCompile Include="utils\lodepng\lodepng.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -209,13 +209,16 @@
     <ClInclude Include="entities\components\gComponent\GSSComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\ImageResource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="utils\ImageLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="graphics\TextureAtlas.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\lodepng\lodepng.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="entities\EntityFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

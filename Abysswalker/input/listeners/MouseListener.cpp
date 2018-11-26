@@ -4,27 +4,27 @@
 
 #define PRINTEVENTS 0
 
-void MouseListener::addObserver(MouseObserver& observer, MOUSELISTENER MOUSELISTENER)
+void MouseListener::addObserver(MouseObserver& observer, MouseListenerType type)
 {
-	if (!findObserver(observer, MOUSELISTENER)) { // Makes sure an observer is never represented more than once in the vector
-		observers[MOUSELISTENER].push_back(&observer);
+	if (!findObserver(observer, type)) { // Makes sure an observer is never represented more than once in the vector
+		observers[type].push_back(&observer);
 	}
 };
 
-void MouseListener::removeObserver(MouseObserver& observer, MOUSELISTENER MOUSELISTENER)
+void MouseListener::removeObserver(MouseObserver& observer, MouseListenerType type)
 {
-	for (size_t i = 0; i < observers[MOUSELISTENER].size(); i++) {
-		if (observers[MOUSELISTENER].at(i) == &observer) {
-			observers[MOUSELISTENER].erase(observers[MOUSELISTENER].begin() + i);
+	for (size_t i = 0; i < observers[type].size(); i++) {
+		if (observers[type].at(i) == &observer) {
+			observers[type].erase(observers[type].begin() + i);
 			return;
 		}
 	}
 };
 
-bool MouseListener::findObserver(MouseObserver& observer, MOUSELISTENER MOUSELISTENER)
+bool MouseListener::findObserver(MouseObserver& observer, MouseListenerType type)
 {
-	for (size_t i = 0; i < observers[MOUSELISTENER].size(); i++) {
-		if (observers[MOUSELISTENER].at(i) == &observer) {
+	for (size_t i = 0; i < observers[type].size(); i++) {
+		if (observers[type].at(i) == &observer) {
 			return true;
 		}
 	}
@@ -34,13 +34,13 @@ bool MouseListener::findObserver(MouseObserver& observer, MOUSELISTENER MOUSELIS
 int MouseListener::getObserversSize() {
 	int returnValue = 0;
 	for (size_t i = 0; i < observers->size(); i++) {
-		returnValue += getObserversSize(MOUSELISTENER(i));
+		returnValue += getObserversSize(MouseListenerType(i));
 	}
 	return returnValue;
 }
 
-int MouseListener::getObserversSize(MOUSELISTENER MOUSELISTENER) {
-	return observers[MOUSELISTENER].size();
+int MouseListener::getObserversSize(MouseListenerType type) {
+	return observers[type].size();
 }
 
 void MouseListener::mouse_position_callback(GLFWwindow* window, double xpos, double ypos)

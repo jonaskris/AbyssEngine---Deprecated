@@ -1,10 +1,9 @@
-#include "GSSComponent.h"
 #include <vector>
-#include "../../../math/vec2.h"
+#include "GSSComponent.h"
 
-GSSComponent::GSSComponent(PComponent* pComponent, TextureAtlas::Atlas atlas, unsigned short textureID)
+GSSComponent::GSSComponent(PComponent& pComponent, TextureAtlas::Atlas atlas, unsigned short textureID) : GComponent(GComponent::gComponentType::GSSComponentType)
 {
-	this->pComponent = pComponent;
+	this->pComponent = &pComponent;
 	this->textureID = textureID;
 	this->atlas = atlas;
 	updateUV();

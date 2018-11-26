@@ -1,15 +1,15 @@
 #pragma once
+#include <vector>
 #include "components/Component.h"
-#include "components/CComponent.h"
-#include "components/PComponent.h"
-#include "components/SComponent.h"
 #include "components/gComponent/GComponent.h"
 
 class Entity
 {
 private:
+	std::vector<Component*> components;
 public:
-	Entity();
+	Entity(std::vector<Component*>& components);
 	~Entity();
-};
 
+	std::vector<GComponent*> getGComponents();
+};

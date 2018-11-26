@@ -1,6 +1,6 @@
 #include "GTComponent.h"
 
-GTComponent::GTComponent()
+GTComponent::GTComponent() : GComponent(GComponent::gComponentType::GTComponentType)
 {
 }
 

@@ -1,6 +1,8 @@
+#include <iostream>
+#include <string>
+#include <vector>
 #include "Shader.h"
 #include "../../utils/FileUtils.h"
-#include <string>
 
 Shader* Shader::shaders[shaderPathsSize] = {};
 

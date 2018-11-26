@@ -19,7 +19,7 @@ void Scene::addEntity(Entity* e)
 
 void Scene::addEntities(std::vector<Entity*>& entities)
 {
-	for (int i = 0; i < entities.size(); i++) {
+	for (size_t i = 0; i < entities.size(); i++) {
 		addEntity(entities.back());
 		entities.pop_back();
 	}

@@ -1,5 +1,6 @@
 #include <iostream>
 #include "KeyboardListener.h"
+#include "../observers/KeyboardObserver.h"
 
 void KeyboardListener::addObserver(KeyboardObserver& observer)
 {
@@ -29,6 +30,7 @@ bool KeyboardListener::findObserver(KeyboardObserver& observer) {
 int KeyboardListener::getObserversSize() {
 	return observers.size();
 }
+
 void KeyboardListener::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	std::cout << "Key: " << key << ", scancode: " << scancode << ", action: " << action << ", mods: " << mods << std::endl;

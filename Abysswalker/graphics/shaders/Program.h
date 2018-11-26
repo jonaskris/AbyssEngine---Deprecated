@@ -1,13 +1,11 @@
 #pragma once
 #include <GL/glew.h>
-#include "Shader.h"
-#include "../../utils/FileUtils.h"
-#include "../../math/vec2.h"
-#include "../../math/vec3.h"
-#include "../../math/vec4.h"
-#include "../../math/mat4.h"
 #include <vector>
 
+struct mat4;
+struct vec4;
+struct vec3;
+struct vec2;
 
 class Program
 {

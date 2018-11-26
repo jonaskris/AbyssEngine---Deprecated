@@ -1,7 +1,6 @@
 #include "CComponent.h"
-#include <iostream>
 
-CComponent::CComponent(const float vertices[], const unsigned int& verticesLength, const unsigned short indices[], const unsigned int& indicesLength)
+CComponent::CComponent(const float vertices[], const unsigned int& verticesLength, const unsigned short indices[], const unsigned int& indicesLength) : Component(Component::componentType::CComponentType)
 {
 	this->verticesLength = verticesLength;
 	this->vertices = new float[verticesLength];
