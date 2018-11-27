@@ -1,12 +1,16 @@
 #include <vector>
 #include "GSSComponent.h"
 
-GSSComponent::GSSComponent(PComponent& pComponent, TextureAtlas::Atlas atlas, unsigned short textureID) : GComponent(GComponent::gComponentType::GSSComponentType)
+GSSComponent::GSSComponent(TextureAtlas::Atlas atlas, unsigned short textureID) : GComponent(GComponent::gComponentType::GSSComponentType)
 {
-	this->pComponent = &pComponent;
 	this->textureID = textureID;
 	this->atlas = atlas;
 	updateUV();
+}
+
+GSSComponent::GSSComponent(TextureAtlas::Atlas atlas, unsigned short textureID, vec2 scale) : GSSComponent(atlas, textureID)
+{
+	this->scale = scale;
 }
 
 void GSSComponent::updateUV()

@@ -1,5 +1,6 @@
 #pragma once
 #include "../Component.h"
+#include "../../Entity.h"
 
 class GSSComponent;
 class GTComponent;
@@ -17,8 +18,22 @@ public:
 	{
 		return type;
 	}
+
+	PComponent* getPositionComponent()
+	{
+		return pComponent;
+	}
+
 private:
 	friend class GSSComponent;
 	friend class GTComponent;
 	gComponentType type;
+
+	PComponent* pComponent;
+
+	friend void Entity::bindPComponentToGComponent(GComponent* gComponent);
+	void bindPComponent(PComponent* pComponent)
+	{
+		this->pComponent = pComponent;
+	}
 };

@@ -1,5 +1,6 @@
 #pragma once
 #include "GComponent.h"
+#include "../../Entity.h"
 #include "../../../graphics/TextureAtlas.h"
 #include "../../../math/vec4.h"
 #include "../../../math/vec3.h"
@@ -9,6 +10,10 @@ class PComponent;
 
 class GSSComponent : public GComponent
 {
+private:
+	unsigned short textureID;
+	TextureAtlas::Atlas atlas;
+	void updateUV();
 public:
 	struct VertexData {
 		vec3 vertex;
@@ -16,10 +21,11 @@ public:
 		vec2 uv;
 	};
 
-	GSSComponent(PComponent& pComponent, TextureAtlas::Atlas atlas, unsigned short textureID);
+	GSSComponent(TextureAtlas::Atlas atlas, unsigned short textureID);
+	GSSComponent(TextureAtlas::Atlas atlas, unsigned short textureID, vec2 scale);
 	vec3 position;
 	vec3 rotation;
-	vec2 scale;
+	vec2 scale = vec2(1.0f, 1.0f);
 	vec4 color[4]
 	{
 		vec4(1.0f, 1.0f, 1.0f, 1.0f),
@@ -32,10 +38,4 @@ public:
 
 	void setAtlas(TextureAtlas::Atlas atlas, unsigned short textureID);
 	void setTextureID(unsigned short textureID);
-private:
-	unsigned short textureID;
-	TextureAtlas::Atlas atlas;
-
-	void updateUV();
-	PComponent* pComponent;
 };

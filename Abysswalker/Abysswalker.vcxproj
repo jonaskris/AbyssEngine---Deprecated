@@ -128,6 +128,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="entities\Entity_Test.cpp" />
     <ClCompile Include="graphics\buffers\Buffer.cpp" />
     <ClCompile Include="entities\components\CComponent.cpp" />
     <ClCompile Include="entities\Entity.cpp" />
@@ -162,6 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="entities\EntityFactory.h" />
+    <ClInclude Include="entities\Entity_Test.h" />
     <ClInclude Include="graphics\buffers\Buffer.h" />
     <ClInclude Include="entities\components\CComponent.h" />
     <ClInclude Include="entities\components\Component.h" />

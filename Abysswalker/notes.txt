@@ -1,5 +1,8 @@
-Code:
-
+		1. Make sure math structs has proper = operator overload
+		
+		
+		
+		
 		GLfloat vertices[] =
 		{
 			4.0f,  4.5f / 2.0f, 0,		// Bottom right

@@ -5,6 +5,20 @@
 #include "../shaders/Program.h"
 #include "SpriteRenderer.h"
 #include "../../math/mat4.h"
+#include "../../entities/Entity.h"
+
+Renderer* Renderer::instance;
+
+Renderer* Renderer::getInstance() 
+{
+	if (!instance)
+	{
+		std::cout << "Initialized Renderer singleton!" << std::endl;
+		instance = new Renderer();
+		return instance;
+	}
+	return instance;
+}
 
 Renderer::Renderer()
 {
@@ -22,7 +36,6 @@ Renderer::Renderer()
 
 	Program::loadPrograms();
 	TextureAtlas::loadAtlases();
-	SpriteRenderer::init();
 }
 
 Renderer::~Renderer()
@@ -34,10 +47,20 @@ bool Renderer::windowClosed() {
 	return window->closed();
 }
 
-void Renderer::render(std::vector<GSSComponent*>* gssComponents)
+void Renderer::render(std::vector<Entity*>& entities)
 {
 	window->clear();
-	SpriteRenderer::render(gssComponents, mat4::identity(), Program::getProgram(Program::SPRITE));
+	std::vector<GSSComponent*> components;
+	for (size_t i = 0; i < entities.size(); i++) 
+	{
+		std::vector<GComponent*> GComponents = entities.at(i)->getGComponents();
+		for (size_t j = 0; j < GComponents.size(); j++) 
+		{
+			components.push_back((GSSComponent*)GComponents.at(j));
+		}
+	}
+
+	SpriteRenderer::getInstance()->render(components, mat4::identity());
 	window->update();
 }
 

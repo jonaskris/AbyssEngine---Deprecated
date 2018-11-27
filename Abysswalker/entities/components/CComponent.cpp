@@ -4,13 +4,13 @@ CComponent::CComponent(const float vertices[], const unsigned int& verticesLengt
 {
 	this->verticesLength = verticesLength;
 	this->vertices = new float[verticesLength];
-	for (int i = 0; i < verticesLength; i++) {
+	for (size_t i = 0; i < verticesLength; i++) {
 		this->vertices[i] = vertices[i];
 	}
 
 	this->indicesLength = indicesLength;
 	this->indices = new float[indicesLength];
-	for (int i = 0; i < indicesLength; i++) {
+	for (size_t i = 0; i < indicesLength; i++) {
 		this->indices[i] = indices[i];
 	}
 }
@@ -19,4 +19,9 @@ CComponent::~CComponent()
 {
 	delete[] vertices;
 	delete[] indices;
+}
+
+void CComponent::bindPComponent(PComponent* pComponent)
+{
+	this->pComponent = pComponent;
 }
