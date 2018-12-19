@@ -57,6 +57,8 @@ void Camera::calculateLookat()
 
 	cameraPos = (lookatPos - cameraPos) * zoom + cameraPos;
 
+	cameraPos.x += tilt;
+
  	lookatMat = mat4::LookAt(cameraPos, lookatPos, vec3(0.0f, 1.0f, 0.0f));
 }
 
@@ -85,6 +87,8 @@ vec3 Camera::getCameraPos()
 		cameraPos = *(this->cameraPos);
 	}
 
+	cameraPos.x += tilt;
+
 	return cameraPos;
 }
 
@@ -105,4 +109,5 @@ vec3 Camera::getLookatPos()
 void Camera::notifyMouseScrollEvent(const double& xoffset, const double& yoffset)
 {
 	zoom += (float)(yoffset / 10.0f);
+	tilt += (float)(xoffset);
 }

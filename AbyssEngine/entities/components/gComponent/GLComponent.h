@@ -13,6 +13,8 @@ class GLComponent : public GComponent
 public:
 	GLComponent();
 	GLComponent(const vec3& vertex1, const vec3& vertex2);
+	GLComponent(const vec3& vertex1, const vec3& vertex2, const vec4& color);
+	GLComponent(const vec3& vertex1, const vec3& vertex2, const vec4& color1, const vec4& color2);
 
 	struct VertexData {
 		vec3 vertex;

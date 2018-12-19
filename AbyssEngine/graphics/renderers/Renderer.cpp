@@ -112,7 +112,6 @@ void Renderer::render(std::vector<Scene*>& scenes)
 		for (GComponent* component : components[GComponent::gComponentType::GLComponentType]) { glComponents.push_back((GLComponent*)component); }
 
 		Camera* camera = scenes.at(i)->getCamera();
-		GComponent* player = components[GComponent::gComponentType::GSSComponentType].at(100);
 		SpriteRenderer::getInstance()->render(gssComponents, mat4::perspective(90.0f, width/(float)height, 1.0f, 4.0f), camera->getLookatMat());
 		LineRenderer::getInstance()->render(glComponents, mat4::perspective(90.0f, width / (float)height, 1.0f, 4.0f), camera->getLookatMat());
 	}

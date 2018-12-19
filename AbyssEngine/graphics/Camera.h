@@ -15,6 +15,7 @@ private:
 	PComponent* target;									// Used when camera is to follow a target, aka when lookatPos is null.
 
 	float zoom = 0;
+	float tilt = 0;
 
 	mat4 lookatMat;
 

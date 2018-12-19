@@ -9,6 +9,14 @@ class PComponent;
 class GComponent;
 class GLComponent;
 
+struct CollisionObject
+{
+public:
+	enum collisionTypes { NONE, COLLIDING, ENCLOSED, ENVELOPING };
+private:
+	collisionTypes collisionType;
+};
+
 class CComponent: public Component
 {
 public:
@@ -18,20 +26,15 @@ public:
 	ENCLOSED: A specific case of COLLIDING, where this is completely enclosed by other object, 
 	ENVELOPING: A specific case of COLLIDING, where this is completely enveloping other object.
 	*/
-	enum collisionTypes{ NONE, COLLIDING, ENCLOSED, ENVELOPING }; 
 
 	CComponent(Shape::shape shape, vec3 scale);
 
-	union {
-		float* vertices;
-		vec3* vecVertices;
-	};
-	unsigned int verticesLength;
+	std::vector<vec3> vertices;
 
-	unsigned int* indices;
-	unsigned int indicesLength;
+	std::vector<unsigned int> indices;
 
 	std::vector<GLComponent*> getGLComponents();
+	void collided(CComponent* other);
 
 private:
 	PComponent* pComponent;

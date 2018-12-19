@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-#include "Math.h"
+#include "mathUtils.h"
 #include "vec3.h"
 #include "vec4.h"
 

@@ -52,10 +52,8 @@ void LineRenderer::render(const std::vector<GLComponent*>& components, const mat
 	glUseProgram(program->getProgramID());
 	glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, &pr_matrix.elements[0]);
 	glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &vw_matrix.elements[0]);
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
+	glPointSize(3.0f);
 
 	unsigned int toRender = components.size();
 	unsigned int progress = 0;
@@ -72,17 +70,30 @@ void LineRenderer::render(const std::vector<GLComponent*>& components, const mat
 
 		for (size_t i = renderFrom; i < renderTo; i++)
 		{
-			VERTEX_DATA[i * 2].vertex = components.at(i)->vertices[0] + components.at(i)->getPositionComponent()->position;
-			VERTEX_DATA[i * 2].color = components.at(i)->colors[0];
-			VERTEX_DATA[i * 2 + 1].vertex = components.at(i)->vertices[1] + components.at(i)->getPositionComponent()->position;
-			VERTEX_DATA[i * 2 + 1].color = components.at(i)->colors[1];
+			if (components.at(i)->getPositionComponent() != NULL)
+			{
+				VERTEX_DATA[i * 2].vertex = components.at(i)->vertices[0] + components.at(i)->getPositionComponent()->position;
+				VERTEX_DATA[i * 2].color = components.at(i)->colors[0];
+				VERTEX_DATA[i * 2 + 1].vertex = components.at(i)->vertices[1] + components.at(i)->getPositionComponent()->position;
+				VERTEX_DATA[i * 2 + 1].color = components.at(i)->colors[1];
+			} else {
+				VERTEX_DATA[i * 2].vertex = components.at(i)->vertices[0];
+				VERTEX_DATA[i * 2].color = components.at(i)->colors[0];
+				VERTEX_DATA[i * 2 + 1].vertex = components.at(i)->vertices[1];
+				VERTEX_DATA[i * 2 + 1].color = components.at(i)->colors[1];
+			}
 		}
 
+		glBindVertexArray(VAO);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER, LR_RENDERER_LINE_SIZE * (renderTo - renderFrom), VERTEX_DATA, GL_STATIC_DRAW);
+
 
 		IBO_COUNT = (renderTo - renderFrom) * 2;
 
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
 		glDrawElements(GL_LINES, IBO_COUNT, GL_UNSIGNED_INT, NULL);
+		//glDrawArrays(GL_LINES, renderFrom, renderTo - renderFrom);
 
 		toRender -= (renderTo - renderFrom);
 		progress += (renderTo - renderFrom);

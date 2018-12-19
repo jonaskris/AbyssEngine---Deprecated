@@ -191,9 +191,6 @@
     <ClInclude Include="math\vec4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="math\Math.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="math\mat4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -261,6 +258,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="math\geometry\Shape.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="math\sets\Set.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="math\sets\Map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="math\mathUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-#include "Math.h"
+#include "mathUtils.h"
 #include "vec2.h"
 #include "vec3.h"
 
@@ -21,7 +21,7 @@ struct mat3
 	friend mat3 operator*(const mat3& left, const mat3& right);
 	mat3& operator*=(const mat3& other);
 
-	vec3& multiply(const vec3& vector) const;
+	vec3 multiply(const vec3& vector) const;
 	friend vec3 operator*(const mat3& left, const vec3& vector);
 
 	static mat3 translation(const vec2& translation);

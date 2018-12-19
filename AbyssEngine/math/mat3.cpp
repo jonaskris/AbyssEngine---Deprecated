@@ -32,7 +32,7 @@ mat3& mat3::multiply(const mat3& other)
 	return *this;
 }
 
-vec3& mat3::multiply(const vec3& vector) const
+vec3 mat3::multiply(const vec3& vector) const
 {
 	vec3 returnVector;
 
