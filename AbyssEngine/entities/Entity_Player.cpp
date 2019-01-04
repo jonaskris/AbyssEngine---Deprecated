@@ -1,11 +1,11 @@
-#include <vector>
 #include "Entity_Player.h"
-#include "components/Component.h"
-#include "components/PComponent.h"
+#include "interaction/Event.h"
+#include "../math/mathUtils.h"
+#include "../math/vec2.h"
 
 Entity_Player::Entity_Player(std::vector<Component*> components) : Entity(components)
 {
-
+	eventToBehaviourMap.addConnection(Event::types::PRESSDIRECTION, Behaviour::types::MOVE, false);
 }
 
 Entity_Player::~Entity_Player()
@@ -13,63 +13,39 @@ Entity_Player::~Entity_Player()
 
 }
 
-void Entity_Player::update()
+void Entity_Player::notifyKeyEvent(std::vector<KeyboardListener::KeyPress> keyPresses)
 {
-	if (wasdPressed[0])
-	{
-		this->pComponent->velocity.y = speed;
-	} else if (wasdPressed[2]) {
-		this->pComponent->velocity.y = -speed;
-	} else {
-		this->pComponent->velocity.y = 0.0f;
-	}
 
-	if (wasdPressed[3])
-	{
-		this->pComponent->velocity.x = speed;
-	} else if (wasdPressed[1]) {
-		this->pComponent->velocity.x = -speed;
-	} else {
-		this->pComponent->velocity.x = 0.0f;
-	}
+	vec3 directionVector(0.0f, 0.0f, 0.0f);
+	unsigned int direction[] = { 0, 0, 0, 0 };
 
-	this->pComponent->update();
-}
+	for (size_t i = 0; i < keyPresses.size(); i++)
+		if (keyPresses.at(i).action == KeyboardListener::Action::PRESSED || keyPresses.at(i).action == KeyboardListener::Action::HELD)
+			switch (keyPresses.at(i).key)
+			{
+			case KeyBindings::Key::MOVE_UP:		// W
+				directionVector += vec2(0.0f, 1.0f);
+				direction[0]++;
+				break;
+			case KeyBindings::Key::MOVE_LEFT:	// A
+				directionVector += vec2(-1.0f, 0.0f);
+				direction[1]++;
+				break;
+			case KeyBindings::Key::MOVE_DOWN:	// S
+				directionVector += vec2(0.0f, -1.0f);
+				direction[2]++;
+				break;
+			case KeyBindings::Key::MOVE_RIGHT:	// D
+				directionVector += vec2(1.0f, 0.0f);
+				direction[3]++;
+				break;
+			}
 
-void Entity_Player::notifyKeyEvent(const int& key, const int& scancode, const int& action, const int& mods)
-{
-	switch (scancode)
-	{
-	case 17:	 // W
-		if (action == 1) {
-			wasdPressed[0] = true;
-		} else if (action == 0) {
-			wasdPressed[0] = false;
-		}
-		break;
-	case 30:	 // A
-		if (action == 1) {
-			wasdPressed[1] = true;
-		}
-		else if (action == 0) {
-			wasdPressed[1] = false;
-		}
-		break;
-	case 31:	 // S
-		if (action == 1) {
-			wasdPressed[2] = true;
-		}
-		else if(action == 0) {
-			wasdPressed[2] = false;
-		}
-		break;
-	case 32:	 // D
-		if (action == 1) {
-			wasdPressed[3] = true;
-		}
-		else if (action == 0) {
-			wasdPressed[3] = false;
-		}
-		break;
+	bool valid = direction[0] != direction[2] || direction[1] != direction[3];
+
+	if(valid){
+		directionVector.normalize();
+		float angle = atan2(directionVector.y, directionVector.x);
+		asyncEvents.push_back(new FloatEvent(Event::types::PRESSDIRECTION, angle));
 	}
 }

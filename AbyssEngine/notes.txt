@@ -1,4 +1,5 @@
 		1. Make sure math structs has proper = operator overload
+		2. Might need mutex for preUpdate in entity when clearing so that events arent lost between swapping buffers and clearing buffer.
 		
 		
 		

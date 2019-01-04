@@ -7,5 +7,6 @@ public:
 	Entity_Ground(std::vector<Component*>& components);
 	~Entity_Ground();
 
-	void update(){}
+	void preUpdate() {}
+	void update(float deltaTime) {}
 };

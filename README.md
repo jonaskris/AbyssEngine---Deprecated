@@ -1,5 +1,6 @@
-# Abysswalker
-A game about a young hero taking on the abyss, to find out what mysteries rest at the bottom. 
+# AbyssEngine
+
+To be used for upcoming game AbyssWalker.
 
 Written in C++ with OpenGL.
 The purpose of the project is to gain experience with creating a fully fleshed out

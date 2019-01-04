@@ -8,6 +8,10 @@
 #include "components/PComponent.h"
 #include "components/SComponent.h"
 
+#include "interaction/Event.h"
+#include "interaction/behaviours/Behaviour.h"
+#include "interaction/Action.h"
+
 Entity::Entity(std::vector<Component*>& components) 
 {
 	for (size_t i = 0; i < components.size(); i++) {
@@ -47,6 +51,55 @@ Entity::Entity(std::vector<Component*>& components)
 Entity::~Entity()
 {
 
+}
+
+void Entity::preUpdate()
+{
+	// Insert events from asynchronous sources
+	events.insert(events.end(), asyncEvents.begin(), asyncEvents.end());
+	asyncEvents.clear();
+
+	// Create behaviors from events
+	std::list<Behaviour*> newBehaviours = eventToBehaviourMap.map(events);
+	behaviours.insert(behaviours.end(), newBehaviours.begin(), newBehaviours.end());
+
+	// Delete every event
+	std::list<Event*>::iterator eventsIterator;
+	for (eventsIterator = events.begin(); eventsIterator != events.end(); eventsIterator++)
+	{
+		delete *eventsIterator;
+	}
+	events.clear();
+}
+
+void Entity::update(float deltaTime)
+{
+	// Update behaviors and delete behaviours that are finished
+	std::list<Behaviour*>::iterator behavioursIterator;
+	for (behavioursIterator = behaviours.begin(); behavioursIterator != behaviours.end(); )
+	{
+		std::list<Action*> newActions = (*behavioursIterator)->update(deltaTime);
+		actions.insert(actions.begin(), newActions.begin(), newActions.end());
+
+		if ((*behavioursIterator)->behaviourFinished()) {
+			delete (*behavioursIterator);
+			behavioursIterator = behaviours.erase(behavioursIterator);
+		}
+		else
+		{
+			behavioursIterator++;
+		}
+	}
+
+	// Execute and delete every action
+	std::list<Action*>::iterator actionsIterator;
+	for (actionsIterator = actions.end(); actionsIterator != actions.begin(); )
+	{
+		actionsIterator--;
+		(*actionsIterator)->executeOn(this);
+		delete (*actionsIterator);
+	}
+	actions.clear();
 }
 
 void Entity::bindPComponent()

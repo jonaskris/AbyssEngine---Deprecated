@@ -21,9 +21,6 @@
     <ClCompile Include="entities\Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="entities\components\CComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="entities\components\PComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -129,6 +126,18 @@
     <ClCompile Include="math\geometry\Shape.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="entities\components\CComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="entities\interaction\Action.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="entities\interaction\behaviours\BehaviourMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="config\ConfigReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="scenes\Scene.h">
@@ -138,9 +147,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="entities\components\Component.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="entities\components\CComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="entities\components\PComponent.h">
@@ -269,12 +275,40 @@
     <ClInclude Include="math\mathUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="entities\components\CComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="entities\interaction\Event.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="entities\interaction\Action.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="entities\interaction\behaviours\Behaviour.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="entities\interaction\behaviours\BehaviourFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="entities\interaction\behaviours\BehaviourMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="config\ConfigReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="config\ConfigToken.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="input\Keybindings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="graphics\shaders\sprite.frag" />
     <None Include="graphics\shaders\sprite.vert" />
     <None Include="graphics\shaders\line.frag" />
     <None Include="graphics\shaders\line.vert" />
+    <None Include="TestConfig.ini" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />

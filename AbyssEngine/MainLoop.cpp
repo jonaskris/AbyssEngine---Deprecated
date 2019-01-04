@@ -2,6 +2,7 @@
 #include <vector>
 #include <math.h>
 #include <chrono>
+#include <map>
 #include <thread>
 #include "graphics/renderers/Renderer.h"
 #include "graphics/TextureAtlas.h"
@@ -14,6 +15,8 @@
 #include "scenes/WorldScene.h"
 #include "math/sets/Set.h"
 #include "math/sets/Map.h"
+#include "config/ConfigReader.h"
+#include "config/ConfigToken.h"
 
 
 int main() 
@@ -29,32 +32,11 @@ int main()
 	{
 		for (size_t i = 0; i < scenes.size(); i++)
 		{
-			scenes.at(i)->update();
+			KeyboardListener::update();
+
+			scenes.at(i)->update(1.0f);
 		}
 		renderer->render(scenes);
-		// std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		//std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}
-
-	/*std::vector<int> a;
-	a.push_back(0);
-	a.push_back(1);
-	a.push_back(2);
-	Set<int> sa(a);
-
-	std::vector<int> b;
-	b.push_back(7);
-	b.push_back(8);
-	b.push_back(9);
-	Set<int> sb(b);
-
-	math::Map<int, int> map;
-	map.addConnection(0, 4);
-	map.addConnection(1, 8);
-	map.addConnection(2, 2);
-
-	Set<int> result = map.map(sa);
-	
-	result.printout();
-
-	system("PAUSE");*/
 }

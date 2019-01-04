@@ -19,5 +19,5 @@ public:
 
 	std::vector<Entity*>& getEntities();
 	Camera* getCamera();
-	virtual void update() = 0;
+	virtual void update(float deltaTime) = 0;
 };

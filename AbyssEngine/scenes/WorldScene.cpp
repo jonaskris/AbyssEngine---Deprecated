@@ -55,7 +55,7 @@ void WorldScene::generateScene()
 }
 
 
-void WorldScene::update()
+void WorldScene::update(float deltaTime)
 {
 	/*std::vector<CComponent*> cComponents;
 	
@@ -76,6 +76,11 @@ void WorldScene::update()
 
 	for (size_t i = 0; i < entities.size(); i++)
 	{
-		entities.at(i)->update();
+		entities.at(i)->preUpdate();
+	}
+
+	for (size_t i = 0; i < entities.size(); i++)
+	{
+		entities.at(i)->update(deltaTime);
 	}
 }

@@ -14,7 +14,6 @@ CComponent::CComponent(Shape::shape shape, vec3 scale) : Component(Component::co
 	{
 		this->vertices[i] = this->vertices[i] * scale;
 	}
-
 }
 
 std::vector<GLComponent*> CComponent::getGLComponents()

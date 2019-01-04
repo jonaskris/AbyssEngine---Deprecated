@@ -1,16 +1,14 @@
 #pragma once
+#include <vector>
 #include "Entity.h"
+#include "../input/listeners/KeyboardListener.h"
 #include "../input/observers/KeyboardObserver.h"
 
-class Entity_Player : public Entity, KeyboardObserver
+class Entity_Player : public Entity, SimpleKeyboardObserver
 {
-private:
-	float speed = 1.0f;
-	bool wasdPressed[4] = {false, false, false, false};
 public:
 	Entity_Player(std::vector<Component*> components);
 	~Entity_Player();
 
-	void update();
-	void notifyKeyEvent(const int& key, const int& scancode, const int& action, const int& mods);
+	void notifyKeyEvent(std::vector<KeyboardListener::KeyPress> keyPresses);
 };

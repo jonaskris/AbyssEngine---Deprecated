@@ -10,3 +10,13 @@ KeyboardObserver::~KeyboardObserver()
 {
 	KeyboardListener::removeObserver(*this);
 }
+
+SimpleKeyboardObserver::SimpleKeyboardObserver()
+{
+	KeyboardListener::addObserver(*this);
+}
+
+SimpleKeyboardObserver::~SimpleKeyboardObserver()
+{
+	KeyboardListener::removeObserver(*this);
+}

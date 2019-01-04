@@ -145,9 +145,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="config\ConfigReader.cpp" />
     <ClCompile Include="entities\Entity_Ground.cpp" />
     <ClCompile Include="entities\Entity_Player.cpp" />
     <ClCompile Include="entities\components\gComponent\GLComponent.cpp" />
+    <ClCompile Include="entities\interaction\Action.cpp" />
+    <ClCompile Include="entities\interaction\behaviours\BehaviourMap.cpp" />
     <ClCompile Include="graphics\Camera.cpp" />
     <ClCompile Include="entities\Entity_Test.cpp" />
     <ClCompile Include="graphics\buffers\Buffer.cpp" />
@@ -185,9 +188,16 @@
     <ClCompile Include="utils\lodepng\lodepng.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="config\ConfigReader.h" />
+    <ClInclude Include="config\ConfigToken.h" />
+    <ClInclude Include="entities\interaction\behaviours\BehaviourFactory.h" />
     <ClInclude Include="entities\Entity_Ground.h" />
     <ClInclude Include="entities\Entity_Player.h" />
     <ClInclude Include="entities\components\gComponent\GLComponent.h" />
+    <ClInclude Include="entities\interaction\Action.h" />
+    <ClInclude Include="entities\interaction\behaviours\Behaviour.h" />
+    <ClInclude Include="entities\interaction\Event.h" />
+    <ClInclude Include="input\Keybindings.h" />
     <ClInclude Include="math\geometry\Shape.h" />
     <ClInclude Include="graphics\Camera.h" />
     <ClInclude Include="entities\EntityFactory.h" />
@@ -206,6 +216,7 @@
     <ClInclude Include="graphics\shaders\Shader.h" />
     <ClInclude Include="graphics\renderers\SpriteRenderer.h" />
     <ClInclude Include="graphics\TextureAtlas.h" />
+    <ClInclude Include="entities\interaction\behaviours\BehaviourMap.h" />
     <ClInclude Include="math\sets\Map.h" />
     <ClInclude Include="math\sets\Set.h" />
     <ClInclude Include="utils\FileUtils.h" />
@@ -233,6 +244,7 @@
     <ClInclude Include="utils\lodepng\lodepng.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="TestConfig.ini" />
     <None Include="graphics\shaders\line.frag" />
     <None Include="graphics\shaders\line.vert" />
     <None Include="graphics\shaders\sprite.frag" />

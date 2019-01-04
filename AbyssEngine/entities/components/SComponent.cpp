@@ -1,7 +1,8 @@
 #include "SComponent.h"
 
-SComponent::SComponent() : Component(Component::componentType::SComponentType)
+SComponent::SComponent(float maxHealth) : Component(Component::componentType::SComponentType)
 {
+	this->maxHealth = maxHealth;
 }
 
 SComponent::~SComponent()

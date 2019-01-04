@@ -9,14 +9,6 @@ class PComponent;
 class GComponent;
 class GLComponent;
 
-struct CollisionObject
-{
-public:
-	enum collisionTypes { NONE, COLLIDING, ENCLOSED, ENVELOPING };
-private:
-	collisionTypes collisionType;
-};
-
 class CComponent: public Component
 {
 public:
