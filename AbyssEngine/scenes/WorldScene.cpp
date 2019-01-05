@@ -22,7 +22,7 @@ WorldScene::~WorldScene()
 
 void WorldScene::generateScene()
 {
-	size_t count = 16;
+	size_t count = 1024;
 	size_t root = (size_t)sqrt(count); 
 	vec3 startPos(0.0f, 0.0f, 0.0f);
 	vec2 gScale(10.0f, 10.0f);
@@ -49,13 +49,11 @@ void WorldScene::generateScene()
 		}
 	}
 
-	
-
 	camera = new Camera(player->getPComponent(), vec3(0.0f, 0.0f, 20.0f));
 }
 
 
-void WorldScene::update(float deltaTime)
+void WorldScene::update(double deltaTime)
 {
 	/*std::vector<CComponent*> cComponents;
 	

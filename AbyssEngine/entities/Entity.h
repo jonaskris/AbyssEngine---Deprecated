@@ -24,7 +24,9 @@ public:
 	SComponent* getSComponent();
 
 	void preUpdate();					// Used for creating behaviours
-	void update(float deltaTime) ;		// Used for updating behaviour and executing actions
+	void update(double deltaTime);		// Used for updating behaviour and executing actions
+
+	void addAsyncEvent(Event* event);	// Used by behaviour or external sources to add events
 protected:
 	Entity(std::vector<Component*>& components);
 	void setPComponent(PComponent* pComponent);

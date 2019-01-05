@@ -28,15 +28,32 @@ int main()
 	std::vector<Scene*> scenes;
 	scenes.push_back((Scene*)scene);
 
+
+	// Renderloop
+
+	double target_fps = 0; // 0 is no cap
+	double target_time = (target_fps != 0) ? 1000000000 / target_fps : 0;
+
+	double deltaTime = 0.0;
+	double fps = 0.0;
+
 	while (!renderer->windowClosed()) 
 	{
-		for (size_t i = 0; i < scenes.size(); i++)
-		{
-			KeyboardListener::update();
+		auto start = std::chrono::high_resolution_clock::now();
 
-			scenes.at(i)->update(1.0f);
-		}
-		renderer->render(scenes);
-		//std::this_thread::sleep_for(std::chrono::milliseconds(100));
+			for (size_t i = 0; i < scenes.size(); i++)
+			{
+				KeyboardListener::update();
+				scenes.at(i)->update(deltaTime);
+			}
+			renderer->render(scenes);
+
+		auto finish = std::chrono::high_resolution_clock::now();
+		double timeTaken = (double)(std::chrono::duration_cast<std::chrono::nanoseconds>(finish - start).count());
+
+		deltaTime = timeTaken / (1000000000 / 1.0f);
+		fps = 1000000000 / timeTaken;
+		std::cout << fps << std::endl;
 	}
+	// Renderloop
 }

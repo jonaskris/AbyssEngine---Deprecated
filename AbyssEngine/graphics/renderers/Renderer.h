@@ -19,6 +19,4 @@ public:
 	~Renderer();
 	void render(std::vector<Scene*>& scenes);
 	bool windowClosed();
-	void clear(); // Temporary
-	void update(); // Temporary
 };

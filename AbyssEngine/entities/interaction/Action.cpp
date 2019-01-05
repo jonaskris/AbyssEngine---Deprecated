@@ -74,3 +74,21 @@ void VecAction::executeOn(Entity* entity)
 		break;
 	}
 }
+
+EventAction::EventAction(types type, Event* event) : Action(type)
+{
+	this->event = event;
+}
+
+void EventAction::executeOn(Entity* entity)
+{
+	switch (type)
+	{
+	case ADDEVENT:
+		entity->addAsyncEvent(event);
+		break;
+	default:
+		std::cout << "Could not execute action: " << type << ", as code for execution in Action.h is not written" << std::endl;
+		break;
+	}
+}

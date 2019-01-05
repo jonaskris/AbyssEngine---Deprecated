@@ -72,7 +72,7 @@ void Entity::preUpdate()
 	events.clear();
 }
 
-void Entity::update(float deltaTime)
+void Entity::update(double deltaTime)
 {
 	// Update behaviors and delete behaviours that are finished
 	std::list<Behaviour*>::iterator behavioursIterator;
@@ -164,4 +164,9 @@ PComponent* Entity::getPComponent()
 SComponent* Entity::getSComponent()
 {
 	return sComponent;
+}
+
+void Entity::addAsyncEvent(Event* event)
+{
+	asyncEvents.push_back(event);
 }

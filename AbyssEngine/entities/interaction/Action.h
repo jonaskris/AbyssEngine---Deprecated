@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include "../../math/vec3.h"
+#include "Event.h"
 
 class Entity;
 
@@ -12,7 +13,8 @@ struct Action
 												// Float
 		SETACCELERATION, CHANGEACCELERATION,	// Vec3
 		SETVELOCITY, CHANGEVELOCITY,
-		SETPOSITION, CHANGEPOSITION
+		SETPOSITION, CHANGEPOSITION,
+		ADDEVENT								// Event*
 	};
 
 	types type;
@@ -38,6 +40,15 @@ struct VecAction : public Action
 	vec3 vector;
 
 	VecAction(types type, vec3 vector);
+
+	void executeOn(Entity* entity);
+};
+
+struct EventAction : public Action
+{
+	Event* event;
+
+	EventAction(types type, Event* vector);
 
 	void executeOn(Entity* entity);
 };

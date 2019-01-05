@@ -5,7 +5,7 @@ struct Event
 {
 	enum types 
 	{ 
-		STUNNED, PRESSDASH,			// No data
+		STUNNED, PRESSDASH,	INDASH,	// No data
 		PRESSDIRECTION,				// Float
 	};
 	types type;

@@ -74,8 +74,6 @@ void Renderer::render(std::vector<Scene*>& scenes)
 
 		std::vector<GComponent*> components[GComponent::getComponentTypeCount()];
 
-
-
 		SceneCollisionBounds sceneCollisionBounds;
 		sceneCollisionBounds.camera = scenes.at(i)->getCamera();
 
@@ -96,7 +94,6 @@ void Renderer::render(std::vector<Scene*>& scenes)
 					std::vector<GLComponent*> cComponentsGLComponents = cComponents.at(k)->getGLComponents();
 					sceneCollisionBounds.lines.insert(sceneCollisionBounds.lines.end(), cComponentsGLComponents.begin(), cComponentsGLComponents.end());
 				}
-
 			}
 		}
 
@@ -125,13 +122,5 @@ void Renderer::render(std::vector<Scene*>& scenes)
 		}
 	}
 
-	window->update();
-}
-
-void Renderer::clear() { // Temporary
-	window->clear();
-}
-
-void Renderer::update() { // Temporary
 	window->update();
 }

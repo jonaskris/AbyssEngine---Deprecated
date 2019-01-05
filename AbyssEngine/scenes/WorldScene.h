@@ -16,6 +16,6 @@ public:
 	~WorldScene();
 	void generateScene();
 
-	void update(float deltaTime);
+	void update(double deltaTime);
 };
 

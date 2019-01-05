@@ -24,7 +24,7 @@ namespace BehaviourFactory
 			}
 
 			if (directionEvent != NULL)
-				return new Behaviour_MOVE(0.5f, directionEvent);
+				return new Behaviour_MOVE(80.0, directionEvent);
 
 			break;
 		case Behaviour::types::DASH:
@@ -36,9 +36,8 @@ namespace BehaviourFactory
 					break;
 				}
 			}
-			
 			if(directionEvent != NULL)
-				return new Behaviour_DASH(1.0f, 1.0f, directionEvent);
+				return new Behaviour_DASH(0.07, 300.0f, directionEvent);
 
 			break;
 		}

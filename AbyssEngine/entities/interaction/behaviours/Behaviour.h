@@ -11,14 +11,14 @@ struct Behaviour
 	};
 
 	types type;
-	float lifeTime;
-	Behaviour(types type, float lifeTime)
+	double lifeTime;
+	Behaviour(types type, double lifeTime)
 	{
 		this->type = type;
 		this->lifeTime = lifeTime;
 	}
 
-	virtual std::list<Action*> update(float deltaTime) = 0;
+	virtual std::list<Action*> update(double deltaTime) = 0;
 
 	bool behaviourFinished()
 	{
@@ -39,10 +39,10 @@ public:
 	}
 
 public:
-	std::list<Action*> update(float deltaTime)
+	std::list<Action*> update(double deltaTime)
 	{
 		std::list<Action*> returnList;
-		returnList.push_back(new VecAction(Action::types::CHANGEPOSITION, vec3(cos(angle) * speed * deltaTime, sin(angle) * speed * deltaTime, 0.0f)));
+		returnList.push_back(new VecAction(Action::types::CHANGEPOSITION, vec3(cos(angle) * speed * (float)deltaTime, sin(angle) * speed * (float)deltaTime, 0.0f)));
 
 		return returnList;
 	}
@@ -54,17 +54,20 @@ private:
 	float speed;
 	float angle;
 public:
-	Behaviour_DASH(float time, float speed, FloatEvent* PRESSDIRECTIONEVENT) : Behaviour(types::DASH, time)
+	Behaviour_DASH(double time, float speed, FloatEvent* PRESSDIRECTIONEVENT) : Behaviour(types::DASH, time)
 	{
 		this->speed = speed;
 		this->angle = PRESSDIRECTIONEVENT->scalar;
 	}
 
 public:
-	std::list<Action*> update(float deltaTime)
+	std::list<Action*> update(double deltaTime)
 	{
+		deltaTime = ((lifeTime < deltaTime) ? lifeTime : deltaTime);
+
 		std::list<Action*> returnList;
-		returnList.push_back(new VecAction(Action::types::CHANGEPOSITION, vec3(cos(angle) * speed * deltaTime, sin(angle) * speed * deltaTime, 0.0f)));
+		returnList.push_back(new VecAction(Action::types::CHANGEPOSITION, vec3(cos(angle) * speed * (float)deltaTime, sin(angle) * speed * (float)deltaTime, 0.0f)));
+		returnList.push_back(new EventAction(Action::types::ADDEVENT, new Event(Event::types::INDASH)));
 
 		lifeTime -= deltaTime;
 		return returnList;
