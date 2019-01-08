@@ -7,12 +7,12 @@
 
 #define SR_PROGRAM						Program::type::SPRITE
 
-#define SR_RENDERER_MAX_SPRITES			10000
-#define SR_RENDERER_VERTEX_SIZE			sizeof(GSSComponent::VertexData)
-#define SR_RENDERER_SPRITE_SIZE			SR_RENDERER_VERTEX_SIZE * 4
-#define SR_RENDERER_BUFFER_SIZE			SR_RENDERER_SPRITE_SIZE * SR_RENDERER_MAX_SPRITES
-#define SR_RENDERER_INDICES_LENGTH		SR_RENDERER_MAX_SPRITES * 6
-#define SR_RENDERER_INDICES_SIZE		SR_RENDERER_INDICES_LENGTH * sizeof(GLuint)
+#define SR_MAX_SPRITES					500
+#define SR_VERTEX_SIZE					sizeof(GSSComponent::VertexData)
+#define SR_SPRITE_SIZE					SR_VERTEX_SIZE * 4
+#define SR_BUFFER_SIZE					SR_SPRITE_SIZE * SR_MAX_SPRITES
+#define SR_INDICES_LENGTH				SR_MAX_SPRITES * 6
+#define SR_INDICES_SIZE					SR_INDICES_LENGTH * sizeof(GLuint)
 
 #define SR_SHADER_VERTEX_INDEX			0
 #define SR_SHADER_COLOR_INDEX			1
@@ -20,6 +20,7 @@
 
 struct mat4;
 class Program;
+class Camera;
 
 class SpriteRenderer
 {
@@ -33,10 +34,10 @@ private:
 	Program* program;
 
 	GLuint VAO, VBO, IBO;
-	GLuint projectionMatrixLocation, viewMatrixLocation, texLoc;
- 	GSSComponent::VertexData* VERTEX_DATA = new GSSComponent::VertexData[SR_RENDERER_BUFFER_SIZE];
-	GLuint* IBO_DATA = new GLuint[SR_RENDERER_INDICES_SIZE];	// RENDERER_INDICES_SIZE is max size of IBO_DATA
-	GLsizei IBO_COUNT = 0;										// IBO_COUNT is how much data is actually in IBO_DATA, used when drawing
+	GLuint viewMatrixLocation, texLoc;
+ 	GSSComponent::VertexData* VERTEX_DATA = new GSSComponent::VertexData[SR_INDICES_SIZE];
+	GLuint* IBO_DATA = new GLuint[SR_INDICES_SIZE];	// RENDERER_INDICES_SIZE is max size of IBO_DATA
+	GLsizei IBO_COUNT = 0;							// IBO_COUNT is how much data is actually in IBO_DATA, used when drawing
 public:
-	void render(const std::vector<GSSComponent*>& components, const mat4& pr_matrix, const mat4& vw_matrix);
+	void render(const std::vector<GSSComponent*>& components, Camera* camera);
 };

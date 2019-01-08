@@ -86,9 +86,10 @@ struct vec3
 	vec3 cross(const vec3& other) const;
 	float dot(const vec3& other) const;
 
-	float& magnitude() const;
-	vec3& normalize() const;
-	float& distance(const vec3& other) const;
+	float magnitude() const;
+	vec3 normalize() const;
+	float distance(const vec3& other) const;
+
 
 	friend std::ostream& operator<<(std::ostream& stream, const vec3& vector);
 };

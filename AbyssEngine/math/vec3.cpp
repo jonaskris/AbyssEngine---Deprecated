@@ -347,23 +347,23 @@ float vec3::dot(const vec3& other) const
 	return x * other.x + y * other.y + z * other.z;
 }
 
-float& vec3::magnitude() const
+float vec3::magnitude() const
 {
-	return *new float(sqrt(x * x + y * y + z * z));
+	return float(sqrt(x * x + y * y + z * z));
 }
 
-vec3& vec3::normalize() const
+vec3 vec3::normalize() const
 {
 	float length = magnitude();
-	return *new vec3(x / length, y / length, z / length);
+	return vec3(x / length, y / length, z / length);
 }
 
-float& vec3::distance(const vec3& other) const
+float vec3::distance(const vec3& other) const
 {
 	float a = x - other.x;
 	float b = y - other.y;
 	float c = z - other.z;
-	return *new float(sqrt(a * a + b * b + c * c));
+	return float(sqrt(a * a + b * b + c * c));
 }
 
 std::ostream& operator<<(std::ostream& stream, const vec3& vector)

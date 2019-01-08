@@ -30,7 +30,6 @@ int main()
 
 
 	// Renderloop
-
 	double target_fps = 0; // 0 is no cap
 	double target_time = (target_fps != 0) ? 1000000000 / target_fps : 0;
 

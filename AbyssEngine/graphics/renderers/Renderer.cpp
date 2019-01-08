@@ -14,6 +14,7 @@
 #include "../../entities/components/CComponent.h"
 
 #define DRAW_COLLISION_BOUNDS true 
+#define DRAW_VIEW_FRUSTUM false 
 
 Renderer* Renderer::instance;
 
@@ -68,20 +69,36 @@ void Renderer::render(std::vector<Scene*>& scenes)
 	};
 	std::vector<SceneCollisionBounds> collisionBounds;
 
+	int drewCount = 0;
+
 	for (size_t i = 0; i < scenes.size(); i++) 
 	{
+		Camera* camera = scenes.at(i)->getCamera();
+		if (camera == NULL)
+		{
+			std::cout << "Tried rendering scene, but it doesent have a camera!" << std::endl;
+			continue;
+		}
+
+		if (camera->getProjectionMatrix() == NULL)
+			camera->setProjectionMatrix(90.0f, width / (float)height, 1.0f, 4.0f);
+
+
 		std::vector<Entity*> sceneEntities = scenes.at(i)->getEntities();
 
 		std::vector<GComponent*> components[GComponent::getComponentTypeCount()];
 
 		SceneCollisionBounds sceneCollisionBounds;
 		sceneCollisionBounds.camera = scenes.at(i)->getCamera();
+		camera->beginFrustumCulling();
+		
 
 		for (size_t j = 0; j < sceneEntities.size(); j++)
 		{
 			std::vector<GComponent*> gComponents = sceneEntities.at(j)->getGComponents();
 			for (size_t h = 0; h < gComponents.size(); h++)
 			{
+				if(camera->inFrustum(gComponents.at(h)))
 				components[gComponents.at(h)->getType()].push_back(gComponents.at(h));
 			}
 
@@ -92,7 +109,12 @@ void Renderer::render(std::vector<Scene*>& scenes)
 				for (size_t k = 0; k < cComponents.size(); k++)
 				{
 					std::vector<GLComponent*> cComponentsGLComponents = cComponents.at(k)->getGLComponents();
-					sceneCollisionBounds.lines.insert(sceneCollisionBounds.lines.end(), cComponentsGLComponents.begin(), cComponentsGLComponents.end());
+
+					for (size_t f = 0; f < cComponentsGLComponents.size(); f++)
+					{
+						if (camera->inFrustum(cComponentsGLComponents.at(f)))
+							sceneCollisionBounds.lines.push_back(cComponentsGLComponents.at(f));
+					}
 				}
 			}
 		}
@@ -108,9 +130,17 @@ void Renderer::render(std::vector<Scene*>& scenes)
 		std::vector<GLComponent*> glComponents;
 		for (GComponent* component : components[GComponent::gComponentType::GLComponentType]) { glComponents.push_back((GLComponent*)component); }
 
-		Camera* camera = scenes.at(i)->getCamera();
-		SpriteRenderer::getInstance()->render(gssComponents, mat4::perspective(90.0f, width/(float)height, 1.0f, 4.0f), camera->getLookatMat());
-		LineRenderer::getInstance()->render(glComponents, mat4::perspective(90.0f, width / (float)height, 1.0f, 4.0f), camera->getLookatMat());
+		if(DRAW_VIEW_FRUSTUM)
+		{
+			glComponents.push_back(new GLComponent(camera->farBottomLeft, camera->farTopLeft));
+			glComponents.push_back(new GLComponent(camera->farTopLeft, camera->farTopRight));
+			glComponents.push_back(new GLComponent(camera->farTopRight, camera->farBottomRight));
+			glComponents.push_back(new GLComponent(camera->farBottomRight, camera->farBottomLeft));
+		}
+
+		drewCount += gssComponents.size() + glComponents.size();
+		SpriteRenderer::getInstance()->render(gssComponents, scenes.at(i)->getCamera());
+		LineRenderer::getInstance()->render(glComponents, scenes.at(i)->getCamera());
 	}
 
 	if (DRAW_COLLISION_BOUNDS)
@@ -118,9 +148,12 @@ void Renderer::render(std::vector<Scene*>& scenes)
 		glClear(GL_DEPTH_BUFFER_BIT);
 		for (size_t i = 0; i < collisionBounds.size(); i++)
 		{
-			LineRenderer::getInstance()->render(collisionBounds.at(i).lines, mat4::perspective(90.0f, width / (float)height, 1.0f, 4.0f), collisionBounds.at(i).camera->getLookatMat());
+			drewCount += collisionBounds.at(i).lines.size();
+			LineRenderer::getInstance()->render(collisionBounds.at(i).lines, collisionBounds.at(i).camera);
 		}
 	}
+
+	std::cout << "Drew " << drewCount << " GComponents." << std::endl;
 
 	window->update();
 }

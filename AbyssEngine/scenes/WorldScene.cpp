@@ -22,12 +22,11 @@ WorldScene::~WorldScene()
 
 void WorldScene::generateScene()
 {
-	size_t count = 1024;
+	size_t count = 64;
 	size_t root = (size_t)sqrt(count); 
 	vec3 startPos(0.0f, 0.0f, 0.0f);
 	vec2 gScale(10.0f, 10.0f);
 	vec3 cScale(10.0f, 10.0f, 1.0f);
-
 
 	std::vector<Component*> components;
 	components.push_back(new PComponent(vec3(0.0f, 0.0f, 0.01f)));

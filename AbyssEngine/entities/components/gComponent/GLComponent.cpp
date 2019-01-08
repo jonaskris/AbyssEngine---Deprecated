@@ -1,7 +1,9 @@
 #include "GLComponent.h"
+#include "../PComponent.h"
 
 GLComponent::GLComponent() : GComponent(GComponent::gComponentType::GLComponentType)
 {
+
 }
 
 GLComponent::GLComponent(const vec3& vertex1, const vec3& vertex2) : GLComponent()
@@ -20,4 +22,29 @@ GLComponent::GLComponent(const vec3& vertex1, const vec3& vertex2, const vec4& c
 {
 	this->colors[0] = color1;
 	this->colors[1] = color2;
+}
+
+GComponent::FrustumInfo GLComponent::getFrustumInfo()
+{
+	return FrustumInfo{ (vertices[0] - vertices[1]).magnitude() / 2.0f, (pComponent != NULL) ? ((vertices[0] + 0.5f * vertices[1]) + pComponent->position) : (vertices[0] + 0.5f * vertices[1]) };
+}
+
+void GLComponent::setVertex(short i, vec3 vertex)
+{
+	vertices[i] = vertex;
+}
+
+void GLComponent::setColor(short i, vec4 color)
+{
+	colors[i] = color;
+}
+
+vec3 GLComponent::getVertex(short i)
+{
+	return vertices[i];
+}
+
+vec4 GLComponent::getColor(short i)
+{
+	return colors[i];
 }

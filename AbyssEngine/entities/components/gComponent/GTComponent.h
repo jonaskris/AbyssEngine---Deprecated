@@ -6,5 +6,7 @@ class GTComponent: public GComponent
 public:
 	GTComponent();
 	~GTComponent();
+
+	FrustumInfo getFrustumInfo();
 };
 

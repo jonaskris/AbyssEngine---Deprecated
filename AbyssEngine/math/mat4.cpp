@@ -97,7 +97,7 @@ mat4 mat4::orthographic(float left, float right, float bottom, float top, float 
 	return returnMatrix;
 }
 
-mat4 mat4::perspective(float fov, float aspectRatio, float near, float far)
+mat4* mat4::perspective(float fov, float aspectRatio, float near, float far)
 {
 	mat4 returnMatrix = identity();
 	float q = 1.0f / tan(toRadians(0.5f * fov));
@@ -112,7 +112,7 @@ mat4 mat4::perspective(float fov, float aspectRatio, float near, float far)
 	returnMatrix.elements[2 + 3 * 4] = -1.0f;
 	returnMatrix.elements[3 + 2 * 4] = c;
 
-	return returnMatrix;
+	return new mat4(returnMatrix);
 }
 
 mat4 mat4::translate(const vec3& translation)
@@ -165,7 +165,7 @@ mat4 mat4::rotation(float angle, const vec3& axis)
 	return returnMatrix;
 }
 
-mat4 mat4::LookAt(const vec3& cameraPos, const vec3& lookAtPos, const vec3& up)
+mat4* mat4::LookAt(const vec3& cameraPos, const vec3& lookAtPos, const vec3& up)
 {
 	mat4 result = identity();
 	vec3 f = (lookAtPos - cameraPos).normalize();
@@ -184,5 +184,5 @@ mat4 mat4::LookAt(const vec3& cameraPos, const vec3& lookAtPos, const vec3& up)
 	result.elements[2 + 1 * 4] = -f.y;
 	result.elements[2 + 2 * 4] = -f.z;
 
-	return result * translate(vec3(-cameraPos.x, -cameraPos.y, -cameraPos.z));
+	return new mat4(result * translate(vec3(-cameraPos.x, -cameraPos.y, -cameraPos.z)));
 }

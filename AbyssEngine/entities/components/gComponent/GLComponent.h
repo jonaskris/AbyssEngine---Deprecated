@@ -21,6 +21,14 @@ public:
 		vec4 color;
 	};
 
+	void setVertex(short i, vec3 vertex);
+	void setColor(short i, vec4 color);
+	vec3 getVertex(short i);
+	vec4 getColor(short i);
+
+	FrustumInfo getFrustumInfo();
+private:
+
 	vec3 vertices[2] = { 
 		vec3(0.0f, 0.0f, 0.0f),
 		vec3(1.0f, 1.0f, 1.0f) 

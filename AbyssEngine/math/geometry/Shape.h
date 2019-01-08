@@ -5,9 +5,8 @@
 class Shape
 {
 public:
-	enum shape{ BOX, MAX };
+	enum shape{ BOX, RECTANGLE, MAX };
 
 	static std::vector<vec3> getVertices(Shape::shape shape);
 	static std::vector<unsigned int> getIndices(Shape::shape shape);
-
 };
