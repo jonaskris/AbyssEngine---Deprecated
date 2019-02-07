@@ -3,3 +3,9 @@ src/main/resources
 documents
 target
 Debug
+builds
+.ipch
+builds/intermediate
+docs/
+doc/
+.vs/

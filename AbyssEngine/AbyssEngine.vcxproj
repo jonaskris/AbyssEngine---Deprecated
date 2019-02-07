@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{1143589F-5540-412C-9002-CC6B3666DCC9}</ProjectGuid>
     <RootNamespace>AbyssEngine</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
     <ProjectName>AbyssEngine</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -71,40 +71,52 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Dependencies\FreeImage\lib;$(SolutionDir)Dependencies\GLFW\lib-vc2015;$(SolutionDir)Dependencies\GLEW\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)ext\freetype\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\FreeImage\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Dependencies\GLFW\lib-vc2015;$(SolutionDir)Dependencies\GLEW\lib;$(SolutionDir)Dependencies\FreeImage\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)builds\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)builds\intermediate\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Dependencies\FreeImage\lib;$(SolutionDir)Dependencies\GLFW\lib-vc2015;$(SolutionDir)Dependencies\GLEW\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)ext\freetype\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\FreeImage\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Dependencies\GLFW\lib-vc2015;$(SolutionDir)Dependencies\GLEW\lib;$(SolutionDir)Dependencies\FreeImage\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)builds\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)builds\intermediate\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\FreeImage\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Dependencies\GLEW\lib;$(SolutionDir)Dependencies\GLFW\lib-vc2015;$(SolutionDir)Dependencies\FreeImage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)ext\freetype\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\FreeImage\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Dependencies\GLFW\lib-vc2015;$(SolutionDir)Dependencies\GLEW\lib;$(SolutionDir)Dependencies\FreeImage\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)builds\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)builds\intermediate\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\FreeImage\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Dependencies\GLEW\lib;$(SolutionDir)Dependencies\GLFW\lib-vc2015;$(SolutionDir)Dependencies\FreeImage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)ext\freetype\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\FreeImage\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Dependencies\GLFW\lib-vc2015;$(SolutionDir)Dependencies\GLEW\lib;$(SolutionDir)Dependencies\FreeImage\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)builds\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)builds\intermediate\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;FT2_BUILD_LIBRARY;WIN32;_LIB;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;FT2_BUILD_LIBRARY;WIN32;_LIB;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
       <AdditionalDependencies>glew32s.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -117,14 +129,16 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;FT2_BUILD_LIBRARY;WIN32;_LIB;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -133,9 +147,11 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;FT2_BUILD_LIBRARY;WIN32;_LIB;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -145,110 +161,181 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="config\ConfigReader.cpp" />
-    <ClCompile Include="entities\Entity_Ground.cpp" />
-    <ClCompile Include="entities\Entity_Player.cpp" />
-    <ClCompile Include="entities\components\gComponent\GLComponent.cpp" />
-    <ClCompile Include="entities\interaction\Action.cpp" />
-    <ClCompile Include="entities\interaction\behaviours\BehaviourMap.cpp" />
-    <ClCompile Include="graphics\Camera.cpp" />
-    <ClCompile Include="entities\Entity_Test.cpp" />
-    <ClCompile Include="graphics\buffers\Buffer.cpp" />
-    <ClCompile Include="entities\components\CComponent.cpp" />
-    <ClCompile Include="entities\Entity.cpp" />
-    <ClCompile Include="entities\components\gComponent\GSSComponent.cpp" />
-    <ClCompile Include="entities\components\gComponent\GTComponent.cpp" />
-    <ClCompile Include="graphics\renderers\Renderer.cpp" />
-    <ClCompile Include="entities\components\PComponent.cpp" />
-    <ClCompile Include="graphics\shaders\Program.cpp" />
-    <ClCompile Include="graphics\buffers\IndexBuffer.cpp" />
-    <ClCompile Include="input\listeners\KeyboardListener.cpp" />
-    <ClCompile Include="input\observers\KeyboardObserver.cpp" />
-    <ClCompile Include="graphics\renderers\LineRenderer.cpp" />
-    <ClCompile Include="MainLoop.cpp" />
-    <ClCompile Include="input\listeners\MouseListener.cpp" />
-    <ClCompile Include="input\observers\MouseButtonObserver.cpp" />
-    <ClCompile Include="input\observers\MouseEnterObserver.cpp" />
-    <ClCompile Include="input\observers\MousePositionObserver.cpp" />
-    <ClCompile Include="input\observers\MouseScrollObserver.cpp" />
-    <ClCompile Include="math\geometry\Shape.cpp" />
-    <ClCompile Include="math\mat3.cpp" />
-    <ClCompile Include="math\mat4.cpp" />
-    <ClCompile Include="scenes\Scene.cpp" />
-    <ClCompile Include="entities\components\SComponent.cpp" />
-    <ClCompile Include="graphics\Window.cpp" />
-    <ClCompile Include="math\vec2.cpp" />
-    <ClCompile Include="math\vec3.cpp" />
-    <ClCompile Include="math\vec4.cpp" />
-    <ClCompile Include="graphics\buffers\VertexArray.cpp" />
-    <ClCompile Include="scenes\WorldScene.cpp" />
-    <ClCompile Include="graphics\shaders\Shader.cpp" />
-    <ClCompile Include="graphics\renderers\SpriteRenderer.cpp" />
-    <ClCompile Include="graphics\TextureAtlas.cpp" />
-    <ClCompile Include="utils\lodepng\lodepng.cpp" />
+    <ClCompile Include="ext\freetype-gl\platform.c" />
+    <ClCompile Include="ext\freetype-gl\texture-atlas.c" />
+    <ClCompile Include="ext\freetype-gl\texture-font.c" />
+    <ClCompile Include="ext\freetype-gl\vector.c" />
+    <ClCompile Include="ext\freetype\src\autofit\autofit.c" />
+    <ClCompile Include="ext\freetype\src\base\ftbase.c" />
+    <ClCompile Include="ext\freetype\src\base\ftbbox.c" />
+    <ClCompile Include="ext\freetype\src\base\ftbitmap.c" />
+    <ClCompile Include="ext\freetype\src\base\ftdebug.c" />
+    <ClCompile Include="ext\freetype\src\base\ftfstype.c" />
+    <ClCompile Include="ext\freetype\src\base\ftgasp.c" />
+    <ClCompile Include="ext\freetype\src\base\ftglyph.c" />
+    <ClCompile Include="ext\freetype\src\base\ftgxval.c" />
+    <ClCompile Include="ext\freetype\src\base\ftinit.c" />
+    <ClCompile Include="ext\freetype\src\base\ftlcdfil.c" />
+    <ClCompile Include="ext\freetype\src\base\ftmm.c" />
+    <ClCompile Include="ext\freetype\src\base\ftotval.c" />
+    <ClCompile Include="ext\freetype\src\base\ftpatent.c" />
+    <ClCompile Include="ext\freetype\src\base\ftpfr.c" />
+    <ClCompile Include="ext\freetype\src\base\ftstroke.c" />
+    <ClCompile Include="ext\freetype\src\base\ftsynth.c" />
+    <ClCompile Include="ext\freetype\src\base\ftsystem.c" />
+    <ClCompile Include="ext\freetype\src\base\fttype1.c" />
+    <ClCompile Include="ext\freetype\src\base\ftwinfnt.c" />
+    <ClCompile Include="ext\freetype\src\base\ftxf86.c" />
+    <ClCompile Include="ext\freetype\src\bdf\bdf.c" />
+    <ClCompile Include="ext\freetype\src\cache\ftcache.c" />
+    <ClCompile Include="ext\freetype\src\cff\cff.c" />
+    <ClCompile Include="ext\freetype\src\cid\type1cid.c" />
+    <ClCompile Include="ext\freetype\src\gzip\ftgzip.c" />
+    <ClCompile Include="ext\freetype\src\lzw\ftlzw.c" />
+    <ClCompile Include="ext\freetype\src\pcf\pcf.c" />
+    <ClCompile Include="ext\freetype\src\pfr\pfr.c" />
+    <ClCompile Include="ext\freetype\src\psaux\psaux.c" />
+    <ClCompile Include="ext\freetype\src\pshinter\pshinter.c" />
+    <ClCompile Include="ext\freetype\src\psnames\psmodule.c" />
+    <ClCompile Include="ext\freetype\src\raster\raster.c" />
+    <ClCompile Include="ext\freetype\src\sfnt\sfnt.c" />
+    <ClCompile Include="ext\freetype\src\smooth\smooth.c" />
+    <ClCompile Include="ext\freetype\src\truetype\truetype.c" />
+    <ClCompile Include="ext\freetype\src\type1\type1.c" />
+    <ClCompile Include="ext\freetype\src\type42\type42.c" />
+    <ClCompile Include="ext\freetype\src\winfonts\winfnt.c" />
+    <ClCompile Include="src\config\ConfigReader.cpp" />
+    <ClCompile Include="src\entities\Entity_Ground.cpp" />
+    <ClCompile Include="src\entities\Entity_Player.cpp" />
+    <ClCompile Include="src\entities\components\gComponent\GLComponent.cpp" />
+    <ClCompile Include="src\entities\interaction\Action.cpp" />
+    <ClCompile Include="src\entities\interaction\behaviours\BehaviourMap.cpp" />
+    <ClCompile Include="src\entities\components\gComponent\GPComponent.cpp" />
+    <ClCompile Include="src\graphics\Camera.cpp" />
+    <ClCompile Include="src\entities\Entity_Test.cpp" />
+    <ClCompile Include="src\graphics\buffers\Buffer.cpp" />
+    <ClCompile Include="src\entities\components\CComponent.cpp" />
+    <ClCompile Include="src\entities\Entity.cpp" />
+    <ClCompile Include="src\entities\components\gComponent\GSSComponent.cpp" />
+    <ClCompile Include="src\graphics\renderers\Renderer.cpp" />
+    <ClCompile Include="src\entities\components\PComponent.cpp" />
+    <ClCompile Include="src\graphics\shaders\Program.cpp" />
+    <ClCompile Include="src\graphics\buffers\IndexBuffer.cpp" />
+    <ClCompile Include="src\input\listeners\KeyboardListener.cpp" />
+    <ClCompile Include="src\input\observers\KeyboardObserver.cpp" />
+    <ClCompile Include="src\graphics\renderers\LineRenderer.cpp" />
+    <ClCompile Include="src\MainLoop.cpp" />
+    <ClCompile Include="src\input\listeners\MouseListener.cpp" />
+    <ClCompile Include="src\input\observers\MouseButtonObserver.cpp" />
+    <ClCompile Include="src\input\observers\MouseEnterObserver.cpp" />
+    <ClCompile Include="src\input\observers\MousePositionObserver.cpp" />
+    <ClCompile Include="src\input\observers\MouseScrollObserver.cpp" />
+    <ClCompile Include="src\math\geometry\Shape.cpp" />
+    <ClCompile Include="src\math\mat3.cpp" />
+    <ClCompile Include="src\math\mat4.cpp" />
+    <ClCompile Include="src\graphics\renderers\PointRenderer.cpp" />
+    <ClCompile Include="src\scenes\Scene.cpp" />
+    <ClCompile Include="src\entities\components\SComponent.cpp" />
+    <ClCompile Include="src\graphics\Window.cpp" />
+    <ClCompile Include="src\math\vec2.cpp" />
+    <ClCompile Include="src\math\vec3.cpp" />
+    <ClCompile Include="src\math\vec4.cpp" />
+    <ClCompile Include="src\graphics\buffers\VertexArray.cpp" />
+    <ClCompile Include="src\scenes\WorldScene.cpp" />
+    <ClCompile Include="src\graphics\shaders\Shader.cpp" />
+    <ClCompile Include="src\graphics\renderers\SpriteRenderer.cpp" />
+    <ClCompile Include="src\graphics\TextureAtlas.cpp" />
+    <ClCompile Include="src\utils\lodepng\lodepng.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="config\ConfigReader.h" />
-    <ClInclude Include="config\ConfigToken.h" />
-    <ClInclude Include="entities\interaction\behaviours\BehaviourFactory.h" />
-    <ClInclude Include="entities\Entity_Ground.h" />
-    <ClInclude Include="entities\Entity_Player.h" />
-    <ClInclude Include="entities\components\gComponent\GLComponent.h" />
-    <ClInclude Include="entities\interaction\Action.h" />
-    <ClInclude Include="entities\interaction\behaviours\Behaviour.h" />
-    <ClInclude Include="entities\interaction\Event.h" />
-    <ClInclude Include="input\Keybindings.h" />
-    <ClInclude Include="math\geometry\Shape.h" />
-    <ClInclude Include="graphics\Camera.h" />
-    <ClInclude Include="entities\EntityFactory.h" />
-    <ClInclude Include="entities\Entity_Test.h" />
-    <ClInclude Include="graphics\buffers\Buffer.h" />
-    <ClInclude Include="entities\components\CComponent.h" />
-    <ClInclude Include="entities\components\Component.h" />
-    <ClInclude Include="entities\Entity.h" />
-    <ClInclude Include="entities\components\gComponent\GComponent.h" />
-    <ClInclude Include="entities\components\gComponent\GSSComponent.h" />
-    <ClInclude Include="entities\components\gComponent\GTComponent.h" />
-    <ClInclude Include="graphics\shaders\Program.h" />
-    <ClInclude Include="graphics\buffers\IndexBuffer.h" />
-    <ClInclude Include="graphics\renderers\LineRenderer.h" />
-    <ClInclude Include="math\mat3.h" />
-    <ClInclude Include="graphics\shaders\Shader.h" />
-    <ClInclude Include="graphics\renderers\SpriteRenderer.h" />
-    <ClInclude Include="graphics\TextureAtlas.h" />
-    <ClInclude Include="entities\interaction\behaviours\BehaviourMap.h" />
-    <ClInclude Include="math\sets\Map.h" />
-    <ClInclude Include="math\sets\Set.h" />
-    <ClInclude Include="utils\FileUtils.h" />
-    <ClInclude Include="graphics\renderers\Renderer.h" />
-    <ClInclude Include="entities\components\PComponent.h" />
-    <ClInclude Include="input\listeners\KeyboardListener.h" />
-    <ClInclude Include="input\observers\KeyboardObserver.h" />
-    <ClInclude Include="input\listeners\MouseListener.h" />
-    <ClInclude Include="input\observers\MouseObserver.h" />
-    <ClInclude Include="input\observers\MouseButtonObserver.h" />
-    <ClInclude Include="input\observers\MouseEnterObserver.h" />
-    <ClInclude Include="input\observers\MousePositionObserver.h" />
-    <ClInclude Include="input\observers\MouseScrollObserver.h" />
-    <ClInclude Include="math\mat4.h" />
-    <ClInclude Include="math\mathUtils.h" />
-    <ClInclude Include="scenes\Scene.h" />
-    <ClInclude Include="entities\components\SComponent.h" />
-    <ClInclude Include="graphics\Window.h" />
-    <ClInclude Include="math\vec2.h" />
-    <ClInclude Include="math\vec3.h" />
-    <ClInclude Include="math\vec4.h" />
-    <ClInclude Include="graphics\buffers\VertexArray.h" />
-    <ClInclude Include="scenes\WorldScene.h" />
-    <ClInclude Include="utils\ImageLoader.h" />
-    <ClInclude Include="utils\lodepng\lodepng.h" />
+    <ClInclude Include="ext\freetype-gl\freetype-gl.h" />
+    <ClInclude Include="ext\freetype-gl\opengl.h" />
+    <ClInclude Include="ext\freetype-gl\platform.h" />
+    <ClInclude Include="ext\freetype-gl\texture-atlas.h" />
+    <ClInclude Include="ext\freetype-gl\texture-font.h" />
+    <ClInclude Include="ext\freetype-gl\vec234.h" />
+    <ClInclude Include="ext\freetype-gl\vector.h" />
+    <ClInclude Include="ext\freetype\include\config\ftconfig.h" />
+    <ClInclude Include="ext\freetype\include\config\ftheader.h" />
+    <ClInclude Include="ext\freetype\include\config\ftmodule.h" />
+    <ClInclude Include="ext\freetype\include\config\ftoption.h" />
+    <ClInclude Include="ext\freetype\include\config\ftstdlib.h" />
+    <ClInclude Include="ext\freetype\include\ft2build.h" />
+    <ClInclude Include="src\config\ConfigReader.h" />
+    <ClInclude Include="src\config\ConfigToken.h" />
+    <ClInclude Include="src\entities\interaction\behaviours\BehaviourFactory.h" />
+    <ClInclude Include="src\entities\Entity_Ground.h" />
+    <ClInclude Include="src\entities\Entity_Player.h" />
+    <ClInclude Include="src\entities\components\gComponent\GLComponent.h" />
+    <ClInclude Include="src\entities\interaction\Action.h" />
+    <ClInclude Include="src\entities\interaction\behaviours\Behaviour.h" />
+    <ClInclude Include="src\entities\interaction\Event.h" />
+    <ClInclude Include="src\entities\components\gComponent\GPComponent.h" />
+    <ClInclude Include="src\input\Keybindings.h" />
+    <ClInclude Include="src\math\geometry\Shape.h" />
+    <ClInclude Include="src\graphics\Camera.h" />
+    <ClInclude Include="src\entities\EntityFactory.h" />
+    <ClInclude Include="src\entities\Entity_Test.h" />
+    <ClInclude Include="src\graphics\buffers\Buffer.h" />
+    <ClInclude Include="src\entities\components\CComponent.h" />
+    <ClInclude Include="src\entities\components\Component.h" />
+    <ClInclude Include="src\entities\Entity.h" />
+    <ClInclude Include="src\entities\components\gComponent\GComponent.h" />
+    <ClInclude Include="src\entities\components\gComponent\GSSComponent.h" />
+    <ClInclude Include="src\graphics\shaders\Program.h" />
+    <ClInclude Include="src\graphics\buffers\IndexBuffer.h" />
+    <ClInclude Include="src\graphics\renderers\LineRenderer.h" />
+    <ClInclude Include="src\math\mat3.h" />
+    <ClInclude Include="src\graphics\shaders\Shader.h" />
+    <ClInclude Include="src\graphics\renderers\SpriteRenderer.h" />
+    <ClInclude Include="src\graphics\TextureAtlas.h" />
+    <ClInclude Include="src\entities\interaction\behaviours\BehaviourMap.h" />
+    <ClInclude Include="src\math\sets\Map.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="src\math\sets\Set.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="src\graphics\renderers\PointRenderer.h" />
+    <ClInclude Include="src\utils\DirUtils.h" />
+    <ClInclude Include="src\utils\FileUtils.h" />
+    <ClInclude Include="src\graphics\renderers\Renderer.h" />
+    <ClInclude Include="src\entities\components\PComponent.h" />
+    <ClInclude Include="src\input\listeners\KeyboardListener.h" />
+    <ClInclude Include="src\input\observers\KeyboardObserver.h" />
+    <ClInclude Include="src\input\listeners\MouseListener.h" />
+    <ClInclude Include="src\input\observers\MouseObserver.h" />
+    <ClInclude Include="src\input\observers\MouseButtonObserver.h" />
+    <ClInclude Include="src\input\observers\MouseEnterObserver.h" />
+    <ClInclude Include="src\input\observers\MousePositionObserver.h" />
+    <ClInclude Include="src\input\observers\MouseScrollObserver.h" />
+    <ClInclude Include="src\math\mat4.h" />
+    <ClInclude Include="src\math\mathUtils.h" />
+    <ClInclude Include="src\scenes\Scene.h" />
+    <ClInclude Include="src\entities\components\SComponent.h" />
+    <ClInclude Include="src\graphics\Window.h" />
+    <ClInclude Include="src\math\vec2.h" />
+    <ClInclude Include="src\math\vec3.h" />
+    <ClInclude Include="src\math\vec4.h" />
+    <ClInclude Include="src\graphics\buffers\VertexArray.h" />
+    <ClInclude Include="src\scenes\WorldScene.h" />
+    <ClInclude Include="src\utils\ImageLoader.h" />
+    <ClInclude Include="src\utils\lodepng\lodepng.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="src\graphics\shaders\text.frag" />
+    <None Include="src\graphics\shaders\text.vert" />
     <None Include="TestConfig.ini" />
-    <None Include="graphics\shaders\line.frag" />
-    <None Include="graphics\shaders\line.vert" />
-    <None Include="graphics\shaders\sprite.frag" />
-    <None Include="graphics\shaders\sprite.vert" />
+    <None Include="src\graphics\shaders\line.frag" />
+    <None Include="src\graphics\shaders\line.vert" />
+    <None Include="src\graphics\shaders\sprite.frag" />
+    <None Include="src\graphics\shaders\sprite.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />

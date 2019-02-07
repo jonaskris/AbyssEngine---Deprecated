@@ -1,0 +1,39 @@
+#pragma once
+#include "../../math/Vec3.h"
+
+namespace abyssengine {
+	struct Event
+	{
+		enum types
+		{
+			STUNNED, PRESSDASH, INDASH,	// No data
+			PRESSDIRECTION,				// Float
+		};
+		types type;
+
+		Event(types type)
+		{
+			this->type = type;
+		}
+	};
+
+	struct FloatEvent : public Event
+	{
+		float scalar;
+
+		FloatEvent(types type, float scalar) : Event(type)
+		{
+			this->scalar = scalar;
+		}
+	};
+
+	struct Vec3Event : public Event
+	{
+		math::vec3 vector;
+
+		Vec3Event(types type, math::vec3 vector) : Event(type)
+		{
+			this->vector = vector;
+		}
+	};
+}

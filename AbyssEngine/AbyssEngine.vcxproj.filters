@@ -15,300 +15,479 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="scenes\Scene.cpp">
+    <ClCompile Include="src\utils\lodepng\lodepng.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="entities\Entity.cpp">
+    <ClCompile Include="src\scenes\Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="entities\components\PComponent.cpp">
+    <ClCompile Include="src\scenes\WorldScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="entities\components\SComponent.cpp">
+    <ClCompile Include="src\math\geometry\Shape.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="entities\components\gComponent\GTComponent.cpp">
+    <ClCompile Include="src\math\mat3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MainLoop.cpp">
+    <ClCompile Include="src\math\mat4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\Window.cpp">
+    <ClCompile Include="src\math\vec2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="input\listeners\KeyboardListener.cpp">
+    <ClCompile Include="src\math\vec3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="input\listeners\MouseListener.cpp">
+    <ClCompile Include="src\math\vec4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="input\observers\KeyboardObserver.cpp">
+    <ClCompile Include="src\input\listeners\KeyboardListener.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="input\observers\MouseButtonObserver.cpp">
+    <ClCompile Include="src\input\listeners\MouseListener.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="input\observers\MouseEnterObserver.cpp">
+    <ClCompile Include="src\input\observers\KeyboardObserver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="input\observers\MousePositionObserver.cpp">
+    <ClCompile Include="src\input\observers\MouseButtonObserver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="input\observers\MouseScrollObserver.cpp">
+    <ClCompile Include="src\input\observers\MouseEnterObserver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="math\vec2.cpp">
+    <ClCompile Include="src\input\observers\MousePositionObserver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="math\vec3.cpp">
+    <ClCompile Include="src\input\observers\MouseScrollObserver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="math\vec4.cpp">
+    <ClCompile Include="src\graphics\buffers\Buffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="math\mat4.cpp">
+    <ClCompile Include="src\graphics\buffers\IndexBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\buffers\Buffer.cpp">
+    <ClCompile Include="src\graphics\buffers\VertexArray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\buffers\IndexBuffer.cpp">
+    <ClCompile Include="src\graphics\renderers\LineRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\buffers\VertexArray.cpp">
+    <ClCompile Include="src\graphics\renderers\PointRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="math\mat3.cpp">
+    <ClCompile Include="src\graphics\renderers\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="scenes\WorldScene.cpp">
+    <ClCompile Include="src\graphics\renderers\SpriteRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\shaders\Program.cpp">
+    <ClCompile Include="src\graphics\shaders\Program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\shaders\Shader.cpp">
+    <ClCompile Include="src\graphics\shaders\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\renderers\Renderer.cpp">
+    <ClCompile Include="src\graphics\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\renderers\SpriteRenderer.cpp">
+    <ClCompile Include="src\graphics\TextureAtlas.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="entities\components\gComponent\GSSComponent.cpp">
+    <ClCompile Include="src\graphics\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\TextureAtlas.cpp">
+    <ClCompile Include="src\entities\components\gComponent\GLComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="utils\lodepng\lodepng.cpp">
+    <ClCompile Include="src\entities\components\gComponent\GPComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="entities\Entity_Test.cpp">
+    <ClCompile Include="src\entities\components\gComponent\GSSComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\Camera.cpp">
+    <ClCompile Include="src\entities\components\CComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="entities\Entity_Ground.cpp">
+    <ClCompile Include="src\entities\components\PComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="entities\Entity_Player.cpp">
+    <ClCompile Include="src\entities\components\SComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\renderers\LineRenderer.cpp">
+    <ClCompile Include="src\entities\interaction\behaviours\BehaviourMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="entities\components\gComponent\GLComponent.cpp">
+    <ClCompile Include="src\entities\interaction\Action.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="math\geometry\Shape.cpp">
+    <ClCompile Include="src\entities\Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="entities\components\CComponent.cpp">
+    <ClCompile Include="src\entities\Entity_Ground.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="entities\interaction\Action.cpp">
+    <ClCompile Include="src\entities\Entity_Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="entities\interaction\behaviours\BehaviourMap.cpp">
+    <ClCompile Include="src\entities\Entity_Test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="config\ConfigReader.cpp">
+    <ClCompile Include="src\config\ConfigReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MainLoop.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\autofit\autofit.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\base\ftbase.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\base\ftbbox.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\base\ftbitmap.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\base\ftdebug.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\base\ftfstype.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\base\ftgasp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\base\ftglyph.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\base\ftgxval.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\base\ftinit.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\base\ftlcdfil.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\base\ftmm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\base\ftotval.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\base\ftpatent.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\base\ftpfr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\base\ftstroke.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\base\ftsynth.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\base\ftsystem.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\base\fttype1.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\base\ftwinfnt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\base\ftxf86.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\bdf\bdf.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\cache\ftcache.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\cff\cff.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\cid\type1cid.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\gzip\ftgzip.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\lzw\ftlzw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\pcf\pcf.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\pfr\pfr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\psaux\psaux.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\pshinter\pshinter.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\psnames\psmodule.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\raster\raster.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\sfnt\sfnt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\smooth\smooth.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\truetype\truetype.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\type1\type1.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\type42\type42.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype\src\winfonts\winfnt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype-gl\platform.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype-gl\texture-atlas.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype-gl\texture-font.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype-gl\vector.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="scenes\Scene.h">
+    <ClInclude Include="src\utils\lodepng\lodepng.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="entities\Entity.h">
+    <ClInclude Include="src\utils\FileUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="entities\components\Component.h">
+    <ClInclude Include="src\utils\ImageLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="entities\components\PComponent.h">
+    <ClInclude Include="src\scenes\Scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="entities\components\SComponent.h">
+    <ClInclude Include="src\scenes\WorldScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="entities\components\gComponent\GComponent.h">
+    <ClInclude Include="src\math\geometry\Shape.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="entities\components\gComponent\GTComponent.h">
+    <ClInclude Include="src\math\sets\Map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\Window.h">
+    <ClInclude Include="src\math\sets\Set.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="input\listeners\KeyboardListener.h">
+    <ClInclude Include="src\math\mat3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="input\listeners\MouseListener.h">
+    <ClInclude Include="src\math\mat4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="input\observers\MouseObserver.h">
+    <ClInclude Include="src\math\mathUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="input\observers\KeyboardObserver.h">
+    <ClInclude Include="src\math\vec2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="input\observers\MouseScrollObserver.h">
+    <ClInclude Include="src\math\vec3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="input\observers\MouseButtonObserver.h">
+    <ClInclude Include="src\math\vec4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="input\observers\MouseEnterObserver.h">
+    <ClInclude Include="src\input\listeners\KeyboardListener.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="input\observers\MousePositionObserver.h">
+    <ClInclude Include="src\input\listeners\MouseListener.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="math\vec2.h">
+    <ClInclude Include="src\input\observers\KeyboardObserver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="math\vec3.h">
+    <ClInclude Include="src\input\observers\MouseButtonObserver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="math\vec4.h">
+    <ClInclude Include="src\input\observers\MouseEnterObserver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="math\mat4.h">
+    <ClInclude Include="src\input\observers\MouseObserver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="utils\FileUtils.h">
+    <ClInclude Include="src\input\observers\MousePositionObserver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\buffers\Buffer.h">
+    <ClInclude Include="src\input\observers\MouseScrollObserver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\buffers\IndexBuffer.h">
+    <ClInclude Include="src\input\Keybindings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\buffers\VertexArray.h">
+    <ClInclude Include="src\graphics\buffers\Buffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="math\mat3.h">
+    <ClInclude Include="src\graphics\buffers\IndexBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="scenes\WorldScene.h">
+    <ClInclude Include="src\graphics\buffers\VertexArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\shaders\Program.h">
+    <ClInclude Include="src\graphics\renderers\LineRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\shaders\Shader.h">
+    <ClInclude Include="src\graphics\renderers\PointRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\renderers\Renderer.h">
+    <ClInclude Include="src\graphics\renderers\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\renderers\SpriteRenderer.h">
+    <ClInclude Include="src\graphics\renderers\SpriteRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="entities\components\gComponent\GSSComponent.h">
+    <ClInclude Include="src\graphics\shaders\Program.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="utils\ImageLoader.h">
+    <ClInclude Include="src\graphics\shaders\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\TextureAtlas.h">
+    <ClInclude Include="src\graphics\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="utils\lodepng\lodepng.h">
+    <ClInclude Include="src\graphics\TextureAtlas.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="entities\EntityFactory.h">
+    <ClInclude Include="src\graphics\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="entities\Entity_Test.h">
+    <ClInclude Include="src\entities\components\gComponent\GComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\Camera.h">
+    <ClInclude Include="src\entities\components\gComponent\GLComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="entities\Entity_Ground.h">
+    <ClInclude Include="src\entities\components\gComponent\GPComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="entities\Entity_Player.h">
+    <ClInclude Include="src\entities\components\gComponent\GSSComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\renderers\LineRenderer.h">
+    <ClInclude Include="src\entities\components\CComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="entities\components\gComponent\GLComponent.h">
+    <ClInclude Include="src\entities\components\Component.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="math\geometry\Shape.h">
+    <ClInclude Include="src\entities\components\PComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="math\sets\Set.h">
+    <ClInclude Include="src\entities\components\SComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="math\sets\Map.h">
+    <ClInclude Include="src\entities\interaction\behaviours\Behaviour.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="math\mathUtils.h">
+    <ClInclude Include="src\entities\interaction\behaviours\BehaviourFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="entities\components\CComponent.h">
+    <ClInclude Include="src\entities\interaction\behaviours\BehaviourMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="entities\interaction\Event.h">
+    <ClInclude Include="src\entities\interaction\Action.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="entities\interaction\Action.h">
+    <ClInclude Include="src\entities\interaction\Event.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="entities\interaction\behaviours\Behaviour.h">
+    <ClInclude Include="src\entities\Entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="entities\interaction\behaviours\BehaviourFactory.h">
+    <ClInclude Include="src\entities\Entity_Ground.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="entities\interaction\behaviours\BehaviourMap.h">
+    <ClInclude Include="src\entities\Entity_Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="config\ConfigReader.h">
+    <ClInclude Include="src\entities\Entity_Test.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="config\ConfigToken.h">
+    <ClInclude Include="src\entities\EntityFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="input\Keybindings.h">
+    <ClInclude Include="src\config\ConfigReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\config\ConfigToken.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\DirUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\freetype\include\ft2build.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\freetype\include\config\ftconfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\freetype\include\config\ftheader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\freetype\include\config\ftmodule.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\freetype\include\config\ftoption.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\freetype\include\config\ftstdlib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\freetype-gl\freetype-gl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\freetype-gl\opengl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\freetype-gl\platform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\freetype-gl\texture-atlas.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\freetype-gl\texture-font.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\freetype-gl\vec234.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\freetype-gl\vector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="graphics\shaders\sprite.frag" />
-    <None Include="graphics\shaders\sprite.vert" />
-    <None Include="graphics\shaders\line.frag" />
-    <None Include="graphics\shaders\line.vert" />
     <None Include="TestConfig.ini" />
+    <None Include="src\graphics\shaders\line.frag" />
+    <None Include="src\graphics\shaders\line.vert" />
+    <None Include="src\graphics\shaders\sprite.frag" />
+    <None Include="src\graphics\shaders\sprite.vert" />
+    <None Include="src\graphics\shaders\text.frag" />
+    <None Include="src\graphics\shaders\text.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />
