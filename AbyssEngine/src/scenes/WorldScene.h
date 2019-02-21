@@ -16,6 +16,6 @@ namespace abyssengine {
 		~WorldScene();
 		void generateScene();
 
-		void update(double deltaTime);
+		void update(const double &dt);
 	};
 }

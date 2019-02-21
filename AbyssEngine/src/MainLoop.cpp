@@ -32,7 +32,7 @@ int main()
 
 			for (size_t i = 0; i < scenes.size(); i++)
 			{
-				KeyboardListener::update();
+				//KeyboardListener::update();
 				scenes.at(i)->update(deltaTime);
 			}
 			renderer->render(scenes);

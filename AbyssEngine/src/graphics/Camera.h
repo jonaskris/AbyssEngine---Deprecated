@@ -3,17 +3,17 @@
 #include "../input/observers/MouseScrollObserver.h"
 #include "../math/vec3.h"
 #include "../math/mat4.h"
-#include "../entities/components/gComponent/GComponent.h"
+#include "../entities/components/Graphics_Component.h"
 
 namespace abyssengine {
-	class PComponent;
+	class Position_Component;
 	class Camera : public MouseScrollObserver
 	{
 	private:
 		math::vec3* cameraPos = new math::vec3(0.0f, 0.0f, 1.0f);		// Used when camera position is static, otherwise null.
 		math::vec3* lookatPos = new math::vec3(0.0f, 0.0f, 0.0f);		// Used when lookatPos is static, otherwise null.
 		math::vec3* cameraOffset = NULL;								// Used when camera position is relative to target, aka when cameraPos is null.
-		PComponent* target = NULL;										// Used when camera is to follow a target, aka when lookatPos is null.
+		Position_Component* target = NULL;										// Used when camera is to follow a target, aka when lookatPos is null.
 
 		float fov;
 		float aspectRatio;
@@ -31,7 +31,7 @@ namespace abyssengine {
 		Camera();
 		~Camera();
 		Camera(math::vec3 lookatPos, math::vec3 cameraPos);
-		Camera(PComponent* target, math::vec3 cameraOffset);
+		Camera(Position_Component* target, math::vec3 cameraOffset);
 
 		math::mat4* getViewMat();
 
@@ -52,7 +52,7 @@ namespace abyssengine {
 		math::vec3 farBottomLeft;
 		math::vec3 farBottomRight;
 
-		bool inFrustum(GComponent* gComponent);
+		bool inFrustum(Graphics_Component* gComponent);
 
 
 		void notifyMouseScrollEvent(const double& xoffset, const double& yoffset);

@@ -1,20 +1,29 @@
 #pragma once
 
 namespace abyssengine {
-	class Component
+
+	//! Base of all components
+	struct Component
 	{
+		enum types { Collision, Graphics, Position, MAX };
+	private:
+		unsigned int entityId;
+		types type;
 	public:
-		enum componentType { GComponentType, CComponentType, PComponentType, SComponentType };
-		Component(componentType type)
-		{
+		Component(Component::types type, unsigned int entityId)
+		{ 
+			this->entityId = entityId;
 			this->type = type;
 		}
 
-		componentType getType()
+		unsigned int getEntityId()
 		{
-			return type;
+			return this->entityId;
 		}
-	private:
-		componentType type;
+
+		Component::types getType()
+		{
+			return this->type;
+		}
 	};
 }

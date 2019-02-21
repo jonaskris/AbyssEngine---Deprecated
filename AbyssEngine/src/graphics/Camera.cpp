@@ -1,7 +1,6 @@
 #include <iostream>
 #include "Camera.h"
-#include "../entities/components/PComponent.h"
-#include "../entities/components/PComponent.h"
+#include "../entities/components/Position_Component.h"
 #include "../math/mat4.h"
 #include "../math/vec4.h"
 
@@ -26,7 +25,7 @@ namespace abyssengine {
 		this->lookatPos = new math::vec3(lookatPos);
 	}
 
-	Camera::Camera(PComponent* target, math::vec3 cameraOffset)
+	Camera::Camera(Position_Component* target, math::vec3 cameraOffset)
 	{
 		this->target = target;
 		this->cameraOffset = new math::vec3(cameraOffset);
@@ -187,7 +186,7 @@ namespace abyssengine {
 		return d(P, *B);
 	}
 	*/
-	bool Camera::inFrustum(GComponent* gComponent)
+	bool Camera::inFrustum(Graphics_Component* gComponent)
 	{
 		/*bool outside = false;
 

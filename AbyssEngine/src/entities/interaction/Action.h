@@ -1,55 +1,57 @@
 #pragma once
 #include <iostream>
-#include "../../math/vec3.h"
-#include "Event.h"
 
 namespace abyssengine {
-	class Entity;
-	struct Action
-	{
-		enum types
+
+	//! Wrapper to restrict instantiation of Action/DataAction to component classes
+	struct Collision_Component;
+	struct Position_Component;
+	struct Graphics_Component;
+	class EntityManager;
+	struct Behaviour;
+
+	class ActionWrapper {
+		virtual ~ActionWrapper() = 0;
+		friend struct Collision_Component;
+		friend struct Position_Component;
+		friend struct Graphics_Component;
+		friend struct Behaviour;
+		friend class EntityManager;
+
+	public:
+		//! Base of all actions, specializations are described in components
+		struct Action
 		{
-			// No data
-			// Float
-			SETACCELERATION, CHANGEACCELERATION,	// Vec3
-			SETVELOCITY, CHANGEVELOCITY,
-			SETPOSITION, CHANGEPOSITION,
-			ADDEVENT								// Event*
+
 		};
 
-		types type;
+	private:
+		template<typename Types>
+		struct TypeAction : Action
+		{
+			Types type;
 
-		Action(types type);
+			Types getType()
+			{
+				return type;
+			}
+		};
 
-		virtual void executeOn(Entity* entity);
+		//! Base of all actions that require data, specializations are described in components
+		template<typename Types, typename Data>
+		struct DataAction : TypeAction<Types>
+		{
+			Data data;
 
-		types getType();
-	};
+			DataAction(Data data)
+			{
+				this->data = data;
+			}
 
-	struct FloatAction : public Action
-	{
-		float scalar;
-
-		FloatAction(types type, float scalar);
-
-		void executeOn(Entity* entity);
-	};
-
-	struct VecAction : public Action
-	{
-		math::vec3 vector;
-
-		VecAction(types type, math::vec3 vector);
-
-		void executeOn(Entity* entity);
-	};
-
-	struct EventAction : public Action
-	{
-		Event* event = NULL;
-
-		EventAction(types type, Event* vector);
-
-		void executeOn(Entity* entity);
+			Data getData()
+			{
+				return data;
+			}
+		};
 	};
 }

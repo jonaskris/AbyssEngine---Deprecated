@@ -9,11 +9,11 @@
 #include "../../math/mat4.h"
 #include "../../entities/Entity.h"
 #include "../../scenes/Scene.h"
-#include "../../entities/components/PComponent.h"
-#include "../../entities/components/gComponent/GSSComponent.h"
-#include "../../entities/components/gComponent/GLComponent.h"
-#include "../../entities/components/gComponent/GPComponent.h"
-#include "../../entities/components/CComponent.h"
+#include "../../entities/components/Position_Component.h"
+#include "../../entities/components/Graphics_Component.h"
+#include "../../entities/components/Collision_Component.h"
+
+#include "../TextureAtlas.h"
 //#include "../Font.h"
 
 #define DRAW_COLLISION_BOUNDS true 
@@ -50,6 +50,7 @@ namespace abyssengine {
 
 		Program::loadPrograms();
 		TextureAtlas::loadAtlases();
+		
 		//Font::initFonts();
 	}
 
@@ -66,19 +67,19 @@ namespace abyssengine {
 	{
 		window->clear();
 
-		struct SceneCollisionBounds
-		{
-			std::vector<GLComponent*> lines;
-			Camera* camera;
-		};
-		std::vector<SceneCollisionBounds> collisionBounds;
-
-		struct SceneGraphicsCenters
-		{
-			std::vector<GPComponent*> points;
-			Camera* camera;
-		};
-		std::vector<SceneGraphicsCenters> graphicsCenters;
+		//struct SceneCollisionBounds
+		//{
+		//	std::vector<GLComponent*> lines;
+		//	Camera* camera;
+		//};
+		//std::vector<SceneCollisionBounds> collisionBounds;
+		//
+		//struct SceneGraphicsCenters
+		//{
+		//	std::vector<GPComponent*> points;
+		//	Camera* camera;
+		//};
+		//std::vector<SceneGraphicsCenters> graphicsCenters;
 
 		int drewCount = 0;
 
@@ -94,77 +95,83 @@ namespace abyssengine {
 			if (camera->getProjectionMatrix() == NULL)
 				camera->setProjectionMatrix(90.0f, width / (float)height, 1.0f, 4.0f);
 
-			std::vector<Entity*> sceneEntities = scenes.at(i)->getEntities();
+			//std::vector<Entity*> sceneEntities = scenes.at(i)->getEntityManager()->getEntities();
+			std::vector<Graphics_Component> graphicsComponents = scenes.at(i)->getEntityManager().getGraphicsComponents();
 
-			std::vector<GComponent*> components[GComponent::getComponentTypeCount()];
+			std::vector<Graphics_Point_Component> graphicsPointComponents;
+			for (Graphics_Component& component : graphicsComponents) { graphicsPointComponents.push_back((Graphics_Point_Component)(component)); }
 
-
-			SceneCollisionBounds sceneCollisionBounds;
-			sceneCollisionBounds.camera = scenes.at(i)->getCamera();
-			SceneGraphicsCenters sceneGraphicsCenters;
-			sceneGraphicsCenters.camera = scenes.at(i)->getCamera();
-
-			camera->beginFrustumCulling();
+			//std::vector<Graphics_Component*> components[Graphics_Component::types::MAX];
 
 
-			for (size_t j = 0; j < sceneEntities.size(); j++)
-			{
-				PComponent* pComponent = sceneEntities.at(j)->getPComponent();
-				std::vector<GComponent*> gComponents = sceneEntities.at(j)->getGComponents();
-				for (size_t h = 0; h < gComponents.size(); h++)
-				{
-					if (camera->inFrustum(gComponents.at(h)))
-					{
-						components[gComponents.at(h)->getType()].push_back(gComponents.at(h));
-						if (DRAW_FRUSTUM_CENTER)
-						{
-							sceneGraphicsCenters.points.push_back(new GPComponent(math::vec3(0.0f, 0.0f, 0.0f)));
-							sceneGraphicsCenters.points[sceneGraphicsCenters.points.size() - 1]->pComponent = pComponent;
-						}
-					}
-				}
+			//SceneCollisionBounds sceneCollisionBounds;
+			//sceneCollisionBounds.camera = scenes.at(i)->getCamera();
+			//SceneGraphicsCenters sceneGraphicsCenters;
+			//sceneGraphicsCenters.camera = scenes.at(i)->getCamera();
 
-				if (DRAW_COLLISION_BOUNDS)
-				{
-					std::vector<CComponent*> cComponents = sceneEntities.at(j)->getCComponents();
+			//camera->beginFrustumCulling();
 
-					for (size_t k = 0; k < cComponents.size(); k++)
-					{
-						std::vector<GLComponent*> cComponentsGLComponents = cComponents.at(k)->getGLComponents();
 
-						for (size_t f = 0; f < cComponentsGLComponents.size(); f++)
-						{
-							if (camera->inFrustum(cComponentsGLComponents.at(f)))
-								sceneCollisionBounds.lines.push_back(cComponentsGLComponents.at(f));
-						}
-					}
-				}
-			}
+			//for (size_t j = 0; j < sceneEntities.size(); j++)
+			//{
+			//	PComponent* pComponent = sceneEntities.at(j)->getPComponent();
+			//	std::vector<GComponent*> gComponents = sceneEntities.at(j)->getGComponents();
+			//	for (size_t h = 0; h < gComponents.size(); h++)
+			//	{
+			//		if (camera->inFrustum(gComponents.at(h)))
+			//		{
+			//			components[gComponents.at(h)->getType()].push_back(gComponents.at(h));
+			//			if (DRAW_FRUSTUM_CENTER)
+			//			{
+			//				sceneGraphicsCenters.points.push_back(new GPComponent(math::vec3(0.0f, 0.0f, 0.0f)));
+			//				sceneGraphicsCenters.points[sceneGraphicsCenters.points.size() - 1]->pComponent = pComponent;
+			//			}
+			//		}
+			//	}
+			//
+			//	if (DRAW_COLLISION_BOUNDS)
+			//	{
+			//		std::vector<CComponent*> cComponents = sceneEntities.at(j)->getCComponents();
+			//
+			//		for (size_t k = 0; k < cComponents.size(); k++)
+			//		{
+			//			std::vector<GLComponent*> cComponentsGLComponents = cComponents.at(k)->getGLComponents();
+			//
+			//			for (size_t f = 0; f < cComponentsGLComponents.size(); f++)
+			//			{
+			//				if (camera->inFrustum(cComponentsGLComponents.at(f)))
+			//					sceneCollisionBounds.lines.push_back(cComponentsGLComponents.at(f));
+			//			}
+			//		}
+			//	}
+			//}
+			//
+			//if (DRAW_COLLISION_BOUNDS)
+			//{
+			//	collisionBounds.push_back(sceneCollisionBounds);
+			//}
+			//
+			//if (DRAW_FRUSTUM_CENTER)
+			//{
+			//	graphicsCenters.push_back(sceneGraphicsCenters);
+			//}
+			//
+			//std::vector<GSSComponent*> gssComponents;
+			//for (GComponent* component : components[GComponent::gComponentType::GSSComponentType]) { gssComponents.push_back((GSSComponent*)component); }
+			//
+			//std::vector<GLComponent*> glComponents;
+			//for (GComponent* component : components[GComponent::gComponentType::GLComponentType]) { glComponents.push_back((GLComponent*)component); }
+			//
+			//std::vector<Graphics_Point_Component*> graphicsPointComponents;
+			//for (Graphics_Component& component : graphicsComponents) { graphicsPointComponents.push_back((Graphics_Point_Component)component); }
+			//
+			//drewCount += gssComponents.size() + glComponents.size();
+			//SpriteRenderer::getInstance()->render(gssComponents, scenes.at(i)->getCamera());
+			//LineRenderer::getInstance()->render(glComponents, scenes.at(i)->getCamera());
+			//PointRenderer::getInstance()->render(gpComponents, scenes.at(i)->getCamera());
 
-			if (DRAW_COLLISION_BOUNDS)
-			{
-				collisionBounds.push_back(sceneCollisionBounds);
-			}
 
-			if (DRAW_FRUSTUM_CENTER)
-			{
-				graphicsCenters.push_back(sceneGraphicsCenters);
-			}
-
-			std::vector<GSSComponent*> gssComponents;
-			for (GComponent* component : components[GComponent::gComponentType::GSSComponentType]) { gssComponents.push_back((GSSComponent*)component); }
-
-			std::vector<GLComponent*> glComponents;
-			for (GComponent* component : components[GComponent::gComponentType::GLComponentType]) { glComponents.push_back((GLComponent*)component); }
-
-			std::vector<GPComponent*> gpComponents;
-			for (GComponent* component : components[GComponent::gComponentType::GPComponentType]) { gpComponents.push_back((GPComponent*)component); }
-
-			drewCount += gssComponents.size() + glComponents.size();
-			SpriteRenderer::getInstance()->render(gssComponents, scenes.at(i)->getCamera());
-			LineRenderer::getInstance()->render(glComponents, scenes.at(i)->getCamera());
-			PointRenderer::getInstance()->render(gpComponents, scenes.at(i)->getCamera());
-		}
+		}	
 
 		if (DRAW_COLLISION_BOUNDS)
 		{

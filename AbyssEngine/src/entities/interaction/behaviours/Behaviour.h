@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <list>
 #include "../Event.h"
 #include "../Action.h"
 
@@ -8,7 +9,7 @@ namespace abyssengine {
 	{
 		enum types
 		{
-			MOVE, DASH, MAX
+			MIN, MOVE, DASH, MAX
 		};
 
 		types type;
@@ -19,7 +20,7 @@ namespace abyssengine {
 			this->lifeTime = lifeTime;
 		}
 
-		virtual std::list<Action*> update(double deltaTime) = 0;
+		virtual std::list<ActionWrapper::Action*> update(double deltaTime) = 0;
 
 		bool behaviourFinished()
 		{
@@ -40,10 +41,10 @@ namespace abyssengine {
 		}
 
 	public:
-		std::list<Action*> update(double deltaTime)
+		std::list<ActionWrapper::Action*> update(double deltaTime)
 		{
-			std::list<Action*> returnList;
-			returnList.push_back(new VecAction(Action::types::CHANGEPOSITION, math::vec3(cos(angle) * speed * (float)deltaTime, sin(angle) * speed * (float)deltaTime, 0.0f)));
+			std::list<ActionWrapper::Action*> returnList;
+			//returnList.push_back(new VecAction(ActionWrapper::Action::types::CHANGEPOSITION, math::vec3(cos(angle) * speed * (float)deltaTime, sin(angle) * speed * (float)deltaTime, 0.0f)));
 
 			return returnList;
 		}
@@ -62,13 +63,13 @@ namespace abyssengine {
 		}
 
 	public:
-		std::list<Action*> update(double deltaTime)
+		std::list<ActionWrapper::Action*> update(double deltaTime)
 		{
 			deltaTime = ((lifeTime < deltaTime) ? lifeTime : deltaTime);
 
-			std::list<Action*> returnList;
-			returnList.push_back(new VecAction(Action::types::CHANGEPOSITION, math::vec3(cos(angle) * speed * (float)deltaTime, sin(angle) * speed * (float)deltaTime, 0.0f)));
-			returnList.push_back(new EventAction(Action::types::ADDEVENT, new Event(Event::types::INDASH)));
+			std::list<ActionWrapper::Action*> returnList;
+			//returnList.push_back(new VecAction(ActionWrapper::Action::types::CHANGEPOSITION, math::vec3(cos(angle) * speed * (float)deltaTime, sin(angle) * speed * (float)deltaTime, 0.0f)));
+			//returnList.push_back(new EventAction(ActionWrapper::Action::types::ADDEVENT, new Event(Event::types::INDASH)));
 
 			lifeTime -= deltaTime;
 			return returnList;

@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "../graphics/shaders/Shader.h"
+#include "../entities/EntityManager.h"
 
 namespace abyssengine {
 	class Entity;
@@ -9,17 +10,14 @@ namespace abyssengine {
 	class Scene
 	{
 	protected:
-		std::vector<Entity*> entities;
 		Camera* camera = NULL;
-
-		void addEntity(Entity* e);
-		void addEntities(std::vector<Entity*>& entities);
-
+		EntityManager entityManager;
 	public:
 		virtual ~Scene();
 
-		std::vector<Entity*>& getEntities();
 		Camera* getCamera();
-		virtual void update(double deltaTime) = 0;
+		virtual void update(const double &dt) = 0;
+
+		EntityManager& getEntityManager();
 	};
 }

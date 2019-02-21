@@ -1,14 +1,39 @@
 #pragma once
-#include <vector>
 #include "../vec3.h"
 
-namespace abyssengine {
-	class Shape
-	{
-	public:
-		enum shape { BOX, RECTANGLE, MAX };
+namespace abyssengine { namespace Shape {
+	using namespace math;
 
-		static std::vector<math::vec3> getVertices(Shape::shape shape);
-		static std::vector<unsigned int> getIndices(Shape::shape shape);
+	//! Cube
+	const vec3 cubeVertices[]
+	{
+		vec3(-0.5f, -0.5f, -0.5f),
+		vec3(-0.5f, 0.5f, -0.5f),
+		vec3(0.5f, 0.5f, -0.5f),
+		vec3(0.5f, -0.5f, -0.5f),
+		vec3(-0.5f, -0.5f, 0.5f),
+		vec3(-0.5f, 0.5f, 0.5f),
+		vec3(0.5f, 0.5f, 0.5f),
+		vec3(0.5f, -0.5f, 0.5f)
 	};
-}
+
+	const unsigned short cubeIndices[]
+	{
+		0, 1, 1, 2, 2, 3, 3, 0,
+		0, 4, 1, 5, 2, 6, 3, 7,
+		4, 5, 5, 6, 6, 7, 7, 4
+	};
+
+	//! Rectangle
+	const vec3 rectangleVertices[]{
+		vec3(-0.5f, -0.5f, 0.0f),
+		vec3(-0.5f, 0.5f, 0.0f),
+		vec3(0.5f, 0.5f, 0.0f),
+		vec3(0.5f, -0.5f, 0.0f)
+	};
+
+	const unsigned short rectangleIndices[]
+	{
+		0, 1, 1, 2, 2, 3, 3, 0
+	};
+}}					  

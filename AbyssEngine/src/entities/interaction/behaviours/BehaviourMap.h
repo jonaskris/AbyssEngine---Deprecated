@@ -3,16 +3,15 @@
 #include <iostream>
 #include "../Event.h"
 #include "Behaviour.h"
-#include "../../../math/sets/Set.h"
 
 namespace abyssengine {
 	class BehaviourMap
 	{
 	public:
 		BehaviourMap();
-		BehaviourMap(const std::list<Behaviour::types>& priorityList);
+		//BehaviourMap(const std::list<Behaviour::types>& priorityList);
 	private:
-		void fillPriorityList(); // Fills prioritylist with missing behaviour types if every behaviour isnt in the priority list when the object is created
+		//void fillPriorityList(); // Fills prioritylist with missing behaviour types if every behaviour isnt in the priority list when the object is created
 		struct Connection
 		{
 			bool negate;
@@ -21,7 +20,7 @@ namespace abyssengine {
 		};
 
 		std::list<Connection> connections;
-		std::list<Behaviour::types> priorityList;
+		//std::list<Behaviour::types> priorityList;
 	public:
 		void addConnection(Event::types from, Behaviour::types to, bool negate);
 
