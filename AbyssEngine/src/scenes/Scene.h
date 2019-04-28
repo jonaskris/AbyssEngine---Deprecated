@@ -1,10 +1,9 @@
 #pragma once
 #include <vector>
 #include "../graphics/shaders/Shader.h"
-#include "../entities/EntityManager.h"
+#include "../entitysystem/entities/EntityManager.h"
 
 namespace abyssengine {
-	class Entity;
 	class Camera;
 
 	class Scene

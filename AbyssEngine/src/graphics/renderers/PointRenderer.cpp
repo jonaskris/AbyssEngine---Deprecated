@@ -1,8 +1,8 @@
 #include "PointRenderer.h"
 #include "../shaders/Program.h"
 #include "../TextureAtlas.h"
-#include "../../entities/components/gComponent/GComponent.h"
-#include "../../entities/components/PComponent.h"
+#include "../../entitysystem/entities/components/ComponentManager.h"
+#include "../../entitysystem/GComponents.h"
 #include "../../math/mat4.h"
 #include "../Camera.h"
 
@@ -32,10 +32,10 @@ namespace abyssengine {
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
 		glEnableVertexAttribArray(PR_SHADER_VERTEX_INDEX);
-		glVertexAttribPointer(PR_SHADER_VERTEX_INDEX, 3, GL_FLOAT, GL_FALSE, sizeof(GPComponent::VertexData), (const GLvoid*)(offsetof(GPComponent::VertexData, GPComponent::VertexData::vertex)));
+		glVertexAttribPointer(PR_SHADER_VERTEX_INDEX, 3, GL_FLOAT, GL_FALSE, sizeof(Point_Component::VertexData), (const GLvoid*)(offsetof(Point_Component::VertexData, Point_Component::VertexData::vertex)));
 
 		glEnableVertexAttribArray(PR_SHADER_COLOR_INDEX);
-		glVertexAttribPointer(PR_SHADER_COLOR_INDEX, 4, GL_FLOAT, GL_TRUE, sizeof(GPComponent::VertexData), (const GLvoid*)(offsetof(GPComponent::VertexData, GPComponent::VertexData::color)));
+		glVertexAttribPointer(PR_SHADER_COLOR_INDEX, 4, GL_FLOAT, GL_TRUE, sizeof(Point_Component::VertexData), (const GLvoid*)(offsetof(Point_Component::VertexData, Point_Component::VertexData::color)));
 
 		glBindVertexArray(0);
 
@@ -47,14 +47,14 @@ namespace abyssengine {
 		viewMatrixLocation = glGetUniformLocation(program->getProgramID(), "vw_matrix");
 	}
 
-	void PointRenderer::render(const std::vector<GPComponent*>& components, Camera* camera)
+	void PointRenderer::render(const std::vector<ComponentWrapper<Point_Component>>* components, Camera* camera)
 	{
 		glUseProgram(program->getProgramID());
 		glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &(*camera->getViewMat()).elements[0]);
 		glBindVertexArray(VAO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-		unsigned int toRender = components.size();
+		unsigned int toRender = components->size();
 		unsigned int progress = 0;
 
 		while (toRender > 0) {
@@ -68,15 +68,15 @@ namespace abyssengine {
 			for (size_t i = renderFrom; i < renderTo; i++)
 			{
 				size_t index = i - renderFrom;
-				if (components.at(i)->getPositionComponent() != NULL)
-				{
-					VERTEX_DATA[index].vertex = components.at(i)->getVertex() + components.at(i)->getPositionComponent()->position;
-					VERTEX_DATA[index].color = components.at(i)->getColor();
-				}
-				else {
-					VERTEX_DATA[index].vertex = components.at(i)->getVertex();
-					VERTEX_DATA[index].color = components.at(i)->getColor();
-				}
+				//if (components.at(i)->getPositionComponent() != NULL)
+				//{
+				//	VERTEX_DATA[index].vertex = components.at(i)->getVertex() + components.at(i)->getPositionComponent()->position;
+				//	VERTEX_DATA[index].color = components.at(i)->getColor();
+				//}
+				//else {
+					VERTEX_DATA[index].vertex = components->at(i).component.vertex.vertex;
+					VERTEX_DATA[index].color = components->at(i).component.vertex.color;
+				//}
 			}
 
 			glBufferData(GL_ARRAY_BUFFER, PR_BUFFER_SIZE, VERTEX_DATA, GL_STATIC_DRAW);

@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-#include "../Camera.h"
 
 namespace abyssengine {
 	class Window;

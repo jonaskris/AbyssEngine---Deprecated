@@ -1,14 +1,14 @@
 #pragma once
 #include <vector>
 #include <gl/glew.h>
-#include "../../entities/components/gComponent/GSSComponent.h"
+#include "../../entitysystem/entities/components/ComponentManager.h"
+#include "../../entitysystem/GComponents.h"
 #include "../shaders/Program.h"
-#include "../../entities/Entity.h"
 
 #define SR_PROGRAM						Program::type::SPRITE
 
 #define SR_MAX_SPRITES					500
-#define SR_VERTEX_SIZE					sizeof(GSSComponent::VertexData)
+#define SR_VERTEX_SIZE					sizeof(SpriteSheet_Component::VertexData)
 #define SR_SPRITE_SIZE					SR_VERTEX_SIZE * 4
 #define SR_BUFFER_SIZE					SR_SPRITE_SIZE * SR_MAX_SPRITES
 #define SR_INDICES_LENGTH				SR_MAX_SPRITES * 6
@@ -36,10 +36,10 @@ namespace abyssengine {
 
 		GLuint VAO, VBO, IBO;
 		GLuint viewMatrixLocation, texLoc;
-		GSSComponent::VertexData* VERTEX_DATA = new GSSComponent::VertexData[SR_INDICES_SIZE];
+		SpriteSheet_Component::VertexData* VERTEX_DATA = new SpriteSheet_Component::VertexData[SR_INDICES_SIZE];
 		GLuint* IBO_DATA = new GLuint[SR_INDICES_SIZE];	// RENDERER_INDICES_SIZE is max size of IBO_DATA
 		GLsizei IBO_COUNT = 0;							// IBO_COUNT is how much data is actually in IBO_DATA, used when drawing
 	public:
-		void render(const std::vector<GSSComponent*>& components, Camera* camera);
+		void render(const std::vector<ComponentWrapper<SpriteSheet_Component>>* components, Camera* camera);
 	};
 }

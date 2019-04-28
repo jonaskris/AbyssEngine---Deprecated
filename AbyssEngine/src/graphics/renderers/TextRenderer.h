@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 #include <vector>
 #include <gl/glew.h>
 #include "../../entities/components/gComponent/GTComponent.h"
@@ -42,4 +42,4 @@ namespace abyssengine {
 	public:
 		void render(const std::vector<GTComponent*>& components, Camera* camera);
 	};
-}
+}*/

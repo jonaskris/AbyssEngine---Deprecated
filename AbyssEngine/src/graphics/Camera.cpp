@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Camera.h"
-#include "../entities/components/Position_Component.h"
+//#include "../entities/components/Position_Component.h"
 #include "../math/mat4.h"
 #include "../math/vec4.h"
 
@@ -25,24 +25,24 @@ namespace abyssengine {
 		this->lookatPos = new math::vec3(lookatPos);
 	}
 
-	Camera::Camera(Position_Component* target, math::vec3 cameraOffset)
-	{
-		this->target = target;
-		this->cameraOffset = new math::vec3(cameraOffset);
-	}
+	//Camera::Camera(Position_Component* target, math::vec3 cameraOffset)
+	//{
+	//	this->target = target;
+	//	this->cameraOffset = new math::vec3(cameraOffset);
+	//}
 
 	void Camera::calculateLookat()
 	{
 		math::vec3 lookatPos;
 		math::vec3 cameraPos;
 
-		if (this->target != NULL)
-		{
-			lookatPos = this->target->position;
-		}
-		else {
+		//if (this->target != NULL)
+		//{
+		//	lookatPos = this->target->position;
+		//}
+		//else {
 			lookatPos = *(this->lookatPos);
-		}
+		//}
 
 		if (this->cameraOffset != NULL)
 		{
@@ -95,13 +95,13 @@ namespace abyssengine {
 	{
 		math::vec3 lookatPos;
 
-		if (this->target != NULL)
-		{
-			lookatPos = this->target->position;
-		}
-		else {
+		//if (this->target != NULL)
+		//{
+		//	lookatPos = this->target->position;
+		//}
+		//else {
 			lookatPos = *(this->lookatPos);
-		}
+		//}
 		return lookatPos;
 	}
 
@@ -186,8 +186,8 @@ namespace abyssengine {
 		return d(P, *B);
 	}
 	*/
-	bool Camera::inFrustum(Graphics_Component* gComponent)
-	{
+	//bool Camera::inFrustum(Graphics_Component* gComponent)
+	//{
 		/*bool outside = false;
 
 		GComponent::FrustumInfo frustumInfo = gComponent->getFrustumInfo();
@@ -221,8 +221,8 @@ namespace abyssengine {
 			}
 		}*/
 
-		return true;
-	}
+	//	return true;
+	//}
 
 	/*
 	int FrustumR::pointInFrustum(Vec3 &p) {

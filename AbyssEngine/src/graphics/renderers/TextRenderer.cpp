@@ -1,4 +1,4 @@
-#include "TextRenderer.h"
+/*#include "TextRenderer.h"
 #include <algorithm>
 #include "../shaders/Program.h"
 #include "../TextureAtlas.h"
@@ -148,4 +148,4 @@ namespace abyssengine {
 		}
 		return instance;
 	}
-}
+}*/

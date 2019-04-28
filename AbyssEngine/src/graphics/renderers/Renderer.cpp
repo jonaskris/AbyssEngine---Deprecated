@@ -7,17 +7,19 @@
 #include "LineRenderer.h"
 #include "PointRenderer.h"
 #include "../../math/mat4.h"
-#include "../../entities/Entity.h"
+//#include "../../entities/Entity.h"
 #include "../../scenes/Scene.h"
-#include "../../entities/components/Position_Component.h"
-#include "../../entities/components/Graphics_Component.h"
-#include "../../entities/components/Collision_Component.h"
+#include "../../Defines.h"
+//#include "../../entities/components/Position_Component.h"
+//#include "../../entities/components/Graphics_Component.h"
+//#include "../../entities/components/Collision_Component.h"
 
 #include "../TextureAtlas.h"
+#include "../Camera.h"
 //#include "../Font.h"
 
-#define DRAW_COLLISION_BOUNDS true 
-#define DRAW_FRUSTUM_CENTER true
+//#define DRAW_COLLISION_BOUNDS true 
+//#define DRAW_FRUSTUM_CENTER true
 
 namespace abyssengine {
 	Renderer* Renderer::instance = NULL;
@@ -34,14 +36,14 @@ namespace abyssengine {
 
 	Renderer::Renderer()
 	{
-		width = (int)(1920 / (1.5f));
-		height = (int)(1080 / (1.5f));
+		width = (int)(SCREEN_WIDTH / (1.5f));
+		height = (int)(SCREEN_HEIGHT / (1.5f));
 
 		if (!glfwInit())
 		{
 			std::cout << "Failed to initialize GLFW!" << std::endl;
 		}
-		window = new Window("Abysswalker", width, height);
+		window = new Window(WINDOW_NAME, width, height);
 
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_BLEND);
@@ -50,6 +52,7 @@ namespace abyssengine {
 
 		Program::loadPrograms();
 		TextureAtlas::loadAtlases();
+
 		
 		//Font::initFonts();
 	}
@@ -67,139 +70,35 @@ namespace abyssengine {
 	{
 		window->clear();
 
-		//struct SceneCollisionBounds
-		//{
-		//	std::vector<GLComponent*> lines;
-		//	Camera* camera;
-		//};
-		//std::vector<SceneCollisionBounds> collisionBounds;
-		//
-		//struct SceneGraphicsCenters
-		//{
-		//	std::vector<GPComponent*> points;
-		//	Camera* camera;
-		//};
-		//std::vector<SceneGraphicsCenters> graphicsCenters;
-
-		int drewCount = 0;
-
+		// For every scene
+			// Get camera
+				// If it doesent have projection matrix, create one for it
+			// Get graphics components from scene, and give them to renderers that can render their type
+			// Update window
+			
 		for (size_t i = 0; i < scenes.size(); i++)
 		{
 			Camera* camera = scenes.at(i)->getCamera();
-			if (camera == NULL)
-			{
-				std::cout << "Tried rendering scene, but it doesent have a camera!" << std::endl;
-				continue;
-			}
-
+		
 			if (camera->getProjectionMatrix() == NULL)
-				camera->setProjectionMatrix(90.0f, width / (float)height, 1.0f, 4.0f);
+				camera->setProjectionMatrix(FOV, ASPECT_RATIO, NEAR, FAR);
 
-			//std::vector<Entity*> sceneEntities = scenes.at(i)->getEntityManager()->getEntities();
-			std::vector<Graphics_Component> graphicsComponents = scenes.at(i)->getEntityManager().getGraphicsComponents();
+			auto pointComponents = scenes.at(i)->getEntityManager().getComponentVectorByType<Point_Component>();
+			if(pointComponents)
+				PointRenderer::getInstance()->render(pointComponents, camera);
 
-			std::vector<Graphics_Point_Component> graphicsPointComponents;
-			for (Graphics_Component& component : graphicsComponents) { graphicsPointComponents.push_back((Graphics_Point_Component)(component)); }
+			auto lineComponents = scenes.at(i)->getEntityManager().getComponentVectorByType<Line_Component>();
+			if(lineComponents)
+				LineRenderer::getInstance()->render(lineComponents, camera);
 
-			//std::vector<Graphics_Component*> components[Graphics_Component::types::MAX];
-
-
-			//SceneCollisionBounds sceneCollisionBounds;
-			//sceneCollisionBounds.camera = scenes.at(i)->getCamera();
-			//SceneGraphicsCenters sceneGraphicsCenters;
-			//sceneGraphicsCenters.camera = scenes.at(i)->getCamera();
-
-			//camera->beginFrustumCulling();
-
-
-			//for (size_t j = 0; j < sceneEntities.size(); j++)
-			//{
-			//	PComponent* pComponent = sceneEntities.at(j)->getPComponent();
-			//	std::vector<GComponent*> gComponents = sceneEntities.at(j)->getGComponents();
-			//	for (size_t h = 0; h < gComponents.size(); h++)
-			//	{
-			//		if (camera->inFrustum(gComponents.at(h)))
-			//		{
-			//			components[gComponents.at(h)->getType()].push_back(gComponents.at(h));
-			//			if (DRAW_FRUSTUM_CENTER)
-			//			{
-			//				sceneGraphicsCenters.points.push_back(new GPComponent(math::vec3(0.0f, 0.0f, 0.0f)));
-			//				sceneGraphicsCenters.points[sceneGraphicsCenters.points.size() - 1]->pComponent = pComponent;
-			//			}
-			//		}
-			//	}
-			//
-			//	if (DRAW_COLLISION_BOUNDS)
-			//	{
-			//		std::vector<CComponent*> cComponents = sceneEntities.at(j)->getCComponents();
-			//
-			//		for (size_t k = 0; k < cComponents.size(); k++)
-			//		{
-			//			std::vector<GLComponent*> cComponentsGLComponents = cComponents.at(k)->getGLComponents();
-			//
-			//			for (size_t f = 0; f < cComponentsGLComponents.size(); f++)
-			//			{
-			//				if (camera->inFrustum(cComponentsGLComponents.at(f)))
-			//					sceneCollisionBounds.lines.push_back(cComponentsGLComponents.at(f));
-			//			}
-			//		}
-			//	}
-			//}
-			//
-			//if (DRAW_COLLISION_BOUNDS)
-			//{
-			//	collisionBounds.push_back(sceneCollisionBounds);
-			//}
-			//
-			//if (DRAW_FRUSTUM_CENTER)
-			//{
-			//	graphicsCenters.push_back(sceneGraphicsCenters);
-			//}
-			//
-			//std::vector<GSSComponent*> gssComponents;
-			//for (GComponent* component : components[GComponent::gComponentType::GSSComponentType]) { gssComponents.push_back((GSSComponent*)component); }
-			//
-			//std::vector<GLComponent*> glComponents;
-			//for (GComponent* component : components[GComponent::gComponentType::GLComponentType]) { glComponents.push_back((GLComponent*)component); }
-			//
-			//std::vector<Graphics_Point_Component*> graphicsPointComponents;
-			//for (Graphics_Component& component : graphicsComponents) { graphicsPointComponents.push_back((Graphics_Point_Component)component); }
-			//
-			//drewCount += gssComponents.size() + glComponents.size();
-			//SpriteRenderer::getInstance()->render(gssComponents, scenes.at(i)->getCamera());
-			//LineRenderer::getInstance()->render(glComponents, scenes.at(i)->getCamera());
-			//PointRenderer::getInstance()->render(gpComponents, scenes.at(i)->getCamera());
-
-
-		}	
-
-		if (DRAW_COLLISION_BOUNDS)
-		{
-			glClear(GL_DEPTH_BUFFER_BIT);
-			for (size_t i = 0; i < collisionBounds.size(); i++)
-			{
-				drewCount += collisionBounds.at(i).lines.size();
-				LineRenderer::getInstance()->render(collisionBounds.at(i).lines, collisionBounds.at(i).camera);
-				for (size_t j = 0; j < collisionBounds.at(i).lines.size(); j++) {
-					delete collisionBounds.at(i).lines[j];
-				}
-			}
+			auto spriteSheetComponents = scenes.at(i)->getEntityManager().getComponentVectorByType<SpriteSheet_Component>();
+			if (spriteSheetComponents)
+				SpriteRenderer::getInstance()->render(spriteSheetComponents, camera);
 		}
 
-		if (DRAW_FRUSTUM_CENTER)
-		{
-			glClear(GL_DEPTH_BUFFER_BIT);
-			for (size_t i = 0; i < graphicsCenters.size(); i++)
-			{
-				drewCount += graphicsCenters.at(i).points.size();
-				PointRenderer::getInstance()->render(graphicsCenters.at(i).points, graphicsCenters.at(i).camera);
-				for (size_t j = 0; j < graphicsCenters.at(i).points.size(); j++) {
-					delete graphicsCenters.at(i).points[j];
-				}
-			}
-		}
 
-		std::cout << "Drew " << drewCount << " GComponents." << std::endl;
+
+		
 
 		window->update();
 	}

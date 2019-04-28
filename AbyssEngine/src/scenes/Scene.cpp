@@ -1,5 +1,4 @@
 #include "Scene.h"
-#include "../entities/Entity.h"
 
 namespace abyssengine {
 	Scene::~Scene()
@@ -14,5 +13,4 @@ namespace abyssengine {
 	{
 		return entityManager;
 	}
-
 }

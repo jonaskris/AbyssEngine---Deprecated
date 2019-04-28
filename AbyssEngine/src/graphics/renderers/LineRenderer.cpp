@@ -1,8 +1,8 @@
 #include "LineRenderer.h"
 #include "../shaders/Program.h"
 #include "../TextureAtlas.h"
-#include "../../entities/components/gComponent/GComponent.h"
-#include "../../entities/components/PComponent.h"
+#include "../../entitysystem/entities/components/ComponentManager.h"
+#include "../../entitysystem/GComponents.h"
 #include "../../math/mat4.h"
 #include "../Camera.h"
 
@@ -32,10 +32,10 @@ namespace abyssengine {
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
 		glEnableVertexAttribArray(LR_SHADER_VERTEX_INDEX);
-		glVertexAttribPointer(LR_SHADER_VERTEX_INDEX, 3, GL_FLOAT, GL_FALSE, sizeof(GLComponent::VertexData), (const GLvoid*)(offsetof(GLComponent::VertexData, GLComponent::VertexData::vertex)));
+		glVertexAttribPointer(LR_SHADER_VERTEX_INDEX, 3, GL_FLOAT, GL_FALSE, sizeof(Line_Component::VertexData), (const GLvoid*)(offsetof(Line_Component::VertexData, Line_Component::VertexData::vertex)));
 
 		glEnableVertexAttribArray(LR_SHADER_COLOR_INDEX);
-		glVertexAttribPointer(LR_SHADER_COLOR_INDEX, 4, GL_FLOAT, GL_TRUE, sizeof(GLComponent::VertexData), (const GLvoid*)(offsetof(GLComponent::VertexData, GLComponent::VertexData::color)));
+		glVertexAttribPointer(LR_SHADER_COLOR_INDEX, 4, GL_FLOAT, GL_TRUE, sizeof(Line_Component::VertexData), (const GLvoid*)(offsetof(Line_Component::VertexData, Line_Component::VertexData::color)));
 
 		glBindVertexArray(0);
 
@@ -47,14 +47,14 @@ namespace abyssengine {
 		viewMatrixLocation = glGetUniformLocation(program->getProgramID(), "vw_matrix");
 	}
 
-	void LineRenderer::render(const std::vector<GLComponent*>& components, Camera* camera)
+	void LineRenderer::render(const std::vector<ComponentWrapper<Line_Component>>* components, Camera* camera)
 	{
 		glUseProgram(program->getProgramID());
 		glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &(*camera->getViewMat()).elements[0]);
 		glBindVertexArray(VAO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-		unsigned int toRender = components.size();
+		unsigned int toRender = components->size();
 		unsigned int progress = 0;
 
 		while (toRender > 0) {
@@ -68,19 +68,19 @@ namespace abyssengine {
 			for (size_t i = renderFrom; i < renderTo; i++)
 			{
 				size_t index = i - renderFrom;
-				if (components.at(i)->getPositionComponent() != NULL)
-				{
-					VERTEX_DATA[index * 2 + 0].vertex = components.at(i)->getVertex(0) + components.at(i)->getPositionComponent()->position;
-					VERTEX_DATA[index * 2 + 0].color = components.at(i)->getColor(0);
-					VERTEX_DATA[index * 2 + 1].vertex = components.at(i)->getVertex(1) + components.at(i)->getPositionComponent()->position;
-					VERTEX_DATA[index * 2 + 1].color = components.at(i)->getColor(1);
-				}
-				else {
-					VERTEX_DATA[index * 2 + 0].vertex = components.at(i)->getVertex(0);
-					VERTEX_DATA[index * 2 + 0].color = components.at(i)->getColor(0);
-					VERTEX_DATA[index * 2 + 1].vertex = components.at(i)->getVertex(1);
-					VERTEX_DATA[index * 2 + 1].color = components.at(i)->getColor(1);
-				}
+				//if (components->at(i).getPositionComponent() != NULL)
+				//{
+				//	VERTEX_DATA[index * 2 + 0].vertex = components.at(i)->getVertex(0) + components.at(i)->getPositionComponent()->position;
+				//	VERTEX_DATA[index * 2 + 0].color = components.at(i)->getColor(0);
+				//	VERTEX_DATA[index * 2 + 1].vertex = components.at(i)->getVertex(1) + components.at(i)->getPositionComponent()->position;
+				//	VERTEX_DATA[index * 2 + 1].color = components.at(i)->getColor(1);
+				//}
+				//else {
+					VERTEX_DATA[index * 2 + 0].vertex = components->at(i).component.vertex[0].vertex;
+					VERTEX_DATA[index * 2 + 0].color = components->at(i).component.vertex[0].color;
+					VERTEX_DATA[index * 2 + 1].vertex = components->at(i).component.vertex[1].vertex;
+					VERTEX_DATA[index * 2 + 1].color = components->at(i).component.vertex[1].color;
+				//}
 			}
 
 			glBufferData(GL_ARRAY_BUFFER, LR_BUFFER_SIZE, VERTEX_DATA, GL_STATIC_DRAW);

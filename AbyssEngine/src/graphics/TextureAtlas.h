@@ -12,11 +12,11 @@ namespace abyssengine {
 	class TextureAtlas
 	{
 	public:
-		enum Atlas { TESTSHEET, TESTSPRITE, MAX };
+		//enum Atlas { TESTSHEET, TESTSPRITE, MAX };
 		static void loadAtlases();
-		static void getTextureCoordinates(int index, Atlas type, std::vector<math::vec2>* textureCoordinates);
-		static TextureAtlas* getAtlas(Atlas type);
-		static TextureAtlas* atlases[Atlas::MAX];
+		//static std::vector<math::vec2> getTextureCoordinates(unsigned short atlasId, unsigned short textureIndex);
+		static TextureAtlas* getAtlas(unsigned short atlasId);
+		static std::vector<TextureAtlas*> atlases;
 	private:
 		std::string path;
 		GLuint textureID;
@@ -25,13 +25,12 @@ namespace abyssengine {
 	private:
 		float hpcX; // Half pixel correction to avoid bleeding between individual textures
 		float hpcY;
-		void calculateHPC();
 	public:
 		TextureAtlas(const std::string& path, unsigned int spriteSize);
 
-		void load();
+		GLuint load(std::vector<unsigned char>& pixels);
 
-		void getTextureCoordinates(int index, std::vector<math::vec2>* textureCoordinates);
+		std::vector<math::vec2> getTextureCoordinates(unsigned int textureIndex);
 		GLuint getTextureID();
 
 		void bind() const;
@@ -41,6 +40,6 @@ namespace abyssengine {
 		inline unsigned int getHeight() const;
 	private:
 		static bool initialized;
-		static const std::string atlasPaths[Atlas::MAX];
+		//static const std::string atlasPaths[Atlas::MAX];
 	};
 }

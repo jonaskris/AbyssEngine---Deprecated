@@ -161,6 +161,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\entities\components\ComponentManager.cpp" />
+    <ClCompile Include="src\entities\EntityManager.cpp" />
     <ClCompile Include="ext\freetype-gl\platform.c" />
     <ClCompile Include="ext\freetype-gl\texture-atlas.c" />
     <ClCompile Include="ext\freetype-gl\texture-font.c" />
@@ -204,17 +206,18 @@
     <ClCompile Include="ext\freetype\src\type1\type1.c" />
     <ClCompile Include="ext\freetype\src\type42\type42.c" />
     <ClCompile Include="ext\freetype\src\winfonts\winfnt.c" />
+    <ClCompile Include="src\config\ConfigReader.cpp" />
+    <ClCompile Include="src\entities\Entity_Ground.cpp" />
+    <ClCompile Include="src\entities\Entity_Player.cpp" />
     <ClCompile Include="src\entitysystem\entities\components\Component.cpp" />
     <ClCompile Include="src\entitysystem\entities\components\ComponentManagerIterator.cpp" />
     <ClCompile Include="src\entitysystem\systems\System.cpp" />
     <ClCompile Include="src\graphics\Camera.cpp" />
+    <ClCompile Include="src\entities\Entity_Test.cpp" />
     <ClCompile Include="src\graphics\buffers\Buffer.cpp" />
-    <ClCompile Include="src\graphics\renderers\LineRenderer.cpp" />
     <ClCompile Include="src\graphics\renderers\Renderer.cpp" />
-    <ClCompile Include="src\graphics\renderers\SpriteRenderer.cpp" />
     <ClCompile Include="src\graphics\shaders\Program.cpp" />
     <ClCompile Include="src\graphics\buffers\IndexBuffer.cpp" />
-    <ClCompile Include="src\graphics\TextureAtlas.cpp" />
     <ClCompile Include="src\input\listeners\KeyboardListener.cpp" />
     <ClCompile Include="src\input\observers\KeyboardObserver.cpp" />
     <ClCompile Include="src\MainLoop.cpp" />
@@ -234,10 +237,10 @@
     <ClCompile Include="src\graphics\buffers\VertexArray.cpp" />
     <ClCompile Include="src\scenes\WorldScene.cpp" />
     <ClCompile Include="src\graphics\shaders\Shader.cpp" />
+    <ClCompile Include="src\graphics\TextureAtlas.cpp" />
     <ClCompile Include="src\utils\lodepng\lodepng.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Defines.h" />
     <ClInclude Include="src\entities\components\ComponentManager.h" />
     <ClInclude Include="src\entities\components\Transform_Component.h" />
     <ClInclude Include="src\entities\EntityManager.h" />
@@ -254,6 +257,8 @@
     <ClInclude Include="ext\freetype\include\config\ftoption.h" />
     <ClInclude Include="ext\freetype\include\config\ftstdlib.h" />
     <ClInclude Include="ext\freetype\include\ft2build.h" />
+    <ClInclude Include="src\config\ConfigReader.h" />
+    <ClInclude Include="src\config\ConfigToken.h" />
     <ClInclude Include="src\entities\Entity_Ground.h" />
     <ClInclude Include="src\entities\Entity_Player.h" />
     <ClInclude Include="src\entitysystem\Components.h" />
@@ -265,9 +270,6 @@
     <ClInclude Include="src\entitysystem\GComponents.h" />
     <ClInclude Include="src\entitysystem\Systems.h" />
     <ClInclude Include="src\entitysystem\systems\System.h" />
-    <ClInclude Include="src\graphics\renderers\LineRenderer.h" />
-    <ClInclude Include="src\graphics\renderers\SpriteRenderer.h" />
-    <ClInclude Include="src\graphics\TextureAtlas.h" />
     <ClInclude Include="src\input\Keybindings.h" />
     <ClInclude Include="src\math\geometry\Shape.h" />
     <ClInclude Include="src\graphics\Camera.h" />
@@ -281,6 +283,7 @@
     <ClInclude Include="src\graphics\buffers\IndexBuffer.h" />
     <ClInclude Include="src\math\mat3.h" />
     <ClInclude Include="src\graphics\shaders\Shader.h" />
+    <ClInclude Include="src\graphics\TextureAtlas.h" />
     <ClInclude Include="src\math\sets\Map.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -320,6 +323,7 @@
   <ItemGroup>
     <None Include="src\graphics\shaders\text.frag" />
     <None Include="src\graphics\shaders\text.vert" />
+    <None Include="TestConfig.ini" />
     <None Include="src\graphics\shaders\line.frag" />
     <None Include="src\graphics\shaders\line.vert" />
     <None Include="src\graphics\shaders\sprite.frag" />

@@ -44,36 +44,4 @@ int main()
 		fps = 1000000000 / timeTaken;
 		//std::cout << fps << std::endl;
 	}
-
-	/*struct obj 
-	{
-		int number;
-
-		bool operator < (const obj& other) const
-		{
-			return (number < other.number);
-		}
-	};
-
-
-	std::vector<obj> ints;
-	ints.push_back(obj{4});
-	ints.push_back(obj{1});
-	ints.push_back(obj{7});
-	ints.push_back(obj{2});
-
-	for (size_t i = 0; i < ints.size(); i++) {
-		std::cout << ints.at(i).number << std::endl;
-	}
-	std::cout << std::endl;
-	
-	std::sort(ints.begin(), ints.end());
-
-	for (size_t i = 0; i < ints.size(); i++) {
-		std::cout << ints.at(i).number << std::endl;
-	}
-	std::cout << std::endl;
-
-
-	system("PAUSE");*/
 }
