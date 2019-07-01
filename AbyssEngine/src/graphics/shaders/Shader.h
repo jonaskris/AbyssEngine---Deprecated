@@ -9,11 +9,11 @@ namespace abyssengine {
 		GLuint getShaderID();
 		~Shader();
 	private:
-		GLuint shaderID;
+		GLuint shaderId;
 		const char* path;
 		Type type;
 		Shader(const char* path, Type type);
-		void load();
+		GLuint load();
 	private:
 		static const int shaderPathsSize = 6; // Remember to update this when adding new shaderPaths.
 		static Shader* shaders[shaderPathsSize];

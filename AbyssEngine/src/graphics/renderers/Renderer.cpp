@@ -13,9 +13,9 @@
 //#include "../../entities/components/Position_Component.h"
 //#include "../../entities/components/Graphics_Component.h"
 //#include "../../entities/components/Collision_Component.h"
-
-#include "../TextureAtlas.h"
-#include "../Camera.h"
+#include "../../resources/Texture.h"
+#include "../../entitysystem/DefaultComponents.h"
+#include "../../resources/ResourceManager.h"
 //#include "../Font.h"
 
 //#define DRAW_COLLISION_BOUNDS true 
@@ -51,7 +51,7 @@ namespace abyssengine {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		Program::loadPrograms();
-		TextureAtlas::loadAtlases();
+		ResourceManager::getInstance();
 
 		
 		//Font::initFonts();
@@ -69,31 +69,26 @@ namespace abyssengine {
 	void Renderer::render(std::vector<Scene*>& scenes)
 	{
 		window->clear();
-
-		// For every scene
-			// Get camera
-				// If it doesent have projection matrix, create one for it
-			// Get graphics components from scene, and give them to renderers that can render their type
-			// Update window
 			
 		for (size_t i = 0; i < scenes.size(); i++)
 		{
-			Camera* camera = scenes.at(i)->getCamera();
-		
-			if (camera->getProjectionMatrix() == NULL)
-				camera->setProjectionMatrix(FOV, ASPECT_RATIO, NEAR, FAR);
+			EntityManager* entityManager = scenes.at(i)->getEntityManager();
+			auto cameras = entityManager->getComponentVectorByType<Camera_Component>();
+			Camera_Component& camera = cameras->at(0);
 
-			auto pointComponents = scenes.at(i)->getEntityManager().getComponentVectorByType<Point_Component>();
+			math::mat4 perspectiveViewMatrix = camera.perspective * camera.viewMatrix;
+
+			auto pointComponents = entityManager->getComponentVectorByType<Point_Component>();
 			if(pointComponents)
-				PointRenderer::getInstance()->render(pointComponents, camera);
+				PointRenderer::getInstance()->render(pointComponents, perspectiveViewMatrix);
 
-			auto lineComponents = scenes.at(i)->getEntityManager().getComponentVectorByType<Line_Component>();
+			auto lineComponents = entityManager->getComponentVectorByType<Line_Component>();
 			if(lineComponents)
-				LineRenderer::getInstance()->render(lineComponents, camera);
+				LineRenderer::getInstance()->render(lineComponents, perspectiveViewMatrix);
 
-			auto spriteSheetComponents = scenes.at(i)->getEntityManager().getComponentVectorByType<SpriteSheet_Component>();
-			if (spriteSheetComponents)
-				SpriteRenderer::getInstance()->render(spriteSheetComponents, camera);
+			auto spriteComponents = entityManager->getComponentVectorByType<Sprite_Component>();
+			if (spriteComponents)
+				SpriteRenderer::getInstance()->render(spriteComponents, perspectiveViewMatrix);
 		}
 
 

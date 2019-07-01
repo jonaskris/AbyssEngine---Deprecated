@@ -26,11 +26,11 @@ namespace abyssengine { namespace math {
 
 
 		static mat4 orthographic(float left, float right, float bottom, float top, float near, float far);
-		static mat4* perspective(float fov, float aspectRatio, float near, float far);
+		static mat4 perspective(float fov, float aspectRatio, float near, float far);
 
 		static mat4 translate(const vec3& translation);
 		static mat4 rotation(float angle, const vec3& axis);
 		static mat4 scale(const vec3& scale);
-		static mat4* LookAt(const vec3& cameraPos, const vec3& lookAtPos, const vec3& up);
+		static mat4 viewMatrix(const vec3& cameraPos, const vec3& lookAtPos, const vec3& up);
 	};
 }}

@@ -2,7 +2,7 @@
 #include "../Entity.h"
 
 class ComponentManagerBase;
-struct ComponentStoreType;
+struct ComponentBase;
 
 /*
 	A generic iterator for use with ComponentManager.
@@ -15,30 +15,27 @@ private:
 	size_t index = 0;
 	ComponentManagerBase* componentManager;
 
-	ComponentManagerIterator(const size_t& index, ComponentManagerBase* componentManager) : componentManager(componentManager), index(index) { };
+	ComponentManagerIterator(const size_t& index, ComponentManagerBase* componentManager) : componentManager(componentManager), index(index) {};
 public:
 
-	/* 
-		Returns false if incrementing leads to out of bounds. 
+	/*
+		Returns false if incrementing leads to out of bounds.
 	*/
 	bool increment();
 
-	/* 
-		Returns false if decrementing leads to out of bounds. 
+	/*
+		Returns false if decrementing leads to out of bounds.
 	*/
 	bool decrement();
 
 	/*
-		Gets the entity associated with component at current index.
-	*/
-	Entity getCurrentEntity() const;
-
-	/* 
 		Gets the component at current index.
 	*/
-	ComponentStoreType* getCurrentComponent() const;
+	ComponentBase* getCurrentComponent() const;
 
-	/* 
+	size_t getComponentManagerSize() const;
+
+	/*
 		For sorting iterators by size of the componentmanager.
 	*/
 	bool operator < (const ComponentManagerIterator& other) const;

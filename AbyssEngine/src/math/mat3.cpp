@@ -93,7 +93,7 @@ namespace abyssengine { namespace math {
 	{
 		mat3 returnMatrix = identity();
 
-		float r = toRadians(angle);
+		float r = math::toRadians(angle);
 		float c = cos(r);
 		float s = sin(r);
 		float omc = 1.0f - c;

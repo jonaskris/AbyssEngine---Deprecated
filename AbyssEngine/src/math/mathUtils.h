@@ -3,7 +3,9 @@
 #include <math.h>
 
 namespace abyssengine { namespace math {
-	inline float toRadians(float degrees) {
-		return float(degrees * (M_PI / 180.0f));
+	
+	template <typename FloatingType>
+	FloatingType toRadians(FloatingType degrees) {
+		return degrees * ((FloatingType)M_PI / (FloatingType)180.0);
 	}
 }}

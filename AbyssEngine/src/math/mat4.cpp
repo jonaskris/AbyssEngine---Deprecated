@@ -98,10 +98,10 @@ namespace abyssengine { namespace math {
 		return returnMatrix;
 	}
 
-	mat4* mat4::perspective(float fov, float aspectRatio, float near, float far)
+	mat4 mat4::perspective(float fov, float aspectRatio, float near, float far)
 	{
 		mat4 returnMatrix = identity();
-		float q = 1.0f / tan(toRadians(0.5f * fov));
+		float q = 1.0f / tan(math::toRadians(0.5f * fov));
 		float a = q / aspectRatio;
 
 		float b = (near + far) / (near - far);
@@ -113,7 +113,7 @@ namespace abyssengine { namespace math {
 		returnMatrix.elements[2 + 3 * 4] = -1.0f;
 		returnMatrix.elements[3 + 2 * 4] = c;
 
-		return new mat4(returnMatrix);
+		return returnMatrix;
 	}
 
 	mat4 mat4::translate(const vec3& translation)
@@ -142,7 +142,7 @@ namespace abyssengine { namespace math {
 	{
 		mat4 returnMatrix = identity();
 
-		float r = toRadians(angle);
+		float r = math::toRadians(angle);
 		float c = cos(r);
 		float s = sin(r);
 		float omc = 1.0f - c;
@@ -166,25 +166,25 @@ namespace abyssengine { namespace math {
 		return returnMatrix;
 	}
 
-	mat4* mat4::LookAt(const vec3& cameraPos, const vec3& lookAtPos, const vec3& up)
+	mat4 mat4::viewMatrix(const vec3& cameraPos, const vec3& lookAtPos, const vec3& up)
 	{
-		mat4 result = identity();
+		mat4 returnMatrix = identity();
 		vec3 f = (lookAtPos - cameraPos).normalize();
 		vec3 s = f.cross(up.normalize());
 		vec3 u = s.cross(f);
 
-		result.elements[0 + 0 * 4] = s.x;
-		result.elements[0 + 1 * 4] = s.y;
-		result.elements[0 + 2 * 4] = s.z;
+		returnMatrix.elements[0 + 0 * 4] = s.x;
+		returnMatrix.elements[0 + 1 * 4] = s.y;
+		returnMatrix.elements[0 + 2 * 4] = s.z;
 
-		result.elements[1 + 0 * 4] = u.x;
-		result.elements[1 + 1 * 4] = u.y;
-		result.elements[1 + 2 * 4] = u.z;
+		returnMatrix.elements[1 + 0 * 4] = u.x;
+		returnMatrix.elements[1 + 1 * 4] = u.y;
+		returnMatrix.elements[1 + 2 * 4] = u.z;
 
-		result.elements[2 + 0 * 4] = -f.x;
-		result.elements[2 + 1 * 4] = -f.y;
-		result.elements[2 + 2 * 4] = -f.z;
+		returnMatrix.elements[2 + 0 * 4] = -f.x;
+		returnMatrix.elements[2 + 1 * 4] = -f.y;
+		returnMatrix.elements[2 + 2 * 4] = -f.z;
 
-		return new mat4(result * translate(vec3(-cameraPos.x, -cameraPos.y, -cameraPos.z)));
+		return returnMatrix * translate(vec3(-cameraPos.x, -cameraPos.y, -cameraPos.z));
 	}
 }}

@@ -4,13 +4,13 @@ namespace abyssengine {
 	Scene::~Scene()
 	{
 	}
-	Camera* Scene::getCamera()
-	{
-		return camera;
-	}
+	//Camera* Scene::getCamera()
+	//{
+	//	return camera;
+	//}
 
-	EntityManager& Scene::getEntityManager()
+	EntityManager* Scene::getEntityManager()
 	{
-		return entityManager;
+		return &entityManager;
 	}
 }

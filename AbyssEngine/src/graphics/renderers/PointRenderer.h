@@ -2,8 +2,9 @@
 #include <vector>
 #include <gl/glew.h>
 #include "../../entitysystem/entities/components/ComponentManager.h"
-#include "../../entitysystem/GComponents.h"
+#include "../../entitysystem/DefaultGComponents.h"
 #include "../shaders/Program.h"
+#include "../../entitysystem/DefaultComponents.h"
 
 #define PR_PROGRAM						Program::type::LINE
 
@@ -39,6 +40,6 @@ namespace abyssengine {
 		GLuint* IBO_DATA = new GLuint[PR_MAX_POINTS];		// RENDERER_INDICES_SIZE is max size of IBO_DATA
 		GLsizei IBO_COUNT = 0;
 	public:
-		void render(const std::vector<ComponentWrapper<Point_Component>>* components, Camera* camera);
+		void render(const std::vector<Point_Component>* components, const math::mat4& perspectiveViewMatrix);
 	};
 }

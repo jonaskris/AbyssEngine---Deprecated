@@ -4,19 +4,19 @@
 #include "../entitysystem/entities/EntityManager.h"
 
 namespace abyssengine {
-	class Camera;
+	//class Camera;
 
 	class Scene
 	{
 	protected:
-		Camera* camera = NULL;
+		//Camera* camera = NULL;
 		EntityManager entityManager;
 	public:
 		virtual ~Scene();
 
-		Camera* getCamera();
+		//Camera* getCamera();
 		virtual void update(const double &dt) = 0;
 
-		EntityManager& getEntityManager();
+		EntityManager* getEntityManager();
 	};
 }

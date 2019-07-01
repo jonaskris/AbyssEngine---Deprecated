@@ -1,8 +1,8 @@
 #include "PointRenderer.h"
 #include "../shaders/Program.h"
-#include "../TextureAtlas.h"
+#include "../../resources/Texture.h"
 #include "../../entitysystem/entities/components/ComponentManager.h"
-#include "../../entitysystem/GComponents.h"
+#include "../../entitysystem/DefaultGComponents.h"
 #include "../../math/mat4.h"
 #include "../Camera.h"
 
@@ -47,10 +47,10 @@ namespace abyssengine {
 		viewMatrixLocation = glGetUniformLocation(program->getProgramID(), "vw_matrix");
 	}
 
-	void PointRenderer::render(const std::vector<ComponentWrapper<Point_Component>>* components, Camera* camera)
+	void PointRenderer::render(const std::vector<Point_Component>* components, const math::mat4& perspectiveViewMatrix)
 	{
 		glUseProgram(program->getProgramID());
-		glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &(*camera->getViewMat()).elements[0]);
+		glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &(perspectiveViewMatrix).elements[0]);
 		glBindVertexArray(VAO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
@@ -74,8 +74,8 @@ namespace abyssengine {
 				//	VERTEX_DATA[index].color = components.at(i)->getColor();
 				//}
 				//else {
-					VERTEX_DATA[index].vertex = components->at(i).component.vertex.vertex;
-					VERTEX_DATA[index].color = components->at(i).component.vertex.color;
+					VERTEX_DATA[index].vertex = components->at(i).vertex.vertex;
+					VERTEX_DATA[index].color = components->at(i).vertex.color;
 				//}
 			}
 

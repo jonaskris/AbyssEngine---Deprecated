@@ -297,7 +297,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="src\graphics\renderers\PointRenderer.h" />
-    <ClInclude Include="src\utils\DirUtils.h" />
     <ClInclude Include="src\utils\FileUtils.h" />
     <ClInclude Include="src\graphics\renderers\Renderer.h" />
     <ClInclude Include="src\input\listeners\KeyboardListener.h" />
@@ -317,7 +316,7 @@
     <ClInclude Include="src\math\vec4.h" />
     <ClInclude Include="src\graphics\buffers\VertexArray.h" />
     <ClInclude Include="src\scenes\WorldScene.h" />
-    <ClInclude Include="src\utils\ImageLoader.h" />
+    <ClInclude Include="src\utils\ImageUtils.h" />
     <ClInclude Include="src\utils\lodepng\lodepng.h" />
   </ItemGroup>
   <ItemGroup>

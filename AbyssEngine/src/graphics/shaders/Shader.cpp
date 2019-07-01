@@ -18,51 +18,53 @@ namespace abyssengine {
 	{
 		this->path = path;
 		this->type = type;
-		load();
+		this->shaderId = load();
 	}
 
 	Shader::~Shader()
 	{
-		glDeleteShader(shaderID);
+		glDeleteShader(shaderId);
 	}
 
 	GLuint Shader::getShaderID()
 	{
-		return shaderID;
+		return shaderId;
 	}
 
-	void Shader::load()
+	GLuint Shader::load()
 	{
+		GLuint shaderId = 0;
 		switch (type) {
 		case Shader::Type::VERTEX:
-			shaderID = glCreateShader(GL_VERTEX_SHADER);
+			shaderId = glCreateShader(GL_VERTEX_SHADER);
 			break;
 		case Shader::Type::FRAGMENT:
-			shaderID = glCreateShader(GL_FRAGMENT_SHADER);
+			shaderId = glCreateShader(GL_FRAGMENT_SHADER);
 			break;
 		}
 
-		std::string sourceString = read_file(path);
+		std::string sourceString = FileUtils::read_file(path);
 		if (sourceString == "") {
 			std::cout << "Failed to read shader, perhaps the path is wrong?" << std::endl;
-			return;
+			return shaderId;
 		}
 		const char* source = sourceString.c_str();
 
-		glShaderSource(shaderID, 1, &source, NULL);
-		glCompileShader(shaderID);
+		glShaderSource(shaderId, 1, &source, NULL);
+		glCompileShader(shaderId);
 
 		GLint result;
-		glGetShaderiv(shaderID, GL_COMPILE_STATUS, &result);
+		glGetShaderiv(shaderId, GL_COMPILE_STATUS, &result);
 		if (result == GL_FALSE) {
 			GLint length;
-			glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &length);
+			glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &length);
 			std::vector<char> error(length);
-			glGetShaderInfoLog(shaderID, length, &length, &error[0]);
+			glGetShaderInfoLog(shaderId, length, &length, &error[0]);
 			std::cout << "Failed to compile shader : " << path << "!" << std::endl << &error[0] << std::endl;
-			glDeleteShader(shaderID);
-			return;
+			glDeleteShader(shaderId);
+			return shaderId;
 		}
+		return shaderId;
 	}
 
 	Shader* Shader::getShader(unsigned short index)

@@ -204,9 +204,7 @@
     <ClCompile Include="ext\freetype\src\type1\type1.c" />
     <ClCompile Include="ext\freetype\src\type42\type42.c" />
     <ClCompile Include="ext\freetype\src\winfonts\winfnt.c" />
-    <ClCompile Include="src\entitysystem\entities\components\Component.cpp" />
     <ClCompile Include="src\entitysystem\entities\components\ComponentManagerIterator.cpp" />
-    <ClCompile Include="src\entitysystem\systems\System.cpp" />
     <ClCompile Include="src\graphics\Camera.cpp" />
     <ClCompile Include="src\graphics\buffers\Buffer.cpp" />
     <ClCompile Include="src\graphics\renderers\LineRenderer.cpp" />
@@ -214,7 +212,8 @@
     <ClCompile Include="src\graphics\renderers\SpriteRenderer.cpp" />
     <ClCompile Include="src\graphics\shaders\Program.cpp" />
     <ClCompile Include="src\graphics\buffers\IndexBuffer.cpp" />
-    <ClCompile Include="src\graphics\TextureAtlas.cpp" />
+    <ClCompile Include="src\resources\ResourceManager.cpp" />
+    <ClCompile Include="src\resources\Texture.cpp" />
     <ClCompile Include="src\input\listeners\KeyboardListener.cpp" />
     <ClCompile Include="src\input\observers\KeyboardObserver.cpp" />
     <ClCompile Include="src\MainLoop.cpp" />
@@ -234,6 +233,7 @@
     <ClCompile Include="src\graphics\buffers\VertexArray.cpp" />
     <ClCompile Include="src\scenes\WorldScene.cpp" />
     <ClCompile Include="src\graphics\shaders\Shader.cpp" />
+    <ClCompile Include="src\utils\FileUtils.cpp" />
     <ClCompile Include="src\utils\lodepng\lodepng.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -256,18 +256,21 @@
     <ClInclude Include="ext\freetype\include\ft2build.h" />
     <ClInclude Include="src\entities\Entity_Ground.h" />
     <ClInclude Include="src\entities\Entity_Player.h" />
-    <ClInclude Include="src\entitysystem\Components.h" />
+    <ClInclude Include="src\entitysystem\DefaultComponents.h" />
     <ClInclude Include="src\entitysystem\entities\components\Component.h" />
     <ClInclude Include="src\entitysystem\entities\components\ComponentManager.h" />
     <ClInclude Include="src\entitysystem\entities\components\ComponentManagerIterator.h" />
     <ClInclude Include="src\entitysystem\entities\Entity.h" />
     <ClInclude Include="src\entitysystem\entities\EntityManager.h" />
-    <ClInclude Include="src\entitysystem\GComponents.h" />
-    <ClInclude Include="src\entitysystem\Systems.h" />
+    <ClInclude Include="src\entitysystem\DefaultGComponents.h" />
+    <ClInclude Include="src\entitysystem\DefaultSystems.h" />
     <ClInclude Include="src\entitysystem\systems\System.h" />
     <ClInclude Include="src\graphics\renderers\LineRenderer.h" />
     <ClInclude Include="src\graphics\renderers\SpriteRenderer.h" />
-    <ClInclude Include="src\graphics\TextureAtlas.h" />
+    <ClInclude Include="src\math\MathSemanticTypes.h" />
+    <ClInclude Include="src\resources\Resource.h" />
+    <ClInclude Include="src\resources\ResourceManager.h" />
+    <ClInclude Include="src\resources\Texture.h" />
     <ClInclude Include="src\input\Keybindings.h" />
     <ClInclude Include="src\math\geometry\Shape.h" />
     <ClInclude Include="src\graphics\Camera.h" />
@@ -294,7 +297,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="src\graphics\renderers\PointRenderer.h" />
-    <ClInclude Include="src\utils\DirUtils.h" />
+    <ClInclude Include="src\resources\TextureAtlas.h" />
     <ClInclude Include="src\utils\FileUtils.h" />
     <ClInclude Include="src\graphics\renderers\Renderer.h" />
     <ClInclude Include="src\input\listeners\KeyboardListener.h" />
@@ -314,8 +317,9 @@
     <ClInclude Include="src\math\vec4.h" />
     <ClInclude Include="src\graphics\buffers\VertexArray.h" />
     <ClInclude Include="src\scenes\WorldScene.h" />
-    <ClInclude Include="src\utils\ImageLoader.h" />
+    <ClInclude Include="src\utils\ImageUtils.h" />
     <ClInclude Include="src\utils\lodepng\lodepng.h" />
+    <ClInclude Include="src\utils\UtilsSemanticTypes.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\graphics\shaders\text.frag" />

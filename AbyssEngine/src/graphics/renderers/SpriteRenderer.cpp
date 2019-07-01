@@ -1,10 +1,14 @@
 #include "SpriteRenderer.h"
 #include "../shaders/Program.h"
-#include "../TextureAtlas.h"
+#include "../../resources/Texture.h"
 #include "../../entitysystem/entities/components/ComponentManager.h"
-#include "../../entitysystem/GComponents.h"
+#include "../../entitysystem/DefaultGComponents.h"
+#include "../../entitysystem/DefaultComponents.h"
 #include "../../math/mat4.h"
 #include "../Camera.h"
+#include "../../resources/ResourceManager.h"
+#include "../../resources/TextureAtlas.h"
+
 
 namespace abyssengine {
 	SpriteRenderer* SpriteRenderer::instance = NULL;
@@ -41,13 +45,13 @@ namespace abyssengine {
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
 		glEnableVertexAttribArray(SR_SHADER_VERTEX_INDEX);
-		glVertexAttribPointer(SR_SHADER_VERTEX_INDEX, 3, GL_FLOAT, GL_FALSE, sizeof(SpriteSheet_Component::VertexData), (const GLvoid*)(offsetof(SpriteSheet_Component::VertexData, SpriteSheet_Component::VertexData::vertex)));
+		glVertexAttribPointer(SR_SHADER_VERTEX_INDEX, 3, GL_FLOAT, GL_FALSE, sizeof(Sprite_Component::VertexData), (const GLvoid*)(offsetof(Sprite_Component::VertexData, Sprite_Component::VertexData::vertex)));
 
 		glEnableVertexAttribArray(SR_SHADER_COLOR_INDEX);
-		glVertexAttribPointer(SR_SHADER_COLOR_INDEX, 4, GL_FLOAT, GL_TRUE, sizeof(SpriteSheet_Component::VertexData), (const GLvoid*)(offsetof(SpriteSheet_Component::VertexData, SpriteSheet_Component::VertexData::color)));
+		glVertexAttribPointer(SR_SHADER_COLOR_INDEX, 4, GL_FLOAT, GL_TRUE, sizeof(Sprite_Component::VertexData), (const GLvoid*)(offsetof(Sprite_Component::VertexData, Sprite_Component::VertexData::color)));
 
 		glEnableVertexAttribArray(SR_SHADER_UV_INDEX);
-		glVertexAttribPointer(SR_SHADER_UV_INDEX, 2, GL_FLOAT, GL_TRUE, sizeof(SpriteSheet_Component::VertexData), (const GLvoid*)(offsetof(SpriteSheet_Component::VertexData, SpriteSheet_Component::VertexData::uv)));
+		glVertexAttribPointer(SR_SHADER_UV_INDEX, 2, GL_FLOAT, GL_TRUE, sizeof(Sprite_Component::VertexData), (const GLvoid*)(offsetof(Sprite_Component::VertexData, Sprite_Component::VertexData::uv)));
 
 		glBindVertexArray(0);
 
@@ -60,91 +64,65 @@ namespace abyssengine {
 		viewMatrixLocation = glGetUniformLocation(program->getProgramID(), "vw_matrix");
 	}
 
-	void SpriteRenderer::render(const std::vector<ComponentWrapper<SpriteSheet_Component>>* components, Camera* camera)
+	void SpriteRenderer::render(const std::vector<Sprite_Component>* components, const math::mat4& perspectiveViewMatrix)
 	{
 		glUseProgram(program->getProgramID());
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, TextureAtlas::getAtlas(0)->getTextureID());
 		glUniform1i(texLoc, 0);
-		glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &(*camera->getViewMat()).elements[0]);
+		glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &(perspectiveViewMatrix).elements[0]);
 
 		glBindVertexArray(VAO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
 
-		unsigned int toRender = components->size();
+
 		unsigned int progress = 0;
+		while (progress < components->size()) {
+			size_t IBOCount = 0;
+			size_t index = 0;
+			size_t textureId = components->at(progress).textureId;
 
-		while (toRender > 0) {
-			unsigned int renderFrom = progress;
-			unsigned int renderTo;
-			if (toRender >= SR_MAX_SPRITES) {
-				renderTo = renderFrom + SR_MAX_SPRITES;
-			}
-			else {
-				renderTo = renderFrom + toRender;
-			}
+			//if (toRender >= SR_MAX_SPRITES) {
+			//	renderTo = renderFrom + SR_MAX_SPRITES;
+			//}
+			//else {
+			//	renderTo = renderFrom + toRender;
+			//}
+			//
+			//for (size_t i = renderFrom; i < renderTo; i++)
+			//{				
+			//	size_t index = i - renderFrom;
+			//	
+			//	VERTEX_DATA[index * 4 + 0] = components->at(i).vertex[0];
+			//	VERTEX_DATA[index * 4 + 1] = components->at(i).vertex[1];
+			//	VERTEX_DATA[index * 4 + 2] = components->at(i).vertex[2];
+			//	VERTEX_DATA[index * 4 + 3] = components->at(i).vertex[3];
+			//}
 
-			for (size_t i = renderFrom; i < renderTo; i++)
+			for (size_t i = progress; i < components->size(); i++)
 			{
-				//math::vec3 gPosition = components.at(i)->getPosition();
-				//math::vec3 pPosition = components.at(i)->getPositionComponent()->position;
-				//math::vec3 scale = components.at(i)->getScale();
-				//math::vec4* color = components.at(i)->getColors();
-				//std::vector<math::vec2> uv = components.at(i)->uv;
+				if ((i - progress) >= SR_MAX_SPRITES)
+					break;
+				else if (components->at(i).textureId != textureId)
+					break;
 				
-				size_t index = i - renderFrom;
-				
-				VERTEX_DATA[index * 4 + 0] = components->at(i).component.vertex[0];
-				
-				VERTEX_DATA[index * 4 + 1] = components->at(i).component.vertex[1];
 
-				VERTEX_DATA[index * 4 + 2] = components->at(i).component.vertex[2];
-				
-				VERTEX_DATA[index * 4 + 3] = components->at(i).component.vertex[3];
+				VERTEX_DATA[index * 4 + 0] = components->at(i).vertex[0];
+				VERTEX_DATA[index * 4 + 1] = components->at(i).vertex[1];
+				VERTEX_DATA[index * 4 + 2] = components->at(i).vertex[2];
+				VERTEX_DATA[index * 4 + 3] = components->at(i).vertex[3];
 
-				//math::vec3 gPosition = components.at(i)->getPosition();
-				//math::vec3 pPosition = components.at(i)->getPositionComponent()->position;
-				//math::vec3 scale = components.at(i)->getScale();
-				//math::vec4* color = components.at(i)->getColors();
-				//std::vector<math::vec2> uv = components.at(i)->uv;
-				//
-				//size_t index = i - renderFrom;
-				//
-				//VERTEX_DATA[index * 4 + 0].vertex.x = gPosition.x + pPosition.x - (scale.x / 2);
-				//VERTEX_DATA[index * 4 + 0].vertex.y = gPosition.y + pPosition.y - (scale.y / 2);
-				//VERTEX_DATA[index * 4 + 0].vertex.z = gPosition.z + pPosition.z - (scale.z / 2);
-				//VERTEX_DATA[index * 4 + 0].color = color[0];
-				//VERTEX_DATA[index * 4 + 0].uv = uv.at(0);
-				//
-				//VERTEX_DATA[index * 4 + 1].vertex.x = gPosition.x + pPosition.x - (scale.x / 2);
-				//VERTEX_DATA[index * 4 + 1].vertex.y = gPosition.y + pPosition.y + (scale.y / 2);
-				//VERTEX_DATA[index * 4 + 1].vertex.z = gPosition.z + pPosition.z - (scale.z / 2);
-				//VERTEX_DATA[index * 4 + 1].color = color[1];
-				//VERTEX_DATA[index * 4 + 1].uv = uv.at(1);
-				//
-				//VERTEX_DATA[index * 4 + 2].vertex.x = gPosition.x + pPosition.x + (scale.x / 2);
-				//VERTEX_DATA[index * 4 + 2].vertex.y = gPosition.y + pPosition.y + (scale.y / 2);
-				//VERTEX_DATA[index * 4 + 2].vertex.z = gPosition.z + pPosition.z - (scale.z / 2);
-				//VERTEX_DATA[index * 4 + 2].color = color[2];
-				//VERTEX_DATA[index * 4 + 2].uv = uv.at(2);
-				//
-				//VERTEX_DATA[index * 4 + 3].vertex.x = gPosition.x + pPosition.x + (scale.x / 2);
-				//VERTEX_DATA[index * 4 + 3].vertex.y = gPosition.y + pPosition.y - (scale.y / 2);
-				//VERTEX_DATA[index * 4 + 3].vertex.z = gPosition.z + pPosition.z - (scale.z / 2);
-				//VERTEX_DATA[index * 4 + 3].color = color[3];
-				//VERTEX_DATA[index * 4 + 3].uv = uv.at(3);
+				IBOCount += 6;
+				index += 4;
+				progress++;
 			}
+
+			glBindTexture(GL_TEXTURE_2D, textureId);
 
 			glBufferData(GL_ARRAY_BUFFER, SR_BUFFER_SIZE, VERTEX_DATA, GL_STATIC_DRAW);
 
-			IBO_COUNT = (renderTo - renderFrom) * 6;
-
-			glDrawElements(GL_TRIANGLES, IBO_COUNT, GL_UNSIGNED_INT, NULL);
-
-			toRender -= (renderTo - renderFrom);
-			progress += (renderTo - renderFrom);
+			glDrawElements(GL_TRIANGLES, IBOCount, GL_UNSIGNED_INT, NULL);
 		}
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);

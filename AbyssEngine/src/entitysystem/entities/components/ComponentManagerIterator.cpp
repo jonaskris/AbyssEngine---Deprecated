@@ -2,14 +2,9 @@
 #include "ComponentManager.h"
 #include "../Entity.h"
 
-struct ComponentStoreType;
+struct ComponentBase;
 
-Entity ComponentManagerIterator::getCurrentEntity() const 
-{ 
-	return componentManager->entityAt(index); 
-};
-
-ComponentStoreType* ComponentManagerIterator::getCurrentComponent() const 
+ComponentBase* ComponentManagerIterator::getCurrentComponent() const
 {
 	return componentManager->componentAt(index);
 };
@@ -30,7 +25,9 @@ bool ComponentManagerIterator::decrement()
 	return true;
 };
 
-bool ComponentManagerIterator::operator < (const ComponentManagerIterator& other) const
+size_t ComponentManagerIterator::getComponentManagerSize() const { return componentManager->size(); }
+
+bool ComponentManagerIterator::operator < (const ComponentManagerIterator & other) const
 {
 	return (componentManager->size() < other.componentManager->size());
 }

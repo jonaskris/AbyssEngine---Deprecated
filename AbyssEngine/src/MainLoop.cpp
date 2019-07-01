@@ -13,23 +13,28 @@ int main()
 {
 	using namespace abyssengine;
 	Renderer* renderer = Renderer::getInstance();
-	glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+	glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
 
 	WorldScene* scene = new WorldScene();
 	std::vector<Scene*> scenes;
 	scenes.push_back((Scene*)scene);
 
 
-	double target_fps = 0; // 0 is no cap
-	double target_time = (target_fps != 0) ? 1000000000 / target_fps : 0;
+	//double target_fps = 0; // 0 is no cap
+	//double target_time = (target_fps != 0) ? 1000000000 / target_fps : 0;
 
 	double deltaTime = 0.0;
 	double fps = 0.0;
+	double timer = 0;
+	double frameCount = 0;
+
+	auto oldTime = std::chrono::high_resolution_clock::now();
+	auto newTime = std::chrono::high_resolution_clock::now();
 
 	while (!renderer->windowClosed())
 	{
-		auto start = std::chrono::high_resolution_clock::now();
-
+		oldTime = newTime;
+		newTime = std::chrono::high_resolution_clock::now();
 			for (size_t i = 0; i < scenes.size(); i++)
 			{
 				//KeyboardListener::update();
@@ -37,11 +42,19 @@ int main()
 			}
 			renderer->render(scenes);
 
-		auto finish = std::chrono::high_resolution_clock::now();
-		double timeTaken = (double)(std::chrono::duration_cast<std::chrono::nanoseconds>(finish - start).count());
 
-		deltaTime = timeTaken / (1000000000 / 1.0f);
-		fps = 1000000000 / timeTaken;
-		//std::cout << fps << std::endl;
+		long long timeTaken = std::chrono::duration_cast<std::chrono::milliseconds>(newTime - oldTime).count();
+
+		deltaTime = (double)timeTaken / (double)1000;
+
+		timer += deltaTime;
+		frameCount++;
+
+		if (timer > 1.0f)
+		{
+			std::cout << frameCount << std::endl;
+			timer = 0.0f;
+			frameCount = 0;
+		}
 	}
 }

@@ -9,7 +9,8 @@
 #include "components/ComponentManagerIterator.h"
 
 
-struct ComponentStoreType;
+struct ComponentBase;
+class EntityManagerSystemInterface;
 
 /*
 	Stores entities, systems and component managers,
@@ -17,17 +18,17 @@ struct ComponentStoreType;
 */
 class EntityManager
 {
+	friend class EntityManagerSystemInterface;
 private:
 	/*
-		Systems
+		Systems.
 	*/
-	std::vector<SystemStoreType*> systems;
+	std::vector<SystemBase*> systems;
 
 	/*
-		Entities
+		Entities.
 	*/
 	std::vector<ComponentManagerBase*> componentManagers;
-	unsigned int entityCount = 0;
 	unsigned int entityCounter = 1; // For assigning entity id, 0 is null value
 
 	/*
@@ -36,7 +37,7 @@ private:
 	template <typename ComponentType>
 	void unpackAndStoreComponentsInManagers(const Entity& entity, const ComponentType& component)
 	{
-		static_assert(std::is_base_of<ComponentStoreType, ComponentType>::value, "ComponentType must be derived from ComponentStoreType!");
+		static_assert(std::is_base_of<ComponentBase, ComponentType>::value, "ComponentType must be derived from ComponentBase!");
 
 		newComponent(entity, component);
 	}
@@ -45,9 +46,9 @@ private:
 		Unpacks parameter pack of components when creating an entity, recursive case.
 	*/
 	template <typename ComponentType, typename... Rest>
-	void unpackAndStoreComponentsInManagers(const Entity& entity, const ComponentType& component, const Rest&... rest)
+	void unpackAndStoreComponentsInManagers(const Entity& entity, const ComponentType& component, const Rest& ... rest)
 	{
-		static_assert(std::is_base_of<ComponentStoreType, ComponentType>::value, "ComponentType must be derived from ComponentStoreType!");
+		static_assert(std::is_base_of<ComponentBase, ComponentType>::value, "ComponentType must be derived from ComponentBase!");
 
 		newComponent(entity, component);
 		unpackAndStoreComponentsInManagers(entity, rest...);
@@ -59,7 +60,7 @@ private:
 	template <typename ComponentType>
 	std::vector<ComponentManagerIterator>& unpackAndGetComponentManagersIteratorsHelper(std::vector<ComponentManagerIterator>& vec)
 	{
-		static_assert(std::is_base_of<ComponentStoreType, ComponentType>::value, "ComponentType must be derived from ComponentStoreType!");
+		static_assert(std::is_base_of<ComponentBase, ComponentType>::value, "ComponentType must be derived from ComponentBase!");
 
 		for (size_t i = 0; i < this->componentManagers.size(); i++)
 			if (this->componentManagers.at(i)->storesComponentType<ComponentType>())
@@ -67,7 +68,7 @@ private:
 				vec.push_back(this->componentManagers.at(i)->begin());
 				return vec;
 			}
-		
+
 		return vec;
 	}
 
@@ -77,7 +78,7 @@ private:
 	template <typename F, typename ComponentType, typename... Rest>
 	std::vector<ComponentManagerIterator>& unpackAndGetComponentManagersIteratorsHelper(std::vector<ComponentManagerIterator>& vec)
 	{
-		static_assert(std::is_base_of<ComponentStoreType, ComponentType>::value, "ComponentType must be derived from ComponentStoreType!");
+		static_assert(std::is_base_of<ComponentBase, ComponentType>::value, "ComponentType must be derived from ComponentBase!");
 
 		for (size_t i = 0; i < this->componentManagers.size(); i++)
 			if (this->componentManagers.at(i)->storesComponentType<ComponentType>())
@@ -85,7 +86,7 @@ private:
 				vec.push_back(this->componentManagers.at(i)->begin());
 				return unpackAndGetComponentManagersIteratorsHelper<F, Rest...>(vec);
 			}
-		
+
 		return unpackAndGetComponentManagersIteratorsHelper<F, Rest...>(vec);
 	}
 
@@ -101,7 +102,7 @@ private:
 
 public:
 	EntityManager() {};
-	~EntityManager() 
+	~EntityManager()
 	{
 		for (size_t i = 0; i < componentManagers.size(); i++)
 			delete componentManagers[i];
@@ -110,15 +111,91 @@ public:
 	};
 
 	/*
+		Executes a System.updateEntity on every entity that has specified set of component types.
+	*/
+	void each(const double& dt, SystemBase * system, std::vector<size_t>& componentIdentifiers)
+	{
+
+		if (componentIdentifiers.size() == 0)
+			return;
+
+		// Get each relevant ComponentManager and create an iterator for it.
+		std::vector<ComponentManagerIterator> componentManagerIterators;
+		for (size_t i = 0; i < componentIdentifiers.size(); i++) 
+		{
+			for (size_t j = 0; j < this->componentManagers.size(); j++)
+			{
+				size_t ci1 = componentIdentifiers.at(i);
+
+				size_t ci2 = this->componentManagers.at(j)->getIdentifier();
+				if (ci1 == ci2)
+				{
+					componentManagerIterators.push_back(this->componentManagers.at(j)->begin());
+				}
+			}
+		}
+
+		// Check that the ComponentManagers the ComponentManagerIterators point to are not empty
+		for (size_t i = 0; i < componentManagerIterators.size(); i++)
+			if (componentManagerIterators[i].getComponentManagerSize() == 0)
+				return;
+
+		// Check if iterator/manager was found for each of ComponentTypes, if not, return.
+		if (componentIdentifiers.size() != componentManagerIterators.size())
+			return;
+
+		// Since unpacking iterators results in reversed order, it must be reversed again to get original order.
+		std::reverse(componentManagerIterators.begin(), componentManagerIterators.end());
+
+		// Create vector of which iterators indices would be where if sorted, from smallest to biggest. To reduce redundant iterating.
+		std::vector<size_t> indicesSorted;
+		indicesSorted.reserve(componentManagerIterators.size());
+		for (size_t i = 0; i < componentManagerIterators.size(); i++)
+			indicesSorted.push_back(i);
+		std::sort(indicesSorted.begin(), indicesSorted.end(), [&componentManagerIterators](const size_t & l, const size_t & r) { return componentManagerIterators[l].getComponentManagerSize() < componentManagerIterators[r].getComponentManagerSize(); });
+
+
+		// While first iterator is not at end.
+		do
+		{
+			if (componentManagerIterators.at(indicesSorted[0]).getCurrentComponent()->getDisabled())
+				goto incrementFirst;
+			//For every other iterator.
+			for (size_t i = 1; i < componentManagerIterators.size(); i++)
+			{
+				// While entity of component at current iterator is smaller than first iterators entity.
+				while (componentManagerIterators.at(indicesSorted[i]).getCurrentComponent()->entity < componentManagerIterators.at(indicesSorted[0]).getCurrentComponent()->entity)
+					if (!componentManagerIterators.at(i).increment())
+						return;
+
+				// If entity of component at first iterator is not the same as entity of component at current iterator or disabled, 
+				// increment first iterator and search for next set of components.
+				if (!(componentManagerIterators.at(indicesSorted[i]).getCurrentComponent()->entity == componentManagerIterators.at(indicesSorted[0]).getCurrentComponent()->entity) || componentManagerIterators.at(indicesSorted[i]).getCurrentComponent()->getDisabled())
+					goto incrementFirst;
+			}
+
+			// If reached this point, lambda can be executed with the components that iterators point to.
+			// Get component of each iterator and execute lambda with vector of these components 
+			{
+				std::vector<ComponentBase*> components;
+				for (size_t i = 0; i < componentManagerIterators.size(); i++)
+					components.push_back(componentManagerIterators.at(i).getCurrentComponent());
+				system->updateEntity(dt, components);
+			}
+
+		incrementFirst:;
+		} while (componentManagerIterators.at(indicesSorted[0]).increment());
+	}
+
+	/*
 		Creates an entity.
 		Returns the entity.
 	*/
 	Entity newEntity()
 	{
 		Entity newEntity{ entityCounter };
-		entityCount++;
 		entityCounter++;
-	
+
 		return newEntity;
 	}
 
@@ -126,11 +203,10 @@ public:
 		Creates an entity and stores components assigned to the new entity.
 		Returns the entity.
 	*/
-	template <typename... Components>
-	Entity newEntity(const Components&... components)
+	template <typename... ComponentTypes>
+	Entity newEntity(const ComponentTypes & ... components)
 	{
 		Entity newEntity{ entityCounter };
-		entityCount++;
 		entityCounter++;
 
 		unpackAndStoreComponentsInManagers(newEntity, components...);
@@ -142,155 +218,111 @@ public:
 		Stores a component in componentmanagers and assigns it to the specified entity.
 	*/
 	template <typename ComponentType>
-	void newComponent(const Entity& entity, const ComponentType& component)
+	void newComponent(const Entity & entity, ComponentType component)
 	{
-		static_assert(std::is_base_of<ComponentStoreType, ComponentType>::value, "ComponentType must be derived from ComponentStoreType!");
+		static_assert(std::is_base_of<ComponentBase, ComponentType>::value, "ComponentType must be derived from ComponentBase!");
+
+		component.setEntity(entity);
 
 		// Try storing component in an existing manager.
 		for (size_t i = 0; i < componentManagers.size(); i++)
 			if (componentManagers.at(i)->storesComponentType<ComponentType>())
 			{
-				componentManagers.at(i)->insertComponent(entity, component);
+				componentManagers.at(i)->insertComponent(component);
 				return;
 			}
-		
+
 		// If unsuccessful in storing component above, there were no component manager that stores given ComponentType.
 		// Create a new componentManager that stores the component type, and insert the component into the new manager. 
 		componentManagers.push_back(new ComponentManager<ComponentType>());
-		componentManagers.back()->insertComponent(entity, component);
+		componentManagers.back()->insertComponent(component);
 	}
 
 	/*
-		Erases component from every ComponentManager that belongs to specified entity.
+		Disables all components of specified entity to erase them after current update.
+		Disabled components are not considered by systems.
 	*/
-	void eraseEntity(const Entity& entity)
+	void disableComponentsOf(const Entity & entity)
 	{
-		bool erasedComponents = false;
-
 		for (size_t i = 0; i < componentManagers.size(); i++)
-			if (componentManagers.at(i)->eraseComponentOf(entity))
-				erasedComponents = true;
-
-		if (erasedComponents)
-			entityCount--;
-		return;
+			componentManagers[i]->disableComponentOf(entity);
 	}
 
 	/*
-		Registers a system that will be used to update components on update call.
+		Disables component of specified ComponentType and Entity to erase them after current update.
+		Disabled components are not considered by systems.
+	*/
+	template <typename ComponentType>
+	void disableComponentOf(const Entity & entity)
+	{
+		for (size_t i = 0; i < componentManagers.size(); i++)
+			if (componentManagers[i]->storesComponentType<ComponentType>())
+			{
+				componentManagers[i]->disableComponentOf(entity);
+				return;
+			}
+	}
+
+	/*
+		Registers a system that will be used to update components on update.
 		ConstructorArgs are optional.
 		Returns whether the system was registered successfully.
 	*/
-	template <typename SystemType, typename... ConstructorArgs>
-	bool registerSystem(ConstructorArgs... constructorArgs)
+	template <typename SystemType>
+	bool registerSystem(SystemType * system)
 	{
-		static_assert(std::is_base_of<SystemStoreType, SystemType>::value, "SystemType must be derived from SystemStoreType!");
+		static_assert(std::is_base_of<SystemBase, SystemType>::value, "SystemType must be derived from SystemBase!");
 
-		// Check if a system of SystemType is already registered.
-		for (size_t i = 0; i < systems.size(); i++)
-			if (systems.at(i)->getIdentifier() == System<SystemType>::getIdentifierStatic())
-				return false;
-		
-		systems.push_back(new SystemType(this, constructorArgs...));
+		systems.push_back(system);
+		systems.back()->setEntityManager(this);
 		return true;
 	}
 
-	/* 
-		Executes a lambda on every entity that has specified set of component types.
-	*/
-	template <typename... ComponentTypes>
-	void each(std::function<void(std::vector<ComponentStoreType*>&)> lambda)
-	{
-		static_assert(sizeof...(ComponentTypes) > 0, "Cannot iterate over no components! Specify set of component types to iterate over in template argument.");
-
-		// Get each relevant componentmanager and create an iterator for it.
-		std::vector<ComponentManagerIterator> componentManagerIterators = unpackAndGetComponentManagersIterators<ComponentTypes...>();
-
-		// Check if iterator/manager was found for each of ComponentTypes, if not, return.
-		if (sizeof...(ComponentTypes) != componentManagerIterators.size())
-			return;
-
-		// Since unpacking iterators results in reversed order, it must be reversed again to get original order.
-		std::reverse(componentManagerIterators.begin(), componentManagerIterators.end());
-
-		// While first iterator is not at end.
-		do
-		{
-			//For every other iterator.
-			for (size_t i = 1; i < componentManagerIterators.size(); i++)
-			{
-				// While entity of component at current iterator is smaller than first iterators entity.
-				while (componentManagerIterators.at(i).getCurrentEntity() < componentManagerIterators.at(0).getCurrentEntity())
-					componentManagerIterators.at(i).increment();
-
-				// If entity of component at first iterator is the same as entity of component at current iterator,
-				// continue by finding the same entity in next iterator.
-				if (!(componentManagerIterators.at(0).getCurrentEntity() == componentManagerIterators.at(i).getCurrentEntity()))
-					goto continueOuter;
-			}
-
-			// If reached this point, lambda can be executed with the components that iterators point to.
-			// Get component of each iterator and execute lambda with vector of these components 
-			{
-				std::vector<ComponentStoreType*> components;
-				for (size_t i = 0; i < componentManagerIterators.size(); i++)
-					components.push_back(componentManagerIterators.at(i).getCurrentComponent());
-				lambda(components);
-			}
-
-			continueOuter:;
-		} while (componentManagerIterators.at(0).increment());
-	}
-
 	/*
-		Executes every registered systems lambda on entities that consists of their respective ComponentTypes.
+		Updates every registered system,
+		updates lifetimes of LifetimeComponents,
+		and erases disabled components.
 	*/
 	void update(const double& dt)
 	{
+		// Update every system.
 		for (size_t i = 0; i < systems.size(); i++)
 			systems.at(i)->update(dt);
-	}
 
-	size_t sizeEntities() const { return entityCount; };
-	size_t sizeComponentManagers() const { return componentManagers.size(); };
-	size_t sizeSystems() const { return systems.size(); };
-	
-	template <typename ComponentType>
-	size_t sizeComponentManager()  const
-	{ 
+		// Decrease lifetime of every LimitedLifetimeComponent.
 		for (size_t i = 0; i < componentManagers.size(); i++)
-			if (Component<ComponentType>::getIdentifierStatic() == componentManagers.at(i)->getIdentifier())
-				return componentManagers.at(i)->size();
+			componentManagers[i]->updateComponentLifetimes(dt);
 
-		// If the component manager was not found.
-		return 0;
-	};
+		// Erase every BasicComponent with disabled = true, or LimitedLifetimeComponent with 0 or less lifetime
+		for (size_t i = 0; i < componentManagers.size(); i++)
+			componentManagers[i]->eraseDisabledComponents();
+	}
 
 	/*
 		Retrieves vector to all components by type.
 	*/
 	template <typename ComponentType>
-	std::vector<ComponentWrapper<ComponentType>>* getComponentVectorByType()
+	std::vector<ComponentType> * getComponentVectorByType()
 	{
 		for (size_t i = 0; i < componentManagers.size(); i++)
 			if (componentManagers.at(i)->storesComponentType<ComponentType>())
 				return static_cast<ComponentManager<ComponentType>*>(componentManagers.at(i))->getComponentVector();
-		
+
 		return nullptr;
 	}
 
 	/*
-		Retrieves a pointer to a component.
+		Retrieves size of ComponentManager that stores specified type.
 	*/
 	template <typename ComponentType>
-	ComponentType* getComponentFromEntity(const Entity& entity)
+	size_t sizeComponentManager() const
 	{
-		static_assert(std::is_base_of<ComponentStoreType, ComponentType>::value, "ComponentType must be derived from ComponentStoreType!");
-
 		for (size_t i = 0; i < componentManagers.size(); i++)
-			if (componentManagers.at(i)->storesComponentType<ComponentType>())
-				return static_cast<ComponentType*>(componentManagers.at(i)->getComponentFromEntity(entity));
+			if (ComponentTypeIdentifier<ComponentType>::getIdentifierStatic() == componentManagers.at(i)->getIdentifier())
+				return componentManagers.at(i)->size();
+		return 0;
+	};
 
-		return static_cast<ComponentType*>(nullptr);
-	}
+	size_t sizeComponentManagers() const { return componentManagers.size(); };
+	size_t sizeSystems() const { return systems.size(); };
 };
