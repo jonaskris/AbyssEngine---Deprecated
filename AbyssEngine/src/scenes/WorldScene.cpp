@@ -38,9 +38,9 @@ namespace abyssengine {
 		entityManager.newEntity(Line_Component{ math::vec3{ 3.0f, 3.0f, 0.0f }, math::vec3{ -3.0f, 3.0f, 0.0f }, math::vec4{1.0f, 0.0f, 0.0f, 1.0f} });
 		entityManager.newEntity(Line_Component{ math::vec3{ -3.0f, 3.0f, 0.0f }, math::vec3{ -3.0f, -3.0f, 0.0f }, math::vec4{1.0f, 0.0f, 0.0f, 1.0f} });
 		
-		float speed = 3.5f;
+		float speed = 1.5f;
 
-		size_t countPoints = 10000;
+		size_t countPoints = 1000;
 		for (size_t i = 0; i < countPoints; i++)
 		{
 			float angle = math::toRadians( ((float)rand() / (float)RAND_MAX) * 360.0f);
@@ -48,7 +48,14 @@ namespace abyssengine {
 			entityManager.newEntity(Point_Component{ math::vec3{ 0.0f, 0.0f, 0.0f}, math::vec4{ 1.0f, 1.0f, 1.0f, 1.0f } }, Velocity_Component{ math::vec3{ sin(angle) * speed, cos(angle) * speed, 0.0f } });
 		}
 
-		entityManager.newEntity(Sprite_Component{ "testSheet1", 7, 1.0f});
+		for (size_t i = 0; i < 5; i++)
+		{
+			for (size_t j = 0; j < 5; j++)
+			{
+				entityManager.newEntity(Sprite_Component{ "testSheet1", 7, 1.0f }, Position_Component{ math::vec3{1.0f, 1.0f, 0.0f }});
+			}
+		}
+
 		entityManager.newEntity(Camera_Component(FOV, ASPECT_RATIO, NEAR, FAR));
 
 	}

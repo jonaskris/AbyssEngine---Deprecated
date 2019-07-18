@@ -7,12 +7,12 @@
 #include <algorithm>
 #include "scenes/WorldScene.h"
 #include "input/listeners/KeyboardListener.h"
-#include "graphics/renderers/Renderer.h"
+#include "graphics/renderers/RenderManager.h"
 
 int main()
 {
 	using namespace abyssengine;
-	Renderer* renderer = Renderer::getInstance();
+	RenderManager* renderer = RenderManager::getInstance();
 	glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
 
 	WorldScene* scene = new WorldScene();

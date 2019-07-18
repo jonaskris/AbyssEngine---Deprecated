@@ -1,23 +1,29 @@
 #pragma once
-#include <vector>
+#include "../../math/mat4.h"
+#include "../../entitysystem/units/UnitGroup.h"
 
-namespace abyssengine {
-	class Window;
-	class GSSComponent;
-	class Entity;
-	class Scene;
-
+namespace abyssengine
+{
+	/*
+		Renders submitted graphics components.
+		Any one renderer uses only one program (Set of shaders). 
+	*/
 	class Renderer
 	{
-	private:
-		Renderer();
-		static Renderer* instance;
-		int width, height;
-		Window* window = NULL;
 	public:
-		static Renderer* getInstance();
-		~Renderer();
-		void render(std::vector<Scene*>& scenes);
-		bool windowClosed();
+		/*
+			Performs necessary one time operations before rendering.
+		*/
+		virtual void begin(const math::mat4& perspectiveViewMatrix) = 0;
+
+		/*
+			Submits a UnitGroup to be rendered.
+		*/
+		virtual void submit(UnitGroup& unitGroup) = 0;
+
+		/*
+			Draws submitted graphics components.
+		*/
+		virtual void end() = 0;
 	};
 }

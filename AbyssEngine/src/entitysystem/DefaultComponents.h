@@ -1,10 +1,10 @@
 #pragma once
-#include "entities/components/Component.h"
+#include "components/Component.h"
 #include "../math/mat4.h"
 #include "../math/vec3.h"
 
 namespace abyssengine {
-	struct Position_Component : public BasicComponent<Position_Component>
+	struct Position_Component : public Component<Position_Component>
 	{
 		math::vec3 position;
 
@@ -12,7 +12,7 @@ namespace abyssengine {
 		Position_Component(const math::vec3& position) : position(position) {}
 	};
 
-	struct Velocity_Component : public BasicComponent<Velocity_Component>
+	struct Velocity_Component : public Component<Velocity_Component>
 	{
 		math::vec3 velocity;
 

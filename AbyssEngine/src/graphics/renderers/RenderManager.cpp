@@ -1,5 +1,5 @@
 #include <vector>
-#include "Renderer.h"
+#include "RenderManager.h"
 #include <GL/glew.h>
 #include "../Window.h"
 #include "../shaders/Program.h"
@@ -7,34 +7,29 @@
 #include "LineRenderer.h"
 #include "PointRenderer.h"
 #include "../../math/mat4.h"
-//#include "../../entities/Entity.h"
 #include "../../scenes/Scene.h"
 #include "../../Defines.h"
-//#include "../../entities/components/Position_Component.h"
-//#include "../../entities/components/Graphics_Component.h"
-//#include "../../entities/components/Collision_Component.h"
 #include "../../resources/Texture.h"
 #include "../../entitysystem/DefaultComponents.h"
 #include "../../resources/ResourceManager.h"
-//#include "../Font.h"
 
 //#define DRAW_COLLISION_BOUNDS true 
 //#define DRAW_FRUSTUM_CENTER true
 
 namespace abyssengine {
-	Renderer* Renderer::instance = NULL;
-	Renderer* Renderer::getInstance()
+	RenderManager* RenderManager::instance = NULL;
+	RenderManager* RenderManager::getInstance()
 	{
 		if (!instance)
 		{
-			std::cout << "Initialized Renderer singleton!" << std::endl;
-			instance = new Renderer();
+			std::cout << "Initialized RenderManager singleton!" << std::endl;
+			instance = new RenderManager();
 			return instance;
 		}
 		return instance;
 	}
 
-	Renderer::Renderer()
+	RenderManager::RenderManager()
 	{
 		width = (int)(SCREEN_WIDTH / (1.5f));
 		height = (int)(SCREEN_HEIGHT / (1.5f));
@@ -57,36 +52,36 @@ namespace abyssengine {
 		//Font::initFonts();
 	}
 
-	Renderer::~Renderer()
+	RenderManager::~RenderManager()
 	{
 		delete window;
 	}
 
-	bool Renderer::windowClosed() {
+	bool RenderManager::windowClosed() {
 		return window->closed();
 	}
 
-	void Renderer::render(std::vector<Scene*>& scenes)
+	void RenderManager::render(std::vector<Scene*>& scenes)
 	{
 		window->clear();
 			
 		for (size_t i = 0; i < scenes.size(); i++)
 		{
 			EntityManager* entityManager = scenes.at(i)->getEntityManager();
-			auto cameras = entityManager->getComponentVectorByType<Camera_Component>();
+			auto cameras = entityManager->getUnitVector<Camera_Component>();
 			Camera_Component& camera = cameras->at(0);
 
 			math::mat4 perspectiveViewMatrix = camera.perspective * camera.viewMatrix;
 
-			auto pointComponents = entityManager->getComponentVectorByType<Point_Component>();
+			auto pointComponents = entityManager->getUnitVector<Point_Component>();
 			if(pointComponents)
 				PointRenderer::getInstance()->render(pointComponents, perspectiveViewMatrix);
 
-			auto lineComponents = entityManager->getComponentVectorByType<Line_Component>();
+			auto lineComponents = entityManager->getUnitVector<Line_Component>();
 			if(lineComponents)
 				LineRenderer::getInstance()->render(lineComponents, perspectiveViewMatrix);
 
-			auto spriteComponents = entityManager->getComponentVectorByType<Sprite_Component>();
+			auto spriteComponents = entityManager->getUnitVector<Sprite_Component>();
 			if (spriteComponents)
 				SpriteRenderer::getInstance()->render(spriteComponents, perspectiveViewMatrix);
 		}

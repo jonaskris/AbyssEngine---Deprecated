@@ -204,11 +204,10 @@
     <ClCompile Include="ext\freetype\src\type1\type1.c" />
     <ClCompile Include="ext\freetype\src\type42\type42.c" />
     <ClCompile Include="ext\freetype\src\winfonts\winfnt.c" />
-    <ClCompile Include="src\entitysystem\entities\components\ComponentManagerIterator.cpp" />
     <ClCompile Include="src\graphics\Camera.cpp" />
     <ClCompile Include="src\graphics\buffers\Buffer.cpp" />
     <ClCompile Include="src\graphics\renderers\LineRenderer.cpp" />
-    <ClCompile Include="src\graphics\renderers\Renderer.cpp" />
+    <ClCompile Include="src\graphics\renderers\RenderManager.cpp" />
     <ClCompile Include="src\graphics\renderers\SpriteRenderer.cpp" />
     <ClCompile Include="src\graphics\shaders\Program.cpp" />
     <ClCompile Include="src\graphics\buffers\IndexBuffer.cpp" />
@@ -237,6 +236,7 @@
     <ClCompile Include="src\utils\lodepng\lodepng.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Algorithm.h" />
     <ClInclude Include="src\Defines.h" />
     <ClInclude Include="src\entities\components\ComponentManager.h" />
     <ClInclude Include="src\entities\components\Transform_Component.h" />
@@ -256,16 +256,21 @@
     <ClInclude Include="ext\freetype\include\ft2build.h" />
     <ClInclude Include="src\entities\Entity_Ground.h" />
     <ClInclude Include="src\entities\Entity_Player.h" />
+    <ClInclude Include="src\entitysystem\components\Component.h" />
     <ClInclude Include="src\entitysystem\DefaultComponents.h" />
-    <ClInclude Include="src\entitysystem\entities\components\Component.h" />
-    <ClInclude Include="src\entitysystem\entities\components\ComponentManager.h" />
-    <ClInclude Include="src\entitysystem\entities\components\ComponentManagerIterator.h" />
-    <ClInclude Include="src\entitysystem\entities\Entity.h" />
-    <ClInclude Include="src\entitysystem\entities\EntityManager.h" />
     <ClInclude Include="src\entitysystem\DefaultGComponents.h" />
     <ClInclude Include="src\entitysystem\DefaultSystems.h" />
+    <ClInclude Include="src\entitysystem\EntityManager.h" />
+    <ClInclude Include="src\entitysystem\events\Event.h" />
     <ClInclude Include="src\entitysystem\systems\System.h" />
+    <ClInclude Include="src\entitysystem\units\Unit.h" />
+    <ClInclude Include="src\entitysystem\units\UnitGroup.h" />
+    <ClInclude Include="src\entitysystem\units\UnitManager.h" />
+    <ClInclude Include="src\entitysystem\units\UnitManagerIterator.h" />
+    <ClInclude Include="src\entitysystem\units\UnitManagerIteratorBase.h" />
+    <ClInclude Include="src\entitysystem\units\UnitTags.h" />
     <ClInclude Include="src\graphics\renderers\LineRenderer.h" />
+    <ClInclude Include="src\graphics\renderers\Renderer.h" />
     <ClInclude Include="src\graphics\renderers\SpriteRenderer.h" />
     <ClInclude Include="src\math\MathSemanticTypes.h" />
     <ClInclude Include="src\resources\Resource.h" />
@@ -299,7 +304,7 @@
     <ClInclude Include="src\graphics\renderers\PointRenderer.h" />
     <ClInclude Include="src\resources\TextureAtlas.h" />
     <ClInclude Include="src\utils\FileUtils.h" />
-    <ClInclude Include="src\graphics\renderers\Renderer.h" />
+    <ClInclude Include="src\graphics\renderers\RenderManager.h" />
     <ClInclude Include="src\input\listeners\KeyboardListener.h" />
     <ClInclude Include="src\input\observers\KeyboardObserver.h" />
     <ClInclude Include="src\input\listeners\MouseListener.h" />

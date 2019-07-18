@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include "../graphics/shaders/Shader.h"
-#include "../entitysystem/entities/EntityManager.h"
+#include "../entitysystem/EntityManager.h"
 
 namespace abyssengine {
 	//class Camera;

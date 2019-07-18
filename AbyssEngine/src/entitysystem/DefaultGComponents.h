@@ -1,5 +1,5 @@
 #pragma once
-#include "entities/components/Component.h"
+#include "components/Component.h"
 #include "../resources/ResourceManager.h"
 #include "../math/vec2.h"
 #include "../math/vec3.h"
@@ -9,7 +9,7 @@
 
 namespace abyssengine {
 	template <typename GraphicsComponentType>
-	struct Graphics_Component : public BasicComponent<GraphicsComponentType>
+	struct Graphics_Component : public Component<GraphicsComponentType>
 	{
 
 	};
@@ -126,7 +126,7 @@ namespace abyssengine {
 	//	{};
 	//};
 
-	struct Camera_Component : public BasicComponent<Camera_Component>
+	struct Camera_Component : public Component<Camera_Component>
 	{
 		math::vec3 lookAt;
 		math::vec3 lookFrom;

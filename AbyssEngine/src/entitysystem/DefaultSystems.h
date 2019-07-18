@@ -2,7 +2,7 @@
 #include <iostream>
 #include "systems/System.h"
 #include "../math/vec3.h"
-#include "entities/EntityManager.h"
+#include "EntityManager.h"
 #include "DefaultComponents.h"
 #include "DefaultGComponents.h"
 
@@ -19,39 +19,27 @@ namespace abyssengine {
 			updateEntities(dt);
 		}
 
-		void updateEntity(const double& dt, std::vector<ComponentBase*>& components)
+		void updateEntity(const double& dt, UnitGroup& units)
 		{
-			Velocity_Component* v = static_cast<Velocity_Component*>(components.at(0));
-			Point_Component* p = static_cast<Point_Component*>(components.at(1));
+			Velocity_Component* v = units.get<Velocity_Component>().first;
+			Point_Component* p = units.get<Point_Component>().first;
 
 			if (p->vertex.vertex.x < -boundary)
 			{
-				if(v->velocity.x < 0)
-				{ 
 					v->velocity.x *= -1.0f;
 					p->vertex.vertex.x += -boundary - p->vertex.vertex.x;
-				}
 			} else if (p->vertex.vertex.x > boundary) {
-				if (v->velocity.x > 0)
-				{
 					v->velocity.x *= -1.0f;
 					p->vertex.vertex.x -= p->vertex.vertex.x - boundary;
-				}
 			}
 
 			if (p->vertex.vertex.y < -boundary)
 			{
-				if (v->velocity.y < 0)
-				{
 					v->velocity.y *= -1.0f;
 					p->vertex.vertex.y += -boundary - p->vertex.vertex.y;
-				}
 			} else if (p->vertex.vertex.y > boundary) {
-				if (v->velocity.y > 0)
-				{
 					v->velocity.y *= -1.0f;
 					p->vertex.vertex.y -= p->vertex.vertex.y - boundary;
-				}
 			}
 
 			p->vertex.vertex += v->velocity * (float)dt;
@@ -71,9 +59,9 @@ namespace abyssengine {
 			updateEntities(dt);
 		}
 
-		void updateEntity(const double& dt, std::vector<ComponentBase*>& components)
+		void updateEntity(const double& dt, UnitGroup& units)
 		{
-			Camera_Component* c = static_cast<Camera_Component*>(components.at(0));
+			Camera_Component* c = units.get<Camera_Component>().first;
 
 			c->viewMatrix = math::mat4::viewMatrix(c->lookFrom, c->lookAt, math::vec3{ 0.0f, 1.0f, 0.0f });
 		}
