@@ -9,7 +9,7 @@ namespace abyssengine {
 	//	return camera;
 	//}
 
-	EntityManager* Scene::getEntityManager()
+	entitysystem::EntityManager* Scene::getEntityManager()
 	{
 		return &entityManager;
 	}

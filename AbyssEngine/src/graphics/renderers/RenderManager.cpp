@@ -3,14 +3,15 @@
 #include <GL/glew.h>
 #include "../Window.h"
 #include "../shaders/Program.h"
+#include "../../entitysystem/entitymanager/EntityManager.h"
 #include "SpriteRenderer.h"
 #include "LineRenderer.h"
 #include "PointRenderer.h"
-#include "../../math/mat4.h"
+#include "../../math/linalg.h"
 #include "../../scenes/Scene.h"
 #include "../../Defines.h"
 #include "../../resources/Texture.h"
-#include "../../entitysystem/DefaultComponents.h"
+#include "../../entitysystem/defaultcomponents/Graphics.h"
 #include "../../resources/ResourceManager.h"
 
 //#define DRAW_COLLISION_BOUNDS true 
@@ -48,6 +49,11 @@ namespace abyssengine {
 		Program::loadPrograms();
 		ResourceManager::getInstance();
 
+		renderers.push_back(new SpriteRenderer());
+		renderers.push_back(new LineRenderer());
+		renderers.push_back(new PointRenderer());
+
+
 		
 		//Font::initFonts();
 	}
@@ -67,29 +73,19 @@ namespace abyssengine {
 			
 		for (size_t i = 0; i < scenes.size(); i++)
 		{
-			EntityManager* entityManager = scenes.at(i)->getEntityManager();
+			entitysystem::EntityManager* entityManager = scenes.at(i)->getEntityManager();
 			auto cameras = entityManager->getUnitVector<Camera_Component>();
 			Camera_Component& camera = cameras->at(0);
 
-			math::mat4 perspectiveViewMatrix = camera.perspective * camera.viewMatrix;
+			math::mat4f perspectiveViewMatrix = camera.perspective * camera.viewMatrix;
 
-			auto pointComponents = entityManager->getUnitVector<Point_Component>();
-			if(pointComponents)
-				PointRenderer::getInstance()->render(pointComponents, perspectiveViewMatrix);
-
-			auto lineComponents = entityManager->getUnitVector<Line_Component>();
-			if(lineComponents)
-				LineRenderer::getInstance()->render(lineComponents, perspectiveViewMatrix);
-
-			auto spriteComponents = entityManager->getUnitVector<Sprite_Component>();
-			if (spriteComponents)
-				SpriteRenderer::getInstance()->render(spriteComponents, perspectiveViewMatrix);
+			for (size_t i = 0; i < renderers.size(); i++)
+			{
+				renderers.at(i)->begin(perspectiveViewMatrix);
+				renderers.at(i)->submitUnits(entityManager);
+				renderers.at(i)->end();
+			}
 		}
-
-
-
-		
-
 		window->update();
 	}
 }

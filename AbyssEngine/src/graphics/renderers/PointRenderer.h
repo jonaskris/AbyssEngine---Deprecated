@@ -4,14 +4,17 @@
 #include "Renderer.h"
 #include "../../entitysystem/units/UnitManager.h"
 #include "../../entitysystem/units/UnitGroup.h"
+#include "../../entitysystem/entitymanager/EachCallable.h"
+#include "../../entitysystem/entitymanager/EntityManager.h"
+#include "../../entitysystem/defaultcomponents/Graphics.h"
+#include "../../entitysystem/defaultcomponents/Spatial.h"
 #include "../shaders/Program.h"
-#include "../../entitysystem/DefaultGComponents.h"
 
 // Program
 #define PR_PROGRAM						Program::type::LINE
 
 // Points
-#define POINT_SIZE						2.0f
+#define POINT_SIZE						3.0f
 #define PR_POINT_SIZE					sizeof(Point_Component::VertexData)
 #define PR_MAX_POINTS					1000
 
@@ -27,7 +30,7 @@ namespace abyssengine {
 	class Program;
 	class Camera;
 
-	class PointRenderer : Renderer
+	class PointRenderer : public Renderer, public entitysystem::EachCallable<Point_Component, Position_Component::optional>
 	{
 	public:
 		PointRenderer();
@@ -35,16 +38,19 @@ namespace abyssengine {
 	private:
 		Program* program = NULL;
 
-		GLuint VAO, VBO, IBO;
+		GLuint VAO, VBO;//, IBO;
 		GLuint viewMatrixLocation;
 		Point_Component::VertexData* VERTEX_DATA = new Point_Component::VertexData[PR_MAX_POINTS];
 
-		GLuint* IBO_DATA = new GLuint[PR_MAX_POINTS];
 		GLsizei POINTS_COUNT = 0;
 	public:
-		void begin(const math::mat4& perspectiveViewMatrix) override;
+		void begin(const math::mat4f& perspectiveViewMatrix) override;
 
-		void submit(UnitGroup& unitGroup) override;
+		void submitUnits(entitysystem::EntityManager* entitymanager) override { entitymanager->each(this); }
+
+		void eachCall(entitysystem::UnitGroup& unitgroup) override { submit(unitgroup); };
+
+		void submit(entitysystem::UnitGroup& unitGroup) override;
 
 		/*
 			Called during submit if buffer is full, and when calling end() if there are points to draw.

@@ -1,0 +1,11 @@
+#pragma once
+#include "linalg/vectors/vec2f.h"
+#include "linalg/vectors/vec2d.h"
+#include "linalg/vectors/vec3f.h"
+#include "linalg/vectors/vec3d.h"
+#include "linalg/vectors/vec4f.h"
+#include "linalg/vectors/vec4d.h"
+#include "linalg/matrices/mat3f.h"
+#include "linalg/matrices/mat3d.h"
+#include "linalg/matrices/mat4f.h"
+#include "linalg/matrices/mat4d.h"

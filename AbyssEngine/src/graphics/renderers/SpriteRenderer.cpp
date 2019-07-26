@@ -2,9 +2,9 @@
 #include "../shaders/Program.h"
 #include "../../resources/Texture.h"
 #include "../../entitysystem/units/UnitManager.h"
-#include "../../entitysystem/DefaultGComponents.h"
-#include "../../entitysystem/DefaultComponents.h"
-#include "../../math/mat4.h"
+#include "../../entitysystem/defaultcomponents/Graphics.h"
+#include "../../entitysystem/defaultcomponents/Spatial.h"
+#include "../../math/linalg.h"
 #include "../Camera.h"
 #include "../../resources/ResourceManager.h"
 #include "../../resources/TextureAtlas.h"
@@ -62,81 +62,14 @@ namespace abyssengine {
 		texLoc = glGetUniformLocation(program->getProgramID(), "tex");
 		viewMatrixLocation = glGetUniformLocation(program->getProgramID(), "vw_matrix");
 	}
-
-	//void SpriteRenderer::render(const std::vector<Sprite_Component>* components, const math::mat4& perspectiveViewMatrix)
-	//{
-	//	glUseProgram(program->getProgramID());
-	//	glActiveTexture(GL_TEXTURE0);
-	//	glUniform1i(texLoc, 0);
-	//	glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &(perspectiveViewMatrix).elements[0]);
-	//
-	//	glBindVertexArray(VAO);
-	//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-	//	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	//
-	//
-	//
-	//	unsigned int progress = 0;
-	//	while (progress < components->size()) {
-	//		size_t IBOCount = 0;
-	//		size_t index = 0;
-	//		size_t textureId = components->at(progress).textureId;
-	//
-	//		//if (toRender >= SR_MAX_SPRITES) {
-	//		//	renderTo = renderFrom + SR_MAX_SPRITES;
-	//		//}
-	//		//else {
-	//		//	renderTo = renderFrom + toRender;
-	//		//}
-	//		//
-	//		//for (size_t i = renderFrom; i < renderTo; i++)
-	//		//{				
-	//		//	size_t index = i - renderFrom;
-	//		//	
-	//		//	VERTEX_DATA[index * 4 + 0] = components->at(i).vertex[0];
-	//		//	VERTEX_DATA[index * 4 + 1] = components->at(i).vertex[1];
-	//		//	VERTEX_DATA[index * 4 + 2] = components->at(i).vertex[2];
-	//		//	VERTEX_DATA[index * 4 + 3] = components->at(i).vertex[3];
-	//		//}
-	//
-	//		for (size_t i = progress; i < components->size(); i++)
-	//		{
-	//			if ((i - progress) >= SR_MAX_SPRITES)
-	//				break;
-	//			else if (components->at(i).textureId != textureId)
-	//				break;
-	//			
-	//
-	//			VERTEX_DATA[index * 4 + 0] = components->at(i).vertex[0];
-	//			VERTEX_DATA[index * 4 + 1] = components->at(i).vertex[1];
-	//			VERTEX_DATA[index * 4 + 2] = components->at(i).vertex[2];
-	//			VERTEX_DATA[index * 4 + 3] = components->at(i).vertex[3];
-	//
-	//			IBOCount += 6;
-	//			index += 4;
-	//			progress++;
-	//		}
-	//
-	//		glBindTexture(GL_TEXTURE_2D, textureId);
-	//
-	//		glBufferData(GL_ARRAY_BUFFER, SR_BUFFER_SIZE, VERTEX_DATA, GL_STATIC_DRAW);
-	//
-	//		glDrawElements(GL_TRIANGLES, IBOCount, GL_UNSIGNED_INT, NULL);
-	//	}
-	//
-	//	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	//	glBindVertexArray(0);
-	//	glUseProgram(0);
-	//}
-
+	
 	SpriteRenderer::~SpriteRenderer()
 	{
 		delete[] VERTEX_DATA;
 		delete[] IBO_DATA;
 	}
 
-	void SpriteRenderer::begin(const math::mat4& perspectiveViewMatrix)
+	void SpriteRenderer::begin(const math::mat4f& perspectiveViewMatrix)
 	{
 		glUseProgram(program->getProgramID());
 		glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &(perspectiveViewMatrix).elements[0]);
@@ -149,22 +82,47 @@ namespace abyssengine {
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	}
 
-	void SpriteRenderer::submit(UnitGroup& unitGroup)
+	void SpriteRenderer::submit(entitysystem::UnitGroup& unitGroup)
 	{
 		std::pair<Sprite_Component*, size_t> spriteComponents = unitGroup.get<Sprite_Component>();
+		std::pair<Position_Component*, size_t> positionComponents = unitGroup.get<Position_Component>();
 
-		for (size_t i = 0; i < spriteComponents.second; i++)
-		{
-			if (spriteComponents.first[i].textureId != textureId || SPRITES_COUNT == SR_MAX_SPRITES - 1)
-				render();
+		size_t sid = (spriteComponents.second > 0)?(spriteComponents.first[0].getEntityId()):(0);
+		size_t pid = (positionComponents.second > 0)?(positionComponents.first[0].getEntityId()):(0);
 
-			textureId = spriteComponents.first[i].textureId;
+		if (positionComponents.second > 0){
+			for (size_t i = 0; i < spriteComponents.second; i++)
+			{
+				if (spriteComponents.first[i].textureId != textureId || SPRITES_COUNT == SR_MAX_SPRITES)
+					render();
 
-			VERTEX_DATA[SPRITES_COUNT * 4 + 0] = spriteComponents.first[i].vertex[0];
-			VERTEX_DATA[SPRITES_COUNT * 4 + 1] = spriteComponents.first[i].vertex[1];
-			VERTEX_DATA[SPRITES_COUNT * 4 + 2] = spriteComponents.first[i].vertex[2];
-			VERTEX_DATA[SPRITES_COUNT * 4 + 3] = spriteComponents.first[i].vertex[3];
-			SPRITES_COUNT++;
+				textureId = spriteComponents.first[i].textureId;
+
+				VERTEX_DATA[SPRITES_COUNT * 4 + 0] = spriteComponents.first[i].vertex[0];
+				VERTEX_DATA[SPRITES_COUNT * 4 + 0].vertex = spriteComponents.first[i].vertex[0].vertex + positionComponents.first[0];
+				VERTEX_DATA[SPRITES_COUNT * 4 + 1] = spriteComponents.first[i].vertex[1];
+				VERTEX_DATA[SPRITES_COUNT * 4 + 1].vertex = spriteComponents.first[i].vertex[1].vertex + positionComponents.first[0];
+				VERTEX_DATA[SPRITES_COUNT * 4 + 2] = spriteComponents.first[i].vertex[2];
+				VERTEX_DATA[SPRITES_COUNT * 4 + 2].vertex = spriteComponents.first[i].vertex[2].vertex + positionComponents.first[0];
+				VERTEX_DATA[SPRITES_COUNT * 4 + 3] = spriteComponents.first[i].vertex[3];
+				VERTEX_DATA[SPRITES_COUNT * 4 + 3].vertex = spriteComponents.first[i].vertex[3].vertex + positionComponents.first[0];
+
+				SPRITES_COUNT++;
+			}
+		} else {
+			for (size_t i = 0; i < spriteComponents.second; i++)
+			{
+				if (spriteComponents.first[i].textureId != textureId || SPRITES_COUNT == SR_MAX_SPRITES)
+					render();
+
+				textureId = spriteComponents.first[i].textureId;
+
+				VERTEX_DATA[SPRITES_COUNT * 4 + 0] = spriteComponents.first[i].vertex[0];
+				VERTEX_DATA[SPRITES_COUNT * 4 + 1] = spriteComponents.first[i].vertex[1];
+				VERTEX_DATA[SPRITES_COUNT * 4 + 2] = spriteComponents.first[i].vertex[2];
+				VERTEX_DATA[SPRITES_COUNT * 4 + 3] = spriteComponents.first[i].vertex[3];
+				SPRITES_COUNT++;
+			}
 		}
 	}
 
@@ -176,6 +134,8 @@ namespace abyssengine {
 		glBindTexture(GL_TEXTURE_2D, textureId);
 		glBufferData(GL_ARRAY_BUFFER, SR_BUFFER_SIZE, VERTEX_DATA, GL_STATIC_DRAW);
 		glDrawElements(GL_TRIANGLES, SPRITES_COUNT * 6, GL_UNSIGNED_INT, NULL);
+
+		SPRITES_COUNT = 0;
 	}
 
 	void SpriteRenderer::end()

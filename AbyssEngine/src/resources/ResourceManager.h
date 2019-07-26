@@ -21,8 +21,6 @@ namespace abyssengine {
 	public:
 		static ResourceManager* getInstance();
 	
-	
-	
 		/*
 			Todo: Return default resource (Error sound, Debug texture etc) if resource not found.
 		*/

@@ -1,20 +1,20 @@
 #pragma once
-#include "../vec3.h"
+#include "../linalg.h"
 
 namespace abyssengine { namespace Shape {
 	using namespace math;
 
 	//! Cube
-	const vec3 cubeVertices[]
+	const vec3f cubeVertices[]
 	{
-		vec3(-0.5f, -0.5f, -0.5f),
-		vec3(-0.5f, 0.5f, -0.5f),
-		vec3(0.5f, 0.5f, -0.5f),
-		vec3(0.5f, -0.5f, -0.5f),
-		vec3(-0.5f, -0.5f, 0.5f),
-		vec3(-0.5f, 0.5f, 0.5f),
-		vec3(0.5f, 0.5f, 0.5f),
-		vec3(0.5f, -0.5f, 0.5f)
+		vec3f(-0.5f, -0.5f, -0.5f),
+		vec3f(-0.5f, 0.5f, -0.5f),
+		vec3f(0.5f, 0.5f, -0.5f),
+		vec3f(0.5f, -0.5f, -0.5f),
+		vec3f(-0.5f, -0.5f, 0.5f),
+		vec3f(-0.5f, 0.5f, 0.5f),
+		vec3f(0.5f, 0.5f, 0.5f),
+		vec3f(0.5f, -0.5f, 0.5f)
 	};
 
 	const unsigned short cubeIndices[]
@@ -25,11 +25,11 @@ namespace abyssengine { namespace Shape {
 	};
 
 	//! Rectangle
-	const vec3 rectangleVertices[]{
-		vec3(-0.5f, -0.5f, 0.0f),
-		vec3(-0.5f, 0.5f, 0.0f),
-		vec3(0.5f, 0.5f, 0.0f),
-		vec3(0.5f, -0.5f, 0.0f)
+	const vec3f rectangleVertices[]{
+		vec3f(-0.5f, -0.5f, 0.0f),
+		vec3f(-0.5f, 0.5f, 0.0f),
+		vec3f(0.5f, 0.5f, 0.0f),
+		vec3f(0.5f, -0.5f, 0.0f)
 	};
 
 	const unsigned short rectangleIndices[]

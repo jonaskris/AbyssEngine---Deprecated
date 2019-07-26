@@ -5,93 +5,106 @@
 #include "UnitManager.h"
 #include "UnitManagerIteratorBase.h"
 
-class UnitManagerBase;
-
-template <typename UnitType>
-struct Event;
-
-/*
-	Used to increment over UnitManagers in terms of groups.
-*/
-template <typename UnitType>
-class UnitManagerIterator : public UnitManagerIteratorBase
+namespace entitysystem
 {
-	friend class UnitManager<UnitType>;
-private:
-	UnitManager<UnitType>* unitManager;
+	class UnitManagerBase;
 
-	// Index of first element and count of elements in group.
-	std::pair<size_t, size_t> currentGroup;
-
-	explicit UnitManagerIterator(UnitManager<UnitType>* unitManager) : unitManager(unitManager), currentGroup(std::pair(0, 0)) { };
-
-public:
+	template <typename UnitType>
+	struct Event;
 
 	/*
-		Finds the next group of units with common entityId.
-
-		Returns false if incrementing leads to out of bounds.
+		Used to increment over UnitManagers in terms of groups.
 	*/
-	bool increment() override
+	template <typename UnitType>
+	class UnitManagerIterator : public UnitManagerIteratorBase
 	{
-		size_t newFirstIndex = currentGroup.first + currentGroup.second;
-		size_t count = 0;
-		size_t sizeUnits = unitManager->units.size();
+		friend class UnitManager<UnitType>;
+	private:
+		UnitManager<UnitType>* unitManager;
 
-		if (newFirstIndex >= sizeUnits)
-			return false;
+		// Index of first element and count of elements in group.
+		std::pair<size_t, size_t> currentGroup = std::pair<size_t, size_t>(0, 0);
 
-		size_t entityIdFirstIndex = unitManager->units.at(newFirstIndex);
+		explicit UnitManagerIterator(UnitManager<UnitType>* unitManager) : unitManager(unitManager), currentGroup(std::pair(0, 0)) { };
+	public:
 
-		while (newFirstIndex + count < sizeUnits && unitManager->units.at(newFirstIndex + count).getEntityId() == entityIdFirstIndex)
-			count++;
+		/*
+			Finds the next group of Units with common entityId.
+			Returns false if incrementing leads to out of bounds.
+		*/
+		bool incrementWhileSmallerThan(const size_t& entityId) override
+		{
+			size_t newIndex = currentGroup.first + currentGroup.second;
 
-		currentGroup = std::pair(newFirstIndex, count);
-		return true;
-	}
+			while (newIndex < unitManager->units.size() && (unitManager->units.at(newIndex).getEntityId() < entityId || unitManager->units.at(newIndex).getIgnore()))
+				newIndex++;
 
-	/*
-		Gets current group.
-		Returns all units in unit vector if it stores type with UnitTag_Untargeted.
-	*/
-	std::pair<Unit*, size_t> getGroup() const override
-	{
-		if constexpr (std::is_base_of<UnitTag_Untargeted, UnitType>::value)
-			return std::pair<Unit*, size_t>(static_cast<Unit*>(&unitManager->units.at(0)), unitManager->units.size());
-		else
-			return std::pair<Unit*, size_t>(static_cast<Unit*>(&unitManager->units.at(currentGroup.first)), currentGroup.second);
-	}
+			if (newIndex == unitManager->units.size())
+				return false;
 
-	/*
-		Gets the UnitTypeIdentifier of the units being iterated on.
-	*/
-	virtual size_t getUnitTypeIdentifier() const override
-	{
-		return UnitType::getIdentifier();
-	}
+			size_t newCount = 1;
+			size_t firstEntityId = unitManager->units.at(newIndex).getEntityId();
+			while (newIndex + newCount < unitManager->units.size() && unitManager->units.at(newIndex + newCount).getEntityId() == firstEntityId)
+				newCount++;
 
-	/*
-		Returns whether UnitType is base of UnitTag_Untargeted.
-	*/
-	virtual bool getStoresUntargeted() const override
-	{
-		return std::is_base_of<UnitTag_Untargeted, UnitType>::value;
-	}
+			currentGroup = std::pair<size_t, size_t>(newIndex, newCount);
+			return true;
+		}
 
-	/*
-		Resets iterator to beginning of the unit vector.
-	*/
-	UnitManagerIteratorBase* begin() override
-	{
-		currentGroup = std::pair<size_t, size_t>(0, 0);
-		return this;
-	}
+		/*
+			Gets current group.
+			Gets all Units in Unit vector if it stores type with UnitTag_Untargeted.
+		*/
+		std::pair<UnitBase*, size_t> getGroup() const override
+		{
+			if constexpr (std::is_base_of<UnitTag_Untargeted, UnitType>::value)
+				return std::pair<UnitBase*, size_t>(static_cast<UnitBase*>(&unitManager->units.at(0)), unitManager->units.size());
+			else
+				return std::pair<UnitBase*, size_t>(static_cast<UnitBase*>(&unitManager->units.at(currentGroup.first)), currentGroup.second);
+		}
 
-	/*
-		Returns size of unit vector of UnitManager (Not queue).
-	*/
-	size_t size() const override
-	{
-		return unitManager->units.size();
-	}
-};
+		/*
+			Gets the UnitTypeIdentifier of the Units being iterated on.
+		*/
+		virtual size_t getUnitTypeIdentifier() const override
+		{
+			return UnitType::getIdentifier();
+		}
+
+		/*
+			Returns whether UnitType is base of UnitTag_Untargeted.
+		*/
+		virtual bool getStoresUntargeted() const override
+		{
+			static bool storesUntargeted = std::is_base_of<UnitTag_Untargeted, UnitType>::value;
+			return storesUntargeted;
+		}
+
+		/*
+			Resets iterator to beginning of the Unit vector.
+		*/
+		UnitManagerIteratorBase* begin() override
+		{
+			if (getStoresUntargeted())
+				return this;
+
+			size_t newIndex = 0;
+			size_t newCount = 1;
+			size_t firstEntityId = unitManager->units.at(newIndex).getEntityId();
+			while (newIndex + newCount < unitManager->units.size() && unitManager->units.at(newIndex + newCount).getEntityId() == firstEntityId)
+				newCount++;
+
+			currentGroup = std::pair<size_t, size_t>(newIndex, newCount);
+
+			return this;
+		}
+
+		/*
+			Returns size of Unit vector of UnitManager (Not queue).
+		*/
+		size_t size() const override
+		{
+			return unitManager->units.size();
+		}
+	};
+}

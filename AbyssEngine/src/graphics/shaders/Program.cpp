@@ -2,10 +2,7 @@
 #include <iostream>
 #include "Program.h"
 #include "Shader.h"
-#include "../../math/mat4.h"
-#include "../../math/vec2.h"
-#include "../../math/vec3.h"
-#include "../../math/vec4.h"
+#include "../../math/linalg.h"
 
 namespace abyssengine {
 	Program* Program::programs[type::MAX] = {};
@@ -88,22 +85,22 @@ namespace abyssengine {
 		glUniform1i(getUniformLocation(name), value);
 	}
 
-	void Program::setUniform2f(const GLchar* name, const math::vec2& vector)
+	void Program::setUniform2f(const GLchar* name, const math::vec2f& vector)
 	{
 		glUniform2f(getUniformLocation(name), vector.x, vector.y);
 	}
 
-	void Program::setUniform3f(const GLchar* name, const math::vec3& vector)
+	void Program::setUniform3f(const GLchar* name, const math::vec3f& vector)
 	{
 		glUniform3f(getUniformLocation(name), vector.x, vector.y, vector.z);
 	}
 
-	void Program::setUniform4f(const GLchar* name, const math::vec4& vector)
+	void Program::setUniform4f(const GLchar* name, const math::vec4f& vector)
 	{
 		glUniform4f(getUniformLocation(name), vector.x, vector.y, vector.z, vector.w);
 	}
 
-	void Program::setUniformMat4(const GLchar* name, const math::mat4& matrix)
+	void Program::setUniformMat4(const GLchar* name, const math::mat4f& matrix)
 	{
 		glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, matrix.elements);
 	}

@@ -1,14 +1,15 @@
 #pragma once
 #include <GL/glew.h>
 #include <vector>
+#include "../../math/Linalg.h"
 
 namespace abyssengine {
-	namespace math {
-		struct mat4;
-		struct vec4;
-		struct vec3;
-		struct vec2;
-	}
+	//namespace math {
+	//	struct mat4;
+	//	struct vec4;
+	//	struct vec3;
+	//	struct vec2;
+	//}
 
 	class Program
 	{
@@ -18,10 +19,10 @@ namespace abyssengine {
 
 		void setUniform1f(const GLchar* name, float value);
 		void setUniform1i(const GLchar* name, int value);
-		void setUniform2f(const GLchar* name, const math::vec2& vector);
-		void setUniform3f(const GLchar* name, const math::vec3& vector);
-		void setUniform4f(const GLchar* name, const math::vec4& vector);
-		void setUniformMat4(const GLchar* name, const math::mat4& matrix);
+		void setUniform2f(const GLchar* name, const math::vec2f& vector);
+		void setUniform3f(const GLchar* name, const math::vec3f& vector);
+		void setUniform4f(const GLchar* name, const math::vec4f& vector);
+		void setUniformMat4(const GLchar* name, const math::mat4f& matrix);
 
 		void enable() const;
 		void disable() const;

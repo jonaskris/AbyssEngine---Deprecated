@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include "Texture.h"
-#include "../math/vec2.h"
+#include "../math/linalg.h"
 #include "../math/MathSemanticTypes.h"
 #include "../utils/UtilsSemanticTypes.h"
 
@@ -13,7 +13,7 @@ namespace abyssengine {
 	{
 		
 	private:
-		std::vector<QuadVec<math::vec2>> uvs;
+		std::vector<QuadVec<math::vec2f>> uvs;
 	public:
 		TextureAtlas(const Path& path) : Texture(path)
 		{
@@ -45,11 +45,11 @@ namespace abyssengine {
 				float ysn = (ys - hpcY) / (float)height;
 				
 				// Texture coordinates are rotated by 90 degrees, as lodepng loads images in a different orientation than opengl.
-				uvs.push_back(QuadVec<math::vec2>{ math::vec2(xn, yn), math::vec2(xsn, yn), math::vec2(xsn, ysn), math::vec2(xn, ysn) });
+				uvs.push_back(QuadVec<math::vec2f>{ math::vec2f(xn, yn), math::vec2f(xsn, yn), math::vec2f(xsn, ysn), math::vec2f(xn, ysn) });
 			}
 		}
 
-		QuadVec<math::vec2> getUv(const size_t& index) const
+		QuadVec<math::vec2f> getUv(const size_t& index) const
 		{
 			return uvs.at(index);
 		}

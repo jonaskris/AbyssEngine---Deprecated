@@ -4,14 +4,14 @@
 #include <string>
 #include "Resource.h"
 #include "../utils/ImageUtils.h"
-#include "../math/vec2.h"
+#include "../math/linalg.h"
 #include "../utils/UtilsSemanticTypes.h"
 
 namespace abyssengine {
 	class Texture : public Resource
 	{
 	protected:
-		size_t width = 0, height = 0;
+		unsigned int width = 0, height = 0;
 		GLuint textureId = 0;
 	public:
 		Texture(const Path& path) : Resource(path)

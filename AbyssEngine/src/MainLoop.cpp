@@ -6,7 +6,7 @@
 #include <thread>
 #include <algorithm>
 #include "scenes/WorldScene.h"
-#include "input/listeners/KeyboardListener.h"
+#include "input/keyboard/listeners/KeyboardListener.h"
 #include "graphics/renderers/RenderManager.h"
 
 int main()
@@ -41,6 +41,7 @@ int main()
 				scenes.at(i)->update(deltaTime);
 			}
 			renderer->render(scenes);
+			KeyboardListener::update();
 
 
 		long long timeTaken = std::chrono::duration_cast<std::chrono::milliseconds>(newTime - oldTime).count();
@@ -52,7 +53,8 @@ int main()
 
 		if (timer > 1.0f)
 		{
-			std::cout << frameCount << std::endl;
+			std::cout << "FPS: " << frameCount << std::endl;
+			std::cout << "Deltatime: " << deltaTime << std::endl;
 			timer = 0.0f;
 			frameCount = 0;
 		}

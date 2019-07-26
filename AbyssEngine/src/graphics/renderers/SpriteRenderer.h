@@ -4,8 +4,11 @@
 #include "Renderer.h"
 #include "../../entitysystem/units/UnitManager.h"
 #include "../../entitysystem/units/UnitGroup.h"
+#include "../../entitysystem/entitymanager/EachCallable.h"
+#include "../../entitysystem/entitymanager/EntityManager.h"
+#include "../../entitysystem/defaultcomponents/Graphics.h"
+#include "../../entitysystem/defaultcomponents/Spatial.h"
 #include "../shaders/Program.h"
-#include "../../entitysystem/DefaultGComponents.h"
 
 // Program
 #define SR_PROGRAM						Program::type::SPRITE
@@ -34,7 +37,7 @@ namespace abyssengine {
 	class Program;
 	class Camera;
 
-	class SpriteRenderer : public Renderer
+	class SpriteRenderer : public Renderer, public entitysystem::EachCallable<Sprite_Component, Position_Component>
 	{
 	public:
 		SpriteRenderer();
@@ -49,9 +52,13 @@ namespace abyssengine {
 		GLuint* IBO_DATA = new GLuint[SR_INDICES_SIZE];
 		GLsizei SPRITES_COUNT = 0;
 	public:
-		void begin(const math::mat4& perspectiveViewMatrix) override;
+		void begin(const math::mat4f& perspectiveViewMatrix) override;
 
-		void submit(UnitGroup& unitGroup) override;
+		void submitUnits(entitysystem::EntityManager* entitymanager) override { entitymanager->each(this); }
+
+		void eachCall(entitysystem::UnitGroup& unitgroup) override { submit(unitgroup); };
+
+		void submit(entitysystem::UnitGroup& unitGroup) override;
 
 		/*
 			Called during submit if buffer is full, and when calling end() if there are sprites to draw.

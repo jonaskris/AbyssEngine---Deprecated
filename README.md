@@ -1,10 +1,38 @@
 # AbyssEngine
+Game engine to be used for upcoming game Abysswalker.
 
-To be used for upcoming game AbyssWalker.
-
-Written in C++ with OpenGL.
 The purpose of the project is to gain experience with creating a fully fleshed out
-project for once, which hopefully will be a very learningful experience.
-I would also like for the project to be able to serve as an example for others who wish
-to create something similar. If you wish to do so, please keep in mind that this is my first proper
-project made with c++, and should be treated as such.
+project that can give a broader understanding of programming.
+
+Dependencies: GLEW, GLFW, FreeImage, FreeType.
+
+## Features
+* **Graphics**
+    * OpenGL
+    * 3D ~~and 2D~~
+    * Currently supports drawing
+      * Sprites (Using single textures or texture atlas)
+      * Text
+      * Polygons
+      * Lines
+      * Points
+* **~~Collision & Physics~~**
+    * ~~Broad-phase~~
+    * ~~Narrow-phase~~
+* **~~Audio~~**
+* **Entity-Component-System (ECS)**
+    * A Data-Oriented architectural pattern that favours composition over inheritance.
+    * Entities are solely defined by the components it exists of, and are identified by an entityId which it
+s components stores.
+    * Components are logicless data objects stored continuously in memory in the entitymanager.
+    * Events are components that have a limited lifetime and can be used to broadcast information.
+    * [More information](https://github.com/jonaskris/EntitySystem)
+* **Resource Loading**
+    * Resources are all loaded on program start and kept in memory for the entirety of the session.
+    * Textures are loaded using [FreeImage](https://github.com/imazen/freeimage).
+    * Fonts are loaded using [FreeType](https://www.freetype.org/).
+    
+* **Input**
+    * Keyboard and mouse.
+    * ~~Controller~~
+## Usage

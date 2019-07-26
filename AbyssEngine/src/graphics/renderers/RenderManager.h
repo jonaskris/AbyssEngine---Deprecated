@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include "Renderer.h"
 
 namespace abyssengine {
 	class Window;
@@ -15,6 +16,7 @@ namespace abyssengine {
 		static RenderManager* instance;
 		int width, height;
 		Window* window = NULL;
+		std::vector<Renderer*> renderers;
 	public:
 		static RenderManager* getInstance();
 		~RenderManager();

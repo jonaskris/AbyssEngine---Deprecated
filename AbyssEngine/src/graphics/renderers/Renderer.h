@@ -1,6 +1,8 @@
 #pragma once
-#include "../../math/mat4.h"
+#include "../../math/linalg.h"
 #include "../../entitysystem/units/UnitGroup.h"
+#include "../../entitysystem/entitymanager/EntityManager.h"
+#include "../../entitysystem/entitymanager/EachCallable.h"
 
 namespace abyssengine
 {
@@ -14,12 +16,14 @@ namespace abyssengine
 		/*
 			Performs necessary one time operations before rendering.
 		*/
-		virtual void begin(const math::mat4& perspectiveViewMatrix) = 0;
+		virtual void begin(const math::mat4f& perspectiveViewMatrix) = 0;
+
+		virtual void submitUnits(entitysystem::EntityManager* entitymanager) = 0;
 
 		/*
 			Submits a UnitGroup to be rendered.
 		*/
-		virtual void submit(UnitGroup& unitGroup) = 0;
+		virtual void submit(entitysystem::UnitGroup& unitGroup) = 0;
 
 		/*
 			Draws submitted graphics components.
