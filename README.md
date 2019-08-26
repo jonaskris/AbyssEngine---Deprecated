@@ -3,7 +3,7 @@
 The purpose of the project is to gain experience with creating a fully fleshed out
 project that can give a broader understanding of programming.
 
-Dependencies: GLEW, GLFW, SOIL, FreeType.
+Dependencies: GLEW, GLFW, SOIL, FreeType and Nlohmann's JSON library.
 
 ## Features
 * **Graphics**
