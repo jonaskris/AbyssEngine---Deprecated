@@ -22,8 +22,10 @@ s components stores.
     * [More information](https://github.com/jonaskris/EntitySystem)
 * **Resource Loading**
     * Resources are all loaded on program start and kept in memory for the entirety of the session.
+    * Supports setting default resources per type that are returned if the requested resource was not found.
     * Textures are loaded using [SOIL](https://www.lonesock.net/soil.html).
     * Fonts are loaded using [FreeType](https://www.freetype.org/).
+    * JSON is loaded using [nlohmann's JSON library](https://github.com/nlohmann/json).
 * **Input**
     * Keyboard and mouse.
     * ~~Controller~~
