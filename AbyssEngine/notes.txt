@@ -1,5 +1,0 @@
-1. Need to fix bug where clicking before game has properly started up crashes it
-2. spritesheet components should be possible to create by refering to the texture atlas name.
-3. Texture atlases should be loaded by reading filenames from appropriate folder, and be given an id based on lexicographic order.
-4. Shaders should be loaded by reading filenames from appropriate folder, shader type should be given by file extension (.frag, .vert). Shaders can belong to multiple programs by separating names by underscore. (Water_Lava.vert for example)
-5. Programs should be defined by shaders with same name

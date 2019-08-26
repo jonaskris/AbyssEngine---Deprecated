@@ -3,12 +3,14 @@
 #include "../../InputEnums.h"
 
 namespace abyssengine {
-	class KeyboardObserver
-	{
-	public:
-		KeyboardObserver() { KeyboardListener::addObserver(*this); }
-		virtual ~KeyboardObserver() { KeyboardListener::removeObserver(*this); }
+	namespace input {
+		class KeyboardObserver
+		{
+		public:
+			KeyboardObserver() { KeyboardListener::addObserver(*this); }
+			virtual ~KeyboardObserver() { KeyboardListener::removeObserver(*this); }
 
-		virtual void notifyKeyEvent(Keyboard::Key key, Keyboard::Action action, Keyboard::Modifier modifier) = 0;
-	};
+			virtual void notifyKeyEvent(Keyboard::Key key, Keyboard::Action action, Keyboard::Modifier modifier) const = 0;
+		};
+	}
 }

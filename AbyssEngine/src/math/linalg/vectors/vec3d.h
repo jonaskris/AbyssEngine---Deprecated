@@ -1,6 +1,5 @@
 #pragma once
 #include <math.h>
-//#include "vec3f.h"
 
 namespace abyssengine {
 	namespace math {
@@ -15,7 +14,9 @@ namespace abyssengine {
 
 			vec3d() : x(0.0), y(0.0), z(0.0) {};
 			vec3d(const double& scalar) : x(scalar), y(scalar), z(scalar) {};
+
 			vec3d(const vec3d& vec) : x(vec.x), y(vec.y), z(vec.z) {};
+			vec3d(const vec2d& vec, const double& z) : x(vec.x), y(vec.y), z(z) {};
 			vec3d(const double& x, const double& y, const double& z) : x(x), y(y), z(z) {};
 
 			vec3d& add(const vec3d& other)

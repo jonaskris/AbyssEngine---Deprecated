@@ -1,6 +1,5 @@
 #pragma once
 #include <math.h>
-//#include "vec2f.h"
 
 namespace abyssengine {
 	namespace math {

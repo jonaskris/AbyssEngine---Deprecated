@@ -6,5 +6,7 @@
 #define SCREEN_HEIGHT 1080.0f
 #define FOV 90
 #define ASPECT_RATIO SCREEN_WIDTH / SCREEN_HEIGHT
-#define NEAR 1.0f
-#define FAR 4.0f
+#define NEAR 0.01f
+#define FAR 30.0f
+#define RESOURCE_DIRECTORY "../resources"
+#define MOUSE_SENSITIVITY 0.05

@@ -118,18 +118,16 @@ namespace abyssengine {
 
 			static mat4f perspective(float fov, float aspectRatio, float near, float far)
 			{
-				mat4f returnMatrix = identity();
-				float q = 1.0f / tan(math::toRadians(0.5f * fov));
-				float a = q / aspectRatio;
+				mat4f returnMatrix = mat4f();
 
-				float b = (near + far) / (near - far);
-				float c = (2.0f * near * far) / (near - far);
+				float angle = (fov / 180.0f) * M_PI;
+				float f = 1.0f / tan(angle * 0.5f);
 
-				returnMatrix.elements[0 + 0 * 4] = a;
-				returnMatrix.elements[1 + 1 * 4] = q;
-				returnMatrix.elements[2 + 2 * 4] = b;
-				returnMatrix.elements[2 + 3 * 4] = -1.0f;
-				returnMatrix.elements[3 + 2 * 4] = c;
+				returnMatrix.elements[0 + 0 * 4] = f / aspectRatio;
+				returnMatrix.elements[1 + 1 * 4] = f;
+				returnMatrix.elements[2 + 2 * 4] = (far + near) / (near - far);
+				returnMatrix.elements[3 + 2 * 4] = -1.0f;
+				returnMatrix.elements[2 + 3 * 4] = (2.0f * far * near) / (near - far);
 
 				return returnMatrix;
 			}
@@ -153,22 +151,24 @@ namespace abyssengine {
 			{
 				mat4f returnMatrix = identity();
 				vec3f f = (lookAtPos - cameraPos).normalize();
-				vec3f s = f.cross(up.normalize());
-				vec3f u = s.cross(f);
+				vec3f u = up.normalize();
+				vec3f s = f.cross(u).normalize();
+				u = s.cross(f);
 
 				returnMatrix.elements[0 + 0 * 4] = s.x;
 				returnMatrix.elements[0 + 1 * 4] = s.y;
 				returnMatrix.elements[0 + 2 * 4] = s.z;
-
 				returnMatrix.elements[1 + 0 * 4] = u.x;
 				returnMatrix.elements[1 + 1 * 4] = u.y;
 				returnMatrix.elements[1 + 2 * 4] = u.z;
-
 				returnMatrix.elements[2 + 0 * 4] = -f.x;
 				returnMatrix.elements[2 + 1 * 4] = -f.y;
 				returnMatrix.elements[2 + 2 * 4] = -f.z;
-
-				return returnMatrix * translate(vec3f(cameraPos.x, cameraPos.y, cameraPos.z) * -1.0f);
+				returnMatrix.elements[0 + 3 * 4] = -s.dot(cameraPos);
+				returnMatrix.elements[1 + 3 * 4] = -u.dot(cameraPos);
+				returnMatrix.elements[2 + 3 * 4] = f.dot(cameraPos);
+				
+				return returnMatrix;
 			}
 		};
 	}

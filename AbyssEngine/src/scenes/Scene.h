@@ -1,21 +1,18 @@
 #pragma once
 #include <vector>
-#include "../graphics/shaders/Shader.h"
+//#include "../graphics/shaders/Shader.h"
 #include "../entitysystem/entitymanager/EntityManager.h"
+#include "../math/semantics/Time.h"
 
 namespace abyssengine {
-	//class Camera;
-
 	class Scene
 	{
 	protected:
-		//Camera* camera = NULL;
 		entitysystem::EntityManager entityManager;
 	public:
 		virtual ~Scene();
 
-		//Camera* getCamera();
-		virtual void update(const double &dt) = 0;
+		virtual void update(const math::Time& time) = 0;
 
 		entitysystem::EntityManager* getEntityManager();
 	};

@@ -1,6 +1,5 @@
 #pragma once
 #include <math.h>
-//#include "vec2d.h"
 
 namespace abyssengine {
 	namespace math {
@@ -66,7 +65,6 @@ namespace abyssengine {
 				return *this;
 			}
 
-
 			// x ¤= y
 			vec2f& operator+=(const vec2f& other) { return add(other); }
 			vec2f& operator-=(const vec2f& other) { return subtract(other); }
@@ -89,7 +87,7 @@ namespace abyssengine {
 			vec2f operator*(const float& scalar) const { return vec2f(*this).multiply(scalar); }
 			vec2f operator/(const float& scalar) const { return vec2f(*this).divide(scalar); }
 
-			float magnitude() const { return sqrt(x*x + y * y); }
+			float magnitude() const { return sqrt(x*x + y*y); }
 			float dot(const vec2f& other) const { return this->x * other.x + this->y * other.y; };
 			float cross(const vec2f& other) const { return this->x * other.y - this->y * other.x; }
 			vec2f normalize() const { return *this / magnitude(); }

@@ -1,21 +1,14 @@
 # AbyssEngine
-Game engine to be used for upcoming game Abysswalker.
 
 The purpose of the project is to gain experience with creating a fully fleshed out
 project that can give a broader understanding of programming.
 
-Dependencies: GLEW, GLFW, FreeImage, FreeType.
+Dependencies: GLEW, GLFW, SOIL, FreeType.
 
 ## Features
 * **Graphics**
-    * OpenGL
+    * Deferred rendering with OpenGL
     * 3D ~~and 2D~~
-    * Currently supports drawing
-      * Sprites (Using single textures or texture atlas)
-      * Text
-      * Polygons
-      * Lines
-      * Points
 * **~~Collision & Physics~~**
     * ~~Broad-phase~~
     * ~~Narrow-phase~~
@@ -29,9 +22,8 @@ s components stores.
     * [More information](https://github.com/jonaskris/EntitySystem)
 * **Resource Loading**
     * Resources are all loaded on program start and kept in memory for the entirety of the session.
-    * Textures are loaded using [FreeImage](https://github.com/imazen/freeimage).
+    * Textures are loaded using [SOIL](https://www.lonesock.net/soil.html).
     * Fonts are loaded using [FreeType](https://www.freetype.org/).
-    
 * **Input**
     * Keyboard and mouse.
     * ~~Controller~~

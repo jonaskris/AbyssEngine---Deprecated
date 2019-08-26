@@ -1,7 +1,8 @@
 #pragma once
 #include <vector>
 #include "Scene.h"
-#include "../graphics/Camera.h"
+//#include "../graphics/Camera.h"
+#include "../math/semantics/Time.h"
 
 namespace abyssengine {
 	class Entity;
@@ -16,6 +17,6 @@ namespace abyssengine {
 		~WorldScene();
 		void generateScene();
 
-		void update(const double &dt);
+		void update(const math::Time& time);
 	};
 }

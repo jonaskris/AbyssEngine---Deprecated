@@ -1,5 +1,5 @@
 #pragma once
-#include "../../input/mouse/observers/MouseButtonObserver.h"
+#include "../../input/mouse/observers/MouseObserver.h"
 #include "../../input/keyboard/observers/KeyboardObserver.h"
 #include "../../input/InputEnums.h"
 #include "../defaultevents/Input.h"
@@ -7,22 +7,30 @@
 #include "../defaultcomponents/Spatial.h"
 
 namespace abyssengine {
-	using UnitGroup = entitysystem::UnitGroup;
+	namespace entitysystem {
 
-	template <typename... UnitTypes>
-	using System = entitysystem::System<UnitTypes...>;
-
-	class Input : public System<>, public MouseButtonObserver, public KeyboardObserver
-	{
-	private:
-		void notifyMouseButtonEvent(Mouse::Button button, Mouse::Action action, Mouse::Modifier modifier, const math::vec2f& position) override
+		namespace im = input::Mouse;
+		class MouseInput : public System<>, public input::MouseObserver
 		{
-			entityManager->newUnit( MouseButton_Event {button, action, modifier } );
-		}
+		private:
+			void notifyMousePositionEvent(const math::vec2f& position, const math::vec2f& lastPosition) const override 
+				{ entityManager->newUnit(Mouse_Position_Event{ position, lastPosition }); };
+			void notifyMouseEnterEvent(im::Action action, const math::vec2f& position) const override
+				{ entityManager->newUnit(Mouse_Enter_Event{ action, position }); };
+			void notifyMouseButtonEvent(im::Button button, im::Action action, im::Modifier modifier, const math::vec2f& position) const override
+				{ entityManager->newUnit(Mouse_Button_Event{ button, action, modifier }); };
+			void notifyMouseScrollEvent(const math::vec2f& offset) const override
+				{ entityManager->newUnit(Mouse_Scroll_Event{ offset }); };
+			void notifyMouseDragEvent(im::Button button, im::Action action, im::Modifier modifier, const math::vec2f& from, const math::vec2f& to) const override
+				{ entityManager->newUnit(Mouse_Drag_Event{ button, action, modifier, from, to }); };
+		};
 
-		void notifyKeyEvent(Keyboard::Key key, Keyboard::Action action, Keyboard::Modifier modifier)
+		namespace ik = input::Keyboard;
+		class KeyboardInput : public System<>, public input::KeyboardObserver
 		{
-			entityManager->newUnit( Key_Event{ key, action, modifier } );
-		}
-	};
+		private:
+			void notifyKeyEvent(ik::Key key, ik::Action action, ik::Modifier modifier) const override 
+				{ entityManager->newUnit(Keyboard_Key_Event{ key, action, modifier }); }
+		};
+	}
 }

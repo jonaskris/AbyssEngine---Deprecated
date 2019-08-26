@@ -1,6 +1,5 @@
 #pragma once
 #include <math.h>
-//#include "vec3d.h"
 
 namespace abyssengine {
 	namespace math {
@@ -15,7 +14,9 @@ namespace abyssengine {
 
 			vec3f() : x(0.0f), y(0.0f), z(0.0f) {};
 			vec3f(const float& scalar) : x(scalar), y(scalar), z(scalar) {};
+
 			vec3f(const vec3f& vec) : x(vec.x), y(vec.y), z(vec.z) {};
+			vec3f(const vec2f& vec, const float& z) : x(vec.x), y(vec.y), z(z) {};
 			vec3f(const float& x, const float& y, const float& z) : x(x), y(y), z(z) {};
 
 			vec3f& add(const vec3f& other)
@@ -89,7 +90,7 @@ namespace abyssengine {
 			vec3f operator*(const float& scalar) const { return vec3f(*this).multiply(scalar); }
 			vec3f operator/(const float& scalar) const { return vec3f(*this).divide(scalar); }
 
-			float magnitude() const { return sqrt(x*x + y * y + z * z); }
+			float magnitude() const { return sqrt(x*x + y*y + z*z); }
 			float dot(const vec3f& other) const { return this->x * other.x + this->y * other.y + this->z * other.z; };
 			vec3f cross(const vec3f& other) const { return vec3f{ this->y * other.z - this->z * other.y, this->z * other.x - this->x * other.z, this->x * other.y - this->y * other.x }; }
 			vec3f normalize() const { return *this / magnitude(); }

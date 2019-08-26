@@ -4,10 +4,6 @@ namespace abyssengine {
 	Scene::~Scene()
 	{
 	}
-	//Camera* Scene::getCamera()
-	//{
-	//	return camera;
-	//}
 
 	entitysystem::EntityManager* Scene::getEntityManager()
 	{
