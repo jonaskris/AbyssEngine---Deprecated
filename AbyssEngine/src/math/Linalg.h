@@ -1,4 +1,5 @@
 #pragma once
+#include "linalg/vectors/conversion.h"
 #include "linalg/vectors/vec2f.h"
 #include "linalg/vectors/vec2d.h"
 #include "linalg/vectors/vec3f.h"

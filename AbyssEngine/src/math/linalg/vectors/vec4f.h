@@ -1,6 +1,5 @@
 #pragma once
 #include <math.h>
-#include "vec3f.h"
 
 namespace abyssengine {
 	namespace math {
@@ -17,8 +16,6 @@ namespace abyssengine {
 			vec4f(const float& scalar) : x(scalar), y(scalar), z(scalar), w(scalar) {};
 
 			vec4f(const vec4f& vec) : x(vec.x), y(vec.y), z(vec.z), w(vec.w) {};
-			vec4f(const vec3f& vec, const float& w) : x(vec.x), y(vec.y), z(vec.z), w(w) {};
-			vec4f(const vec2f& vec, const float& z, const float& w) : x(vec.x), y(vec.y), z(z), w(w) {};
 			vec4f(const float& x, const float& y, const float& z, const float& w) : x(x), y(y), z(z), w(w) {};
 
 			vec4f& add(const vec4f& other)
@@ -69,7 +66,6 @@ namespace abyssengine {
 				return *this;
 			}
 
-
 			// x ¤= y
 			vec4f& operator+=(const vec4f& other) { return add(other); }
 			vec4f& operator-=(const vec4f& other) { return subtract(other); }
@@ -92,7 +88,7 @@ namespace abyssengine {
 			vec4f operator*(const float& scalar) const { return vec4f(*this).multiply(scalar); }
 			vec4f operator/(const float& scalar) const { return vec4f(*this).divide(scalar); }
 
-			float magnitude() const { return sqrt(x*x + y * y + z * z + w * w); }
+			float magnitude() const { return sqrt(x*x + y*y + z*z + w*w); }
 			float dot(const vec4f& other) const { return this->x * other.x + this->y * other.y + this->z * other.z + this->w * other.w; };
 			vec4f normalize() const { return *this / magnitude(); }
 		};

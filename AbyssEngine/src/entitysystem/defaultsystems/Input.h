@@ -1,10 +1,10 @@
 #pragma once
-#include "../../input/mouse/observers/MouseObserver.h"
-#include "../../input/keyboard/observers/KeyboardObserver.h"
-#include "../../input/InputEnums.h"
+#include "../defaultcomponents/Spatial.h"
 #include "../defaultevents/Input.h"
 #include "../systems/System.h"
-#include "../defaultcomponents/Spatial.h"
+#include "../../input/InputEnums.h"
+#include "../../input/mouse/observers/MouseObserver.h"
+#include "../../input/keyboard/observers/KeyboardObserver.h"
 
 namespace abyssengine {
 	namespace entitysystem {

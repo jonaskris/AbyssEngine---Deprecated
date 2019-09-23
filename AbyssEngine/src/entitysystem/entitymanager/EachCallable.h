@@ -34,7 +34,7 @@ namespace abyssengine {
 			static void unpackUnitTypesHelper(std::vector<std::pair<size_t, bool>>& unitIdentifiersUnpacking)
 			{
 				static_assert(std::is_base_of<UnitBase, UnitType>::value || std::is_base_of<OptionalBase, UnitType>::value, "UnitType must be derived from Unit or Optional!");
-				unitIdentifiersUnpacking.emplace_back(UnitType::getIdentifier(), std::is_base_of<OptionalBase, UnitType>::value);
+				unitIdentifiersUnpacking.emplace_back(utils::TypeIdentifier<UnitType>::getIdentifier(), std::is_base_of<OptionalBase, UnitType>::value);
 			}
 
 			/*
@@ -44,7 +44,7 @@ namespace abyssengine {
 			static void unpackUnitTypesHelper(std::vector<std::pair<size_t, bool>>& unitIdentifiersUnpacking)
 			{
 				static_assert(std::is_base_of<UnitBase, UnitType>::value || std::is_base_of<OptionalBase, UnitType>::value, "UnitType must be derived from Unit or Optional!");
-				unitIdentifiersUnpacking.emplace_back(UnitType::getIdentifier(), std::is_base_of<OptionalBase, UnitType>::value);
+				unitIdentifiersUnpacking.emplace_back(utils::TypeIdentifier<UnitType>::getIdentifier(), std::is_base_of<OptionalBase, UnitType>::value);
 
 				unpackUnitTypesHelper<F, Rest...>(unitIdentifiersUnpacking);
 			}

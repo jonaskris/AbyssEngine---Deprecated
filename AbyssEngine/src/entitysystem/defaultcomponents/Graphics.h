@@ -108,15 +108,24 @@ namespace abyssengine {
 
 		struct Camera_Component : public Component<Camera_Component>
 		{
-			math::vec3f position = math::vec3f(0.0f, 0.0f, 0.0f);
+			math::vec3f position = math::vec3f(0.0f, 0.0f, 3.0f);
 
-			float pitch = 0.0f, yaw = -90.0f, roll = 0.0f;
-			math::vec3f front = math::vec3f(0.0f, 0.0f, -1.0f);
-			math::vec3f up = math::vec3f(0.0f, 1.0f, 0.0f);
+			float pitch = 0.0f, yaw = 90.0f, roll = 0.0f;
+			math::vec3f front;
+			math::vec3f up = math::vec3f(0.0f, 0.0f, 1.0f);
 
-			math::mat4f view = math::mat4f::identity();
+			math::mat4f view;
 
-			Camera_Component() {};
+			Camera_Component() { update(); };
+
+			void update()
+			{
+				front.x = cos(math::toRadians(pitch)) * cos(math::toRadians(yaw));
+				front.y = cos(math::toRadians(pitch)) * sin(math::toRadians(yaw));
+				front.z = sin(math::toRadians(pitch));
+
+				view = math::mat4f::viewMatrix(position, position + front, up);
+			}
 		};
 	}
 }

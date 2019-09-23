@@ -1,5 +1,4 @@
 #pragma once
-#include <map>
 #include <utility>
 #include "Unit.h"
 #include "../../utils/Algorithm.h"
@@ -8,9 +7,8 @@ namespace abyssengine {
 	namespace entitysystem
 	{
 		class EntityManager;
-
 		/*
-			UnitGroups are used to pass around groups of Units regardless of UnitType.
+			UnitGroups are used to pass around groups of Units regardless of type.
 		*/
 		class UnitGroup
 		{
@@ -27,15 +25,18 @@ namespace abyssengine {
 
 				operator size_t() const { return unitIdentifier; }
 			};
+
 		private:
 			std::vector<Group> groups;
 
-			// How many Groups starting from back that can be replaced by another.
-			// Used to change value of existing groups, instead of allocating a whole new group.
+			/* 
+				How many Groups starting from back that can be replaced by another.
+				Used to change value of existing groups, instead of allocating a whole new group.
+			*/
 			size_t replaceable = 0;
-		public:
+
 			/*
-				Sets all current groups to be able to be replaced with new values.
+				Sets all current groups to be replaced with new values.
 			*/
 			void setReplaceable()
 			{
@@ -63,6 +64,7 @@ namespace abyssengine {
 				groups.insert(groups.begin() + (groups.size() - replaceable), Group{ unitIdentifier, first, count });
 			}
 
+		public:
 			template <typename UnitType>
 			std::pair<UnitType*, size_t> get()
 			{
@@ -71,7 +73,7 @@ namespace abyssengine {
 				int index = -1;
 				for (size_t i = 0; i < groups.size(); i++)
 				{
-					if (groups.at(i).unitIdentifier == UnitType::getIdentifier())
+					if (groups.at(i).unitIdentifier == utils::TypeIdentifier<UnitType>::getIdentifier())
 					{
 						if (i >= groups.size() - replaceable)
 							break;

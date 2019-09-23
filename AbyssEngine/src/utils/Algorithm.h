@@ -56,36 +56,33 @@ namespace abyssengine {
 		}
 
 		template <typename V, typename TypeToKey>
-		void insertSorted(std::vector<V> & vec, const V & newElement, TypeToKey typeToKey)
+		size_t insertSorted(std::vector<V> & vec, const V & newElement, TypeToKey typeToKey)
 		{
-			bool inserted = false;
 			for (auto it = vec.begin(); it != vec.end(); it++)
-			{
 				if (typeToKey(newElement) < typeToKey(*it))
 				{
-					vec.insert(it, newElement);
-					inserted = true;
-					break;
+					auto newIt = vec.insert(it, newElement);
+					return newIt - vec.begin();
 				}
-			}
-			if (!inserted)
-				vec.push_back(newElement);
+
+			vec.push_back(newElement);
+			return vec.size() - 1;
 		}
 
 		template <typename T, typename TypeToKey>
-		void insertSortedReverse(std::vector<T> & vec, const T & newElement, TypeToKey typeToKey)
+		size_t insertSortedReverse(std::vector<T>& vec, const T & newElement, TypeToKey typeToKey)
 		{
 			bool inserted = false;
 			for (auto it = vec.rbegin(); it != vec.rend(); it++)
-				if (typeToKey(*it) < typeToKey(newElement)) // <
+				if (typeToKey(*it) < typeToKey(newElement))
 				{
-					vec.insert(it.base(), newElement);
+					auto newIt = vec.insert(it.base(), newElement);
 					inserted = true;
-					break;
+					return newIt - vec.begin();
 				}
 
-			if (!inserted)
-				vec.push_back(newElement);
+			vec.push_back(newElement);
+			return vec.size() - 1;
 		}
 	}
 }

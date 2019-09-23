@@ -20,27 +20,23 @@ namespace abyssengine {
 			{
 				Camera_Component& c = units.get<Camera_Component>().first[0];
 				Position_Component& p = units.get<Position_Component>().first[0];
-
 				Mouse_Position_Event& pe = units.get<Mouse_Position_Event>().first[0];
+
 				math::vec2f mousePosition = pe.getPosition();
 				math::vec2f mouseLastPosition = pe.getLastPosition();
 
-				c.yaw += (mousePosition.x - mouseLastPosition.x) * MOUSE_SENSITIVITY;
-				c.pitch += (mouseLastPosition.y - mousePosition.y) * MOUSE_SENSITIVITY;
+				c.yaw += (mouseLastPosition.x - mousePosition.x) * (float)MOUSE_SENSITIVITY;
+				c.pitch += (mouseLastPosition.y - mousePosition.y) * (float)MOUSE_SENSITIVITY;
 
 				if (c.pitch > 89.0f)
 					c.pitch = 89.0f;
 				if (c.pitch < -89.0f)
 					c.pitch = -89.0f;
 
-				math::vec3f& front = c.front;
-				front.x = cos(math::toRadians(c.yaw)) * cos(math::toRadians(c.pitch));
-				front.y = sin(math::toRadians(c.pitch));
-				front.z = sin(math::toRadians(c.yaw)) * cos(math::toRadians(c.pitch));
+				c.yaw = std::fmodf(c.yaw, 360.0f);
 
-				front = front.normalize();
 
-				c.view = math::mat4f::viewMatrix(p.position.vec, p.position.vec + c.front, c.up);
+				c.update();
 			}
 		};
 
@@ -54,7 +50,7 @@ namespace abyssengine {
 
 			void updateEntity(const math::Time& time, UnitGroup& units) override
 			{
-				static const float movementSpeed = 0.05;
+				static const float movementSpeed = 0.1f;
 				
 				Camera_Component& c = units.get<Camera_Component>().first[0];
 				Position_Component& p = units.get<Position_Component>().first[0];
@@ -62,18 +58,21 @@ namespace abyssengine {
 
 				c.position = p.position.vec;
 
-
 				for (size_t i = 0; i < ks.second; i++) {
 					Keyboard_Key_Event& k = ks.first[i];
 
 					if (k.getKey() == input::Keyboard::Key::W && k.getAction() == input::Keyboard::Action::HOLD)
-						p.position.y += movementSpeed;
+						p.position += c.front.normalize() * movementSpeed;
 					if (k.getKey() == input::Keyboard::Key::S && k.getAction() == input::Keyboard::Action::HOLD)
-						p.position.y -= movementSpeed;
+						p.position -= c.front.normalize() * movementSpeed;
 					if (k.getKey() == input::Keyboard::Key::D && k.getAction() == input::Keyboard::Action::HOLD)
-						p.position.x += movementSpeed;
+						p.position += c.front.cross(math::vec3f(0.0f, 0.0f, 1.0f)).normalize() * movementSpeed;
 					if (k.getKey() == input::Keyboard::Key::A && k.getAction() == input::Keyboard::Action::HOLD)
-						p.position.x -= movementSpeed;
+						p.position -= c.front.normalize().cross(math::vec3f(0.0f, 0.0f, 1.0f)).normalize() * movementSpeed;
+					if (k.getKey() == input::Keyboard::Key::SPACE && k.getAction() == input::Keyboard::Action::HOLD)
+						p.position.z += movementSpeed;
+					if (k.getKey() == input::Keyboard::Key::LEFT_SHIFT && k.getAction() == input::Keyboard::Action::HOLD)
+						p.position.z -= movementSpeed;
 				}
 				c.view = math::mat4f::viewMatrix(p.position.vec, p.position.vec + c.front, c.up);
 			}

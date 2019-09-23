@@ -139,7 +139,7 @@ namespace abyssengine {
 				glActiveTexture(GL_TEXTURE2);
 				glBindTexture(GL_TEXTURE_2D, framebuffer->albedoSpecular->getID());
 				
-				lightingProgram.setUniform3f("lights[0].Position", math::vec3f(0.0f, 0.0f, 0.1f));
+				lightingProgram.setUniform3f("lights[0].Position", math::vec3f(0.0f, 0.0f, 0.0f));
 				lightingProgram.setUniform3f("lights[0].Color", math::vec3f(0.5f, 0.5f, 0.5f));
 				float constant = 1.0f;
 				float linear = 1.0f;

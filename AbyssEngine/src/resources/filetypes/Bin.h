@@ -14,7 +14,6 @@ namespace abyssengine {
 
 			Bin(const Path& path) : File(path)
 			{
-
 				std::ifstream file(path.getFullPath());
 
 				if (!file.is_open())

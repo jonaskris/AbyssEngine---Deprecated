@@ -1,4 +1,4 @@
-#pragma once
+ #pragma once
 #include <math.h>
 
 namespace abyssengine {
@@ -16,7 +16,6 @@ namespace abyssengine {
 			vec3d(const double& scalar) : x(scalar), y(scalar), z(scalar) {};
 
 			vec3d(const vec3d& vec) : x(vec.x), y(vec.y), z(vec.z) {};
-			vec3d(const vec2d& vec, const double& z) : x(vec.x), y(vec.y), z(z) {};
 			vec3d(const double& x, const double& y, const double& z) : x(x), y(y), z(z) {};
 
 			vec3d& add(const vec3d& other)
@@ -66,7 +65,6 @@ namespace abyssengine {
 				this->x /= scalar; this->y /= scalar; this->z /= scalar;
 				return *this;
 			}
-
 
 			// x ¤= y
 			vec3d& operator+=(const vec3d& other) { return add(other); }

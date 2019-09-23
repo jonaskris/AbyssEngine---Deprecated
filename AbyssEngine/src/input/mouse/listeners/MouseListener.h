@@ -6,6 +6,7 @@
 #include <map>
 #include "../../InputEnums.h"
 #include "../../../math/linalg.h"
+#include "../../../Defines.h"
 
 namespace abyssengine {
 	namespace input {
@@ -21,7 +22,7 @@ namespace abyssengine {
 				bool releasedThisUpdate = false;
 			};
 
-			static math::vec2f lastPosition = math::vec2f(0.0f, 0.0f);
+			static math::vec2f lastPosition = math::vec2f((SCREEN_WIDTH / 2.0f) / 1.5f, (SCREEN_HEIGHT / 2.0f) / 1.5f );
 
 			static std::map<Mouse::Button, ButtonState> buttonStates;
 

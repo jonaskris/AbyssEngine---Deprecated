@@ -120,7 +120,7 @@ namespace abyssengine {
 			{
 				mat4f returnMatrix = mat4f();
 
-				float angle = (fov / 180.0f) * M_PI;
+				float angle = (fov / 180.0f) * (float)M_PI;
 				float f = 1.0f / tan(angle * 0.5f);
 
 				returnMatrix.elements[0 + 0 * 4] = f / aspectRatio;

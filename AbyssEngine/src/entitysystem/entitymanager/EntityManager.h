@@ -4,8 +4,9 @@
 #include <utility>
 #include "../systems/System.h"
 #include "../units/Unit.h"
-#include "../units/UnitManager.h"
-#include "../units/UnitManagerIterator.h"
+#include "../units/OwnedUnit.h"
+#include "../units/UnitContainer.h"
+#include "../units/OwnedUnitIterator.h"
 #include "../units/UnitGroup.h"
 #include "EachCallable.h"
 #include "../../math/semantics/Time.h"
@@ -27,16 +28,16 @@ namespace abyssengine {
 			/*
 				Units and entities.
 			*/
-			std::vector<UnitManagerBase*> unitManagers;
+			std::vector<UnitContainerBase*> unitContainers;
 			size_t entityIdCounter = 1; // For assigning entityId.
 
 			/*
 				Unpacks parameter pack of units when creating an entity, base case.
 			*/
 			template <typename UnitType>
-			void unpackAndStoreUnitsInManagers(const size_t& entityId, const UnitType& unit)
+			void unpackAndStoreUnitsInContainers(const size_t& entityId, const UnitType& unit)
 			{
-				static_assert(std::is_base_of<UnitBase, UnitType>::value, "UnitType must be derived from Unit!");
+				static_assert(std::is_base_of<UnitBase, UnitType>::value, "UnitType must be derived from UnitBase!");
 
 				newUnit(entityId, unit);
 			}
@@ -45,12 +46,12 @@ namespace abyssengine {
 				Unpacks parameter pack of units when creating an entity, recursive case.
 			*/
 			template <typename UnitType, typename... Rest>
-			void unpackAndStoreUnitsInManagers(const size_t& entityId, const UnitType& unit, const Rest& ... rest)
+			void unpackAndStoreUnitsInContainers(const size_t& entityId, const UnitType& unit, const Rest& ... rest)
 			{
-				static_assert(std::is_base_of<UnitBase, UnitType>::value, "UnitType must be derived from Unit!");
+				static_assert(std::is_base_of<UnitBase, UnitType>::value, "UnitType must be derived from UnitBase!");
 
 				newUnit(entityId, unit);
-				unpackAndStoreUnitsInManagers(entityId, rest...);
+				unpackAndStoreUnitsInContainers(entityId, rest...);
 			}
 
 			/*
@@ -59,7 +60,7 @@ namespace abyssengine {
 			template <typename UnitType>
 			static void unpackUnitTypesHelper(std::vector<size_t>& unitIdentifiersUnpacking)
 			{
-				static_assert(std::is_base_of<Unit, UnitType>::value && std::is_base_of<utils::TypeIdentifier<UnitType>, UnitType>::value, "UnitType must be derived from Unit and UnitTypeIdentifier!");
+				static_assert(std::is_base_of<UnitBase, UnitType>::value, "UnitType must be derived from UnitBase!");
 
 				unitIdentifiersUnpacking.push_back(UnitType::getIdentifier());
 			}
@@ -70,7 +71,7 @@ namespace abyssengine {
 			template <typename UnitType, typename F, typename... Rest>
 			static void unpackUnitTypesHelper(std::vector<size_t>& unitIdentifiersUnpacking)
 			{
-				static_assert(std::is_base_of<Unit, UnitType>::value && std::is_base_of<utils::TypeIdentifier<UnitType>, UnitType>::value, "UnitType must be derived from Unit and UnitTypeIdentifier!");
+				static_assert(std::is_base_of<UnitBase, UnitType>::value, "UnitType must be derived from UnitBase!");
 
 				unitIdentifiersUnpacking.push_back(UnitType::getIdentifier());
 				unpackUnitTypesHelper<F, Rest...>(unitIdentifiersUnpacking);
@@ -90,17 +91,14 @@ namespace abyssengine {
 			EntityManager() {};
 			~EntityManager()
 			{
-				for (size_t i = 0; i < unitManagers.size(); i++)
-					delete unitManagers[i];
+				for (size_t i = 0; i < unitContainers.size(); i++)
+					delete unitContainers[i];
 				for (size_t i = 0; i < systems.size(); i++)
 					delete systems[i];
 			};
 
 			/*
 				Executes EachCallable.eachCall on every entity that has specified set of unit types.
-
-				If a unitIdentifier has bool set to true, it is regarded as an optional unit,
-				and EachCallable.eachCall will be called for an entity, regardless if a unit of that type was found.
 			*/
 			void each(EachCallableBase * eachCallable)
 			{
@@ -110,19 +108,19 @@ namespace abyssengine {
 					return;
 
 				// Get an iterator to every relevant unitManager.
-				std::vector<UnitManagerIteratorBase*> unitManagerIterators;
+				std::vector<OwnedUnitIteratorBase*> unitContainerIterators;
 				for (size_t i = 0; i < unitIdentifiers.size(); i++)
 				{
 					bool found = false;
-					for (size_t j = 0; j < this->unitManagers.size(); j++)
-						if (unitIdentifiers.at(i).first == this->unitManagers.at(j)->getIdentifier())
+					for (size_t j = 0; j < this->unitContainers.size(); j++)
+						if (unitIdentifiers.at(i).first == this->unitContainers.at(j)->getIdentifier())
 						{
-							unitManagerIterators.push_back(this->unitManagers.at(j)->begin());
+							unitContainerIterators.push_back(this->unitContainers.at(j)->begin());
 							found = true;
 							break;
 						}
 
-					if (!found || unitManagerIterators.back()->size() == 0)
+					if (!found || unitContainerIterators.back()->size() == 0)
 					{
 						if (!(unitIdentifiers.at(i).second))
 							return;
@@ -134,8 +132,8 @@ namespace abyssengine {
 
 				// To make sure an each on only untargeted units is only done once (since an iterator on untargeted units is not incremented and wont end the loop that way).
 				bool allUntargeted = true;
-				for (size_t i = 0; i < unitManagerIterators.size(); i++)
-					if (!unitManagerIterators.at(i)->getStoresUntargeted())
+				for (size_t i = 0; i < unitContainerIterators.size(); i++)
+					if (unitContainerIterators.at(i)->getStoresOwnedUnits())
 					{
 						allUntargeted = false;
 						break;
@@ -143,30 +141,29 @@ namespace abyssengine {
 
 				// Preallocate UnitGroup.
 				UnitGroup unitGroup;
-				unitGroup.groups.reserve(unitManagerIterators.size());
+				unitGroup.groups.reserve(unitContainerIterators.size());
 
 				size_t targetEntityId = 0;
 				do
 				{
-					for (size_t i = 0; i < unitManagerIterators.size(); i++)
+					for (size_t i = 0; i < unitContainerIterators.size(); i++)
 					{
-						if (unitManagerIterators.at(i)->getStoresUntargeted())
+						if (!unitContainerIterators.at(i)->getStoresOwnedUnits())
 							continue;
 
-						if (unitManagerIterators.at(i)->getGroup().first->getEntityId() < targetEntityId)
-							if (!unitManagerIterators.at(i)->incrementWhileSmallerThan(targetEntityId))
+						if (unitContainerIterators.at(i)->getEntityId() < targetEntityId)
+							if (!unitContainerIterators.at(i)->incrementWhileSmallerThan(targetEntityId))
 								if (!(unitIdentifiers.at(i).second))
 								{
 									goto end;
-								}
-								else {
-									unitManagerIterators.erase(unitManagerIterators.begin() + i);
+								} else {
+									unitContainerIterators.erase(unitContainerIterators.begin() + i);
 									i--;
 									goto continueInner;
 								}
-						if (unitManagerIterators.at(i)->getGroup().first->getEntityId() > targetEntityId && !unitIdentifiers.at(i).second)
+						if (unitContainerIterators.at(i)->getEntityId() > targetEntityId && !unitIdentifiers.at(i).second)
 						{
-							targetEntityId = unitManagerIterators.at(i)->getGroup().first->getEntityId();
+							targetEntityId = unitContainerIterators.at(i)->getEntityId();
 
 							if (i != 0)
 								goto continueOuter;
@@ -176,11 +173,11 @@ namespace abyssengine {
 
 					// Call eachCallable with units from iterators.	
 					unitGroup.setReplaceable();
-					for (size_t i = 0; i < unitManagerIterators.size(); i++)
+					for (size_t i = 0; i < unitContainerIterators.size(); i++)
 					{
-						if (unitManagerIterators.at(i)->getStoresUntargeted()
-							|| unitManagerIterators.at(i)->getGroup().first[0].entityId == targetEntityId)
-							unitGroup.insert(unitManagerIterators.at(i)->getUnitTypeIdentifier(), unitManagerIterators.at(i)->getGroup());
+						if (!unitContainerIterators.at(i)->getStoresOwnedUnits()
+							|| (unitContainerIterators.at(i)->getEntityId() == targetEntityId))
+							unitGroup.insert(unitContainerIterators.at(i)->getUnitTypeIdentifier(), unitContainerIterators.at(i)->getGroup());
 					}
 
 					eachCallable->eachCall(unitGroup);
@@ -209,7 +206,7 @@ namespace abyssengine {
 			{
 				size_t newEntity = entityIdCounter++;
 
-				unpackAndStoreUnitsInManagers(newEntity, units...);
+				unpackAndStoreUnitsInContainers(newEntity, units...);
 
 				return newEntity;
 			}
@@ -222,23 +219,31 @@ namespace abyssengine {
 			{
 				static_assert(std::is_base_of<UnitBase, UnitType>::value, "UnitType must be derived from Unit!");
 
-				if (unit.getEntityId() == 0)
-					unit.setEntityId(entityId);
+				if constexpr (std::is_base_of<OwnedUnitBase, UnitType>::value)
+					if (unit.getEntityId() == 0)
+						unit.setEntityId(entityId);
 
 				// Try storing unit in an existing manager.
-				for (size_t i = 0; i < unitManagers.size(); i++)
-					if (unitManagers.at(i)->storesUnitType<UnitType>())
+				for (size_t i = 0; i < unitContainers.size(); i++)
+					if (unitContainers.at(i)->storesUnitType<UnitType>())
 					{
-						unitManagers.at(i)->insertUnit(unit);
-						return unit.getEntityId();
+						unitContainers.at(i)->insert(unit);
+
+						if constexpr (std::is_base_of<OwnedUnitBase, UnitType>::value)
+							return unit.getEntityId();
+						else
+							return 0;
 					}
 
 				// If unsuccessful in storing unit above, there were no UnitManager that stores given unit type.
 				// Create a new unit manager that stores the unit type, and insert the unit into the new manager. 
-				unitManagers.push_back(new UnitManager<UnitType>());
-				unitManagers.back()->insertUnit(unit);
+				unitContainers.push_back(new UnitContainer<UnitType>());
+				unitContainers.back()->insert(unit);
 
-				return unit.getEntityId();
+				if constexpr (std::is_base_of<OwnedUnitBase, UnitType>::value)
+					return unit.getEntityId();
+				else
+					return 0;
 			}
 
 			/*
@@ -250,24 +255,32 @@ namespace abyssengine {
 			size_t newUnit(UnitType unit)
 			{
 				static_assert(std::is_base_of<UnitBase, UnitType>::value, "UnitType must be derived from Unit!");
-
-				if (unit.getEntityId() == 0)
-					unit.setEntityId(newEntity());
+				
+				if constexpr (std::is_base_of<OwnedUnitBase, UnitType>::value)
+					if (unit.getEntityId() == 0)
+						unit.setEntityId(newEntity());
 
 				// Try storing unit in an existing manager.
-				for (size_t i = 0; i < unitManagers.size(); i++)
-					if (unitManagers.at(i)->storesUnitType<UnitType>())
+				for (size_t i = 0; i < unitContainers.size(); i++)
+					if (unitContainers.at(i)->storesUnitType<UnitType>())
 					{
-						unitManagers.at(i)->insertUnit(unit);
-						return unit.getEntityId();
+						unitContainers.at(i)->insert(unit);
+
+						if constexpr (std::is_base_of<OwnedUnitBase, UnitType>::value)
+							return unit.getEntityId();
+						else
+							return 0;
 					}
 
 				// If unsuccessful in storing unit above, there were no UnitManager that stores given unit type.
 				// Create a new UnitManager that stores the unit type, and insert the unit into the new manager. 
-				unitManagers.push_back(new UnitManager<UnitType>());
-				unitManagers.back()->insertUnit(unit);
+				unitContainers.push_back(new UnitContainer<UnitType>());
+				unitContainers.back()->insert(unit);
 
-				return unit.getEntityId();
+				if constexpr (std::is_base_of<OwnedUnitBase, UnitType>::value)
+					return unit.getEntityId();
+				else
+					return 0;
 			}
 
 			/*
@@ -279,15 +292,15 @@ namespace abyssengine {
 			{
 				if constexpr (sizeof...(UnitTypes) == 0)
 				{
-					for (size_t i = 0; i < unitManagers.size(); i++)
-						unitManagers[i]->setErase(entityId);
+					for (size_t i = 0; i < unitContainers.size(); i++)
+						unitContainers[i]->setErase(entityId);
 				}
 				else {
 					std::vector<size_t> unitIdentifiers = unpackUnitTypes<UnitTypes...>();
 
-					for (size_t i = 0; i < unitManagers.size(); i++)
-						if (std::find(unitIdentifiers.begin(), unitIdentifiers.end(), unitManagers[i]->getIdentifier()) != unitIdentifiers.end())
-							unitManagers[i]->setErase(entityId);
+					for (size_t i = 0; i < unitContainers.size(); i++)
+						if (std::find(unitIdentifiers.begin(), unitIdentifiers.end(), unitContainers[i]->getIdentifier()) != unitIdentifiers.end())
+							unitContainers[i]->setErase(entityId);
 				}
 			}
 
@@ -300,15 +313,15 @@ namespace abyssengine {
 			{
 				if constexpr (sizeof...(UnitTypes) == 0)
 				{
-					for (size_t i = 0; i < unitManagers.size(); i++)
-						unitManagers[i]->setIgnore(entityId);
+					for (size_t i = 0; i < unitContainers.size(); i++)
+						unitContainers[i]->setIgnore(entityId);
 				}
 				else {
 					std::vector<size_t> unitIdentifiers = unpackUnitTypes<UnitTypes...>();
 
-					for (size_t i = 0; i < unitManagers.size(); i++)
-						if (std::find(unitIdentifiers.begin(), unitIdentifiers.end(), unitManagers[i]->getIdentifier()) != unitIdentifiers.end())
-							unitManagers[i]->setIgnore(entityId);
+					for (size_t i = 0; i < unitContainers.size(); i++)
+						if (std::find(unitIdentifiers.begin(), unitIdentifiers.end(), unitContainers[i]->getIdentifier()) != unitIdentifiers.end())
+							unitContainers[i]->setIgnore(entityId);
 				}
 			}
 
@@ -318,8 +331,6 @@ namespace abyssengine {
 			template <typename SystemType>
 			void registerSystem(SystemType * system)
 			{
-				static_assert(std::is_base_of<SystemBase, SystemType>::value, "SystemType must be derived from SystemBase!");
-
 				systems.push_back(system);
 				systems.back()->setEntityManager(this);
 			}
@@ -329,17 +340,17 @@ namespace abyssengine {
 			*/
 			void update(const math::Time & time)
 			{
-				// PreUpdate every UnitManager. Inserts into unit vector from insertionQueue.
-				for (size_t i = 0; i < unitManagers.size(); i++)
-					unitManagers.at(i)->preUpdate();
+				// PreUpdate every UnitContainer. Inserts into unit vector from insertionQueue.
+				for (size_t i = 0; i < unitContainers.size(); i++)
+					unitContainers.at(i)->preUpdate();
 
 				// Update every system.
 				for (size_t i = 0; i < systems.size(); i++)
 					systems.at(i)->update(time);
 
 				// PostUpdate every UnitManager. Updates lifetimes and erases units set to be erased.
-				for (size_t i = 0; i < unitManagers.size(); i++)
-					unitManagers.at(i)->postUpdate(time);
+				for (size_t i = 0; i < unitContainers.size(); i++)
+					unitContainers.at(i)->postUpdate(time.value);
 			}
 
 			/*
@@ -348,8 +359,8 @@ namespace abyssengine {
 			*/
 			void insertFromQueues()
 			{
-				for (size_t i = 0; i < unitManagers.size(); i++)
-					unitManagers.at(i)->insertFromQueue();
+				for (size_t i = 0; i < unitContainers.size(); i++)
+					unitContainers.at(i)->preUpdate();
 			}
 
 			/*
@@ -360,21 +371,21 @@ namespace abyssengine {
 			{
 				static_assert(std::is_base_of<UnitBase, UnitType>::value, "UnitType must be derived from Unit!");
 
-				for (size_t i = 0; i < unitManagers.size(); i++)
-					if (unitManagers.at(i)->storesUnitType<UnitType>())
-						return static_cast<UnitManager<UnitType>*>(unitManagers.at(i))->getUnits();
+				for (size_t i = 0; i < unitContainers.size(); i++)
+					if (unitContainers.at(i)->storesUnitType<UnitType>())
+						return static_cast<UnitContainer<UnitType>*>(unitContainers.at(i))->getUnits();
 
 				return nullptr;
 			}
 
 			/*
-				Retrieves summed size of every UnitManager.
+				Retrieves summed size of every UnitContainer.
 			*/
 			size_t sizeUnits() const
 			{
 				size_t sum = 0;
-				for (size_t i = 0; i < unitManagers.size(); i++)
-					sum += unitManagers.at(i)->size();
+				for (size_t i = 0; i < unitContainers.size(); i++)
+					sum += unitContainers.at(i)->size();
 
 				return sum;
 			};
@@ -387,13 +398,13 @@ namespace abyssengine {
 			{
 				static_assert(std::is_base_of<UnitBase, UnitType>::value, "UnitType must be derived from Unit!");
 
-				for (size_t i = 0; i < unitManagers.size(); i++)
-					if (UnitType::getIdentifier() == unitManagers.at(i)->getIdentifier())
-						return unitManagers.at(i)->size();
+				for (size_t i = 0; i < unitContainers.size(); i++)
+					if (UnitType::getIdentifier() == unitContainers.at(i)->getIdentifier())
+						return unitContainers.at(i)->size();
 				return 0;
 			};
 
-			size_t sizeUnitManagers() const { return unitManagers.size(); };
+			size_t sizeUnitManagers() const { return unitContainers.size(); };
 			size_t sizeSystems() const { return systems.size(); };
 		};
 	}

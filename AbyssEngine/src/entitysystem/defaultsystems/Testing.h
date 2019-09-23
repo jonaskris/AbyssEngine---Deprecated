@@ -17,7 +17,6 @@ namespace abyssengine {
 
 			void update(const math::Time& time) override
 			{
-
 				updateEntities(time);
 			}
 

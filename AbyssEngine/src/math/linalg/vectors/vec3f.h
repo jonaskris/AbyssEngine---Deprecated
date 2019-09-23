@@ -16,7 +16,6 @@ namespace abyssengine {
 			vec3f(const float& scalar) : x(scalar), y(scalar), z(scalar) {};
 
 			vec3f(const vec3f& vec) : x(vec.x), y(vec.y), z(vec.z) {};
-			vec3f(const vec2f& vec, const float& z) : x(vec.x), y(vec.y), z(z) {};
 			vec3f(const float& x, const float& y, const float& z) : x(x), y(y), z(z) {};
 
 			vec3f& add(const vec3f& other)
