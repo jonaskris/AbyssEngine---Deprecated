@@ -1,0 +1,8 @@
+{
+  "left": "negx.png",
+  "right": "posx.png",
+  "bottom": "negy.png",
+  "top": "posy.png",
+  "back": "negz.png",
+  "front": "posz.png"
+}

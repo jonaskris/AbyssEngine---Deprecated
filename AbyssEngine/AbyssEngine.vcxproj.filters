@@ -392,34 +392,10 @@
     <ClInclude Include="src\graphics\rendermanager\RenderManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\graphics\renderabletypes\SpriteRenderable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\graphics\renderables\renderabledata\RenderableData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\graphics\renderables\Renderable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\graphics\renderables\RenderableManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utils\Void.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entitysystem\units\BatchErasableUnit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entitysystem\units\BatchInsertableUnit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entitysystem\units\BatchInsertableUnitContainer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\entitysystem\units\UnitContainer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entitysystem\units\OwnedUnit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\entitysystem\units\Unit.h">
@@ -428,13 +404,7 @@
     <ClInclude Include="src\entitysystem\units\Optional.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\entitysystem\units\OwnedUnitIterator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\entitysystem\units\UnitGroup.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entitysystem\units\LimitedLifetimeUnit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\math\linalg\vectors\vec2d.h">
@@ -456,6 +426,36 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\math\linalg\vectors\Conversion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\Geometry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\geometry\Icosahedron.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entitysystem\units\LifetimeSpecifier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entitysystem\units\OwnageSpecifier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entitysystem\units\UnitIterator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entitysystem\units\UnitContainerBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\renderables\RenderableHandle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resources\resourcetypes\Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\geometry\Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resources\resourcetypes\Cubemap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

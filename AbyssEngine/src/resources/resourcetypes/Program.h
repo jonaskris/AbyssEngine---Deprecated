@@ -105,32 +105,37 @@ namespace abyssengine {
 				return glGetUniformLocation(programID, name);
 			}
 
-			void setUniform1f(const GLchar * name, float value)
+			void setUniform1b(const GLchar* name, bool value)
+			{
+				glUniform1i(getUniformLocation(name), (value)?(1):(0));
+			}
+
+			void setUniform1f(const GLchar* name, float value)
 			{
 				glUniform1f(getUniformLocation(name), value);
 			}
 
-			void setUniform1i(const GLchar * name, int value)
+			void setUniform1i(const GLchar* name, int value)
 			{
 				glUniform1i(getUniformLocation(name), value);
 			}
 
-			void setUniform2f(const GLchar * name, const math::vec2f & vector)
+			void setUniform2f(const GLchar* name, const math::vec2f & vector)
 			{
 				glUniform2f(getUniformLocation(name), vector.x, vector.y);
 			}
 
-			void setUniform3f(const GLchar * name, const math::vec3f & vector)
+			void setUniform3f(const GLchar* name, const math::vec3f & vector)
 			{
 				glUniform3f(getUniformLocation(name), vector.x, vector.y, vector.z);
 			}
 
-			void setUniform4f(const GLchar * name, const math::vec4f & vector)
+			void setUniform4f(const GLchar* name, const math::vec4f & vector)
 			{
 				glUniform4f(getUniformLocation(name), vector.x, vector.y, vector.z, vector.w);
 			}
 
-			void setUniformMat4(const GLchar * name, const math::mat4f & matrix)
+			void setUniformMat4(const GLchar* name, const math::mat4f & matrix)
 			{
 				glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, matrix.elements);
 			}

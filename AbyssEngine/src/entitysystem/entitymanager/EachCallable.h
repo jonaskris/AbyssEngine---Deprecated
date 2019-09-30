@@ -26,7 +26,6 @@ namespace abyssengine {
 			*/
 			static std::vector<std::pair<size_t, bool>> unitIdentifiers;
 
-
 			/*
 				Unpacks parameter pack of unit types, base case.
 			*/

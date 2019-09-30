@@ -43,6 +43,7 @@ namespace abyssengine {
 				if (newResource)
 					resources.push_back(newResource);
 			}
+
 		}
 
 

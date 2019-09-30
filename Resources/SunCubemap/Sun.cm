@@ -1,0 +1,8 @@
+{
+  "left": "sunleft.png",
+  "right": "sunright.png",
+  "bottom": "sunbottom.png",
+  "top": "suntop.png",
+  "back": "sunback.png",
+  "front": "sunfront.png"
+}

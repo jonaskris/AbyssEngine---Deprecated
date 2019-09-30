@@ -28,10 +28,10 @@ namespace abyssengine {
 				c.yaw += (mouseLastPosition.x - mousePosition.x) * (float)MOUSE_SENSITIVITY;
 				c.pitch += (mouseLastPosition.y - mousePosition.y) * (float)MOUSE_SENSITIVITY;
 
-				if (c.pitch > 89.0f)
-					c.pitch = 89.0f;
-				if (c.pitch < -89.0f)
-					c.pitch = -89.0f;
+				if (c.pitch > 89.99f)
+					c.pitch = 89.99f;
+				if (c.pitch < -89.99f)
+					c.pitch = -89.99f;
 
 				c.yaw = std::fmodf(c.yaw, 360.0f);
 
@@ -50,7 +50,7 @@ namespace abyssengine {
 
 			void updateEntity(const math::Time& time, UnitGroup& units) override
 			{
-				static const float movementSpeed = 0.1f;
+				static const float movementSpeed = 0.03f;
 				
 				Camera_Component& c = units.get<Camera_Component>().first[0];
 				Position_Component& p = units.get<Position_Component>().first[0];
@@ -75,6 +75,44 @@ namespace abyssengine {
 						p.position.z -= movementSpeed;
 				}
 				c.view = math::mat4f::viewMatrix(p.position.vec, p.position.vec + c.front, c.up);
+			}
+		};
+
+		//class Transform_Updater : public System<Transform_Component, Position_Component::optional, Scale_Component::optional>
+		//{
+		//private:
+		//	void update(const math::Time& time) override
+		//	{
+		//		updateEntities(time);
+		//	}
+		//
+		//	void updateEntity(const math::Time& time, UnitGroup& units) override
+		//	{
+		//		Transform_Component& t = units.get<Transform_Component>().first[0];
+		//		Position_Component* p = units.get<Position_Component>().first;
+		//		Scale_Component* s = units.get<Scale_Component>().first;
+		//
+		//		t.transform = math::mat4f::identity();
+		//		if (s)
+		//			t.transform = math::mat4f::scale(s->scale.vec);
+		//		if (p)
+		//			t.transform = math::mat4f::translate(p->position.vec);
+		//	}
+		//};
+		//
+		class Planet_Rotation : public System<Mesh_Component>
+		{
+		private:
+			void update(const math::Time& time) override
+			{
+				updateEntities(time);
+			}
+		
+			void updateEntity(const math::Time& time, UnitGroup& units) override
+			{
+				Mesh_Component& m = units.get<Mesh_Component>().first[0];
+		
+				m.rotation.w += 0.1f;
 			}
 		};
 	}

@@ -22,13 +22,14 @@ int main()
 	using namespace resources;
 
 	graphics::RenderManager* renderManager = new graphics::RenderManager();
+
 	ResourceManager* resourceManager = ResourceManager::initInstance(RESOURCE_DIRECTORY);
 	
 	WorldScene* scene = new WorldScene();
 	std::vector<Scene*> scenes;
 	scenes.push_back((Scene*)scene);
-	
-	
+
+
 	//double target_fps = 0; // 0 is no cap
 	//double target_time = (target_fps != 0) ? 1000000000 / target_fps : 0;
 	

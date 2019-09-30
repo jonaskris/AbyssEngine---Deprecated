@@ -45,13 +45,12 @@ namespace abyssengine {
 				if (jsonTexture.is_string()) {
 					texture = ResourceManager::getInstance()->getResource<Texture>(jsonTexture.get<std::string>());
 					if (!texture)
-						throw ResourceCreationException(std::string("Couldent find texture: ") + jsonTexture.get<std::string>() + std::string(" for program!"));
-				}
-				else {
+						throw ResourceCreationException(std::string("Couldent find texture: ") + jsonTexture.get<std::string>() + std::string(" for texture atlas!"));
+				} else {
 					Path path = json.getPath();
 					texture = ResourceManager::getInstance()->getResource<Texture>(path.name + path.extension);
 					if (!texture)
-						throw ResourceCreationException(std::string("Couldent find texture: ") + path.name + path.extension + std::string(" for program!"));
+						throw ResourceCreationException(std::string("Couldent find texture: ") + path.name + path.extension + std::string(" for texture atlas!"));
 				}
 
 				textureID = texture->getTextureID();

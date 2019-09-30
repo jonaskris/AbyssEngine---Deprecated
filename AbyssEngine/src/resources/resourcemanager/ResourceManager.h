@@ -56,7 +56,7 @@ namespace abyssengine {
 			}
 
 			template <typename ResourceType>
-			ResourceType* getResource(const std::string & path)
+			ResourceType* getResource(const std::string& path)
 			{
 				Path pathObj(path);
 
@@ -68,7 +68,13 @@ namespace abyssengine {
 					// If not found, attempt to find a suitable default. Suitable default resources are marked with default.
 						// If no suitable default resource is found, return nullptr.
 				/// When a resource is made, an attempt should be made to mark it as default. (For example if a gltf file is named default/Default, the whole resource is marked as default.
+			}
 
+			template <typename ResourceType>
+			ResourceType* submitGeneratedResource(ResourceType* resource)
+			{
+				resources.push_back(resource);
+				return resource;
 			}
 		};
 	}

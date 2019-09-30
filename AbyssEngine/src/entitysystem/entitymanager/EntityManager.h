@@ -4,9 +4,8 @@
 #include <utility>
 #include "../systems/System.h"
 #include "../units/Unit.h"
-#include "../units/OwnedUnit.h"
 #include "../units/UnitContainer.h"
-#include "../units/OwnedUnitIterator.h"
+#include "../units/UnitIterator.h"
 #include "../units/UnitGroup.h"
 #include "EachCallable.h"
 #include "../../math/semantics/Time.h"
@@ -108,7 +107,7 @@ namespace abyssengine {
 					return;
 
 				// Get an iterator to every relevant unitManager.
-				std::vector<OwnedUnitIteratorBase*> unitContainerIterators;
+				std::vector<UnitIteratorBase*> unitContainerIterators;
 				for (size_t i = 0; i < unitIdentifiers.size(); i++)
 				{
 					bool found = false;
@@ -219,9 +218,9 @@ namespace abyssengine {
 			{
 				static_assert(std::is_base_of<UnitBase, UnitType>::value, "UnitType must be derived from Unit!");
 
-				if constexpr (std::is_base_of<OwnedUnitBase, UnitType>::value)
+				if constexpr (std::is_base_of<OwnedSpecifier, UnitType>::value)
 					if (unit.getEntityId() == 0)
-						unit.setEntityId(entityId);
+						unit.entityId = entityId;
 
 				// Try storing unit in an existing manager.
 				for (size_t i = 0; i < unitContainers.size(); i++)
@@ -229,7 +228,7 @@ namespace abyssengine {
 					{
 						unitContainers.at(i)->insert(unit);
 
-						if constexpr (std::is_base_of<OwnedUnitBase, UnitType>::value)
+						if constexpr (std::is_base_of<OwnedSpecifier, UnitType>::value)
 							return unit.getEntityId();
 						else
 							return 0;
@@ -240,7 +239,7 @@ namespace abyssengine {
 				unitContainers.push_back(new UnitContainer<UnitType>());
 				unitContainers.back()->insert(unit);
 
-				if constexpr (std::is_base_of<OwnedUnitBase, UnitType>::value)
+				if constexpr (std::is_base_of<OwnedSpecifier, UnitType>::value)
 					return unit.getEntityId();
 				else
 					return 0;
@@ -256,7 +255,7 @@ namespace abyssengine {
 			{
 				static_assert(std::is_base_of<UnitBase, UnitType>::value, "UnitType must be derived from Unit!");
 				
-				if constexpr (std::is_base_of<OwnedUnitBase, UnitType>::value)
+				if constexpr (std::is_base_of<OwnedSpecifier, UnitType>::value)
 					if (unit.getEntityId() == 0)
 						unit.setEntityId(newEntity());
 
@@ -266,7 +265,7 @@ namespace abyssengine {
 					{
 						unitContainers.at(i)->insert(unit);
 
-						if constexpr (std::is_base_of<OwnedUnitBase, UnitType>::value)
+						if constexpr (std::is_base_of<OwnedSpecifier, UnitType>::value)
 							return unit.getEntityId();
 						else
 							return 0;
@@ -277,7 +276,7 @@ namespace abyssengine {
 				unitContainers.push_back(new UnitContainer<UnitType>());
 				unitContainers.back()->insert(unit);
 
-				if constexpr (std::is_base_of<OwnedUnitBase, UnitType>::value)
+				if constexpr (std::is_base_of<OwnedSpecifier, UnitType>::value)
 					return unit.getEntityId();
 				else
 					return 0;
@@ -294,8 +293,7 @@ namespace abyssengine {
 				{
 					for (size_t i = 0; i < unitContainers.size(); i++)
 						unitContainers[i]->setErase(entityId);
-				}
-				else {
+				} else {
 					std::vector<size_t> unitIdentifiers = unpackUnitTypes<UnitTypes...>();
 
 					for (size_t i = 0; i < unitContainers.size(); i++)
@@ -315,8 +313,7 @@ namespace abyssengine {
 				{
 					for (size_t i = 0; i < unitContainers.size(); i++)
 						unitContainers[i]->setIgnore(entityId);
-				}
-				else {
+				} else {
 					std::vector<size_t> unitIdentifiers = unpackUnitTypes<UnitTypes...>();
 
 					for (size_t i = 0; i < unitContainers.size(); i++)

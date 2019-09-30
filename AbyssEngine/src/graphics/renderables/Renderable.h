@@ -1,48 +1,42 @@
 #pragma once
-#include <utility>
-#include <nlohmann/json.hpp>
-#include "../renderer/Renderer.h"
-#include "../../utils/TypeIdentifier.h"
+#include "../../math/Linalg.h"
+#include "../../entitysystem/components/Component.h"
 
 namespace abyssengine {
 	namespace graphics
 	{
-		/*
-			RenderableHandles are stored in components where it can be referred to when needed.
-		*/
-		template <typename RenderableType>
-		struct RenderableHandle : public utils::TypeIdentifier<RenderableType>
+		struct RenderableBase
 		{
-		private:
-			Renderable<RenderableType>* renderable;
-		public:
-			Renderable<RenderableType>& getRenderable() { return *renderable; }
-
-			RenderableHandle(Renderable<RenderableType>* renderable) : renderable(renderable) { };
-			~RenderableHandle() { Renderer::removeRenderable<RenderableType>(); };
-		};
-
-		/*
-			Renderables are stored contiguously in RenderableContainer and can be referred to by
-			its RenderableHandle.
-		*/
-		struct RenderableBase 
-		{ 
-			virtual size_t getRenderableTypeIdentifier() = 0;
+			virtual math::mat4f& getTransform() = 0;
 		};
 
 		template <typename RenderableType>
-		struct Renderable : public utils::TypeIdentifier<RenderableType>
+		struct Renderable : public entitysystem::Component<RenderableType>
 		{
 			friend class Renderer;
-		public:			
-			size_t getRenderableTypeIdentifier() const override { return utils::TypeIdentifier<RenderableType>::getIdentifier(); }
+		protected:
+			math::mat4f transform;
 
-			template <typename... Args>
-			static RenderableHandle<RenderableType> newRenderable(const Args& ... args)
+			template <typename Transform>
+			void unpackTransforms(const Transform& transform)
 			{
-				return Renderer::makeRenderable<RenderableType, Args...>(args...);
+				this->transform *= transform;
 			}
+
+			template <typename Transform, typename... Transforms>
+			void unpackTransforms(const Transform& transform, const Transforms& ... transforms)
+			{
+				this->transform *= transform;
+				unpackTransforms(transforms...);
+			}
+
+			template <typename... Transforms>
+			Renderable(const Transforms& ... transforms) { unpackTransforms(transforms...); }
+
+			Renderable() : transform(math::mat4f::identity()) {}
+
+		public:
+			math::mat4f& getTransform() override { return transform; }
 		};
 	}
 }

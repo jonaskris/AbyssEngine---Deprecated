@@ -9,6 +9,9 @@ namespace abyssengine {
 		class Unit : public UnitBase
 		{
 		public:
+			/*
+				Used for semantic reasons when declaring an eachcallable.
+			*/
 			typedef Optional<UnitType> optional;
 		};
 	}

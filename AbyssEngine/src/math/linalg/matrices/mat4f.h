@@ -111,7 +111,7 @@ namespace abyssengine {
 
 				returnMatrix.columns[0].x = factor.x;
 				returnMatrix.columns[1].y = factor.y;
-				returnMatrix.columns[2].y = factor.z;
+				returnMatrix.columns[2].z = factor.z;
 
 				return returnMatrix;
 			}

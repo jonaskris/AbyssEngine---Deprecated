@@ -1,0 +1,8 @@
+{
+  "left": "bkg1_left.png",
+  "right": "bkg1_right.png",
+  "bottom": "bkg1_bot.png",
+  "top": "bkg1_top.png",
+  "back": "bkg1_back.png",
+  "front": "bkg1_front.png"
+}

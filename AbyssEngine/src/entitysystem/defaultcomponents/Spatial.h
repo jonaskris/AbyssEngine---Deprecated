@@ -14,12 +14,20 @@ namespace abyssengine {
 			Position_Component(const math::Position& position) : position(position) {}
 		};
 
-		struct Velocity_Component : public Component<Velocity_Component>
+		struct Scale_Component : public Component<Scale_Component>
 		{
-			math::Velocity velocity;
+			math::Scale scale;
 
-			Velocity_Component() : velocity(math::vec3f{ 0.0f, 0.0f, 0.0f }) {}
-			Velocity_Component(const math::Velocity& velocity) : velocity(velocity) {}
+			Scale_Component() : scale(math::vec3f{ 1.0f, 1.0f, 1.0f }) {}
+			Scale_Component(const math::Scale& scale) : scale(scale) {}
 		};
+
+		//struct Velocity_Component : public Component<Velocity_Component>
+		//{
+		//	math::Velocity velocity;
+		//
+		//	Velocity_Component() : velocity(math::vec3f{ 0.0f, 0.0f, 0.0f }) {}
+		//	Velocity_Component(const math::Velocity& velocity) : velocity(velocity) {}
+		//};
 	}
 }

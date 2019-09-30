@@ -4,16 +4,11 @@
 #include "../../math/linalg.h"
 #include "../../math/Semantics.h"
 #include "../../resources/resourcetypes/TextureAtlas.h"
+#include "../../math/geometry/Mesh.h"
 
 namespace abyssengine {
 	namespace entitysystem {
-		template <typename GraphicsComponentType>
-		struct Graphics_Component : public Component<GraphicsComponentType>
-		{
-
-		};
-
-		struct Point_Component : public Graphics_Component<Point_Component>
+		struct Point_Component : public Component<Point_Component>
 		{
 			struct VertexData
 			{
@@ -28,7 +23,7 @@ namespace abyssengine {
 			Point_Component(const math::vec3f& vertex, const math::vec4f& color) : vertex(vertex, color) {};
 		};
 
-		struct Line_Component : public Graphics_Component<Line_Component>
+		struct Line_Component : public Component<Line_Component>
 		{
 			struct VertexData
 			{
@@ -44,7 +39,7 @@ namespace abyssengine {
 			Line_Component(const math::vec3f& vertex0, const math::vec3f& vertex1, const math::vec4f& color) : vertex{ {vertex0, color}, {vertex1, color } } {};
 		};
 
-		struct Sprite_Component : public Graphics_Component<Sprite_Component>
+		struct Sprite_Component : public Component<Sprite_Component>
 		{
 			size_t textureId;
 			struct VertexData
@@ -78,33 +73,34 @@ namespace abyssengine {
 			Sprite_Component(const resources::TextureAtlas* textureAtlas, const size_t& index, const float& scale) : Sprite_Component(textureAtlas->getTextureID(), textureAtlas->getUV(index), scale) {};
 		};
 
-		struct Transform_Component : public Graphics_Component<Transform_Component>
-		{
-			math::mat4f transform = math::mat4f::identity();
-
-			template <typename Transform>
-			void unpackRenderableOptions(const Transform& transform)
-			{
-				static_assert(std::is_base_of <math::Transform, Transform>::value, "Transform must be of type math::transform!");
-				math::mat4f test = transform.toMatrix();
-				this->transform = test * this->transform;
-			}
-
-			template <typename Transform, typename... Transforms>
-			void unpackRenderableOptions(const Transform& transform, const Transforms& ... transforms)
-			{
-				static_assert(std::is_base_of <math::Transform, Transform>::value, "Transform must be of type math::transform!");
-				math::mat4f test = transform.toMatrix();
-				this->transform = test * this->transform;
-				unpackRenderableOptions(transforms...);
-			}
-
-			template <typename... Transforms>
-			Transform_Component(Transforms... transforms)
-			{
-				unpackRenderableOptions(transforms...);
-			};
-		};
+		//struct Transform_Component : public Component<Transform_Component>
+		//{
+		//	math::mat4f transform = math::mat4f::identity();
+		//
+		//	template <typename Transform>
+		//	void unpackRenderableOptions(const Transform& transform)
+		//	{
+		//		static_assert(std::is_base_of <math::Transform, Transform>::value, "Transform must be of type math::transform!");
+		//		math::mat4f test = transform.toMatrix();
+		//		this->transform = test * this->transform;
+		//	}
+		//
+		//	template <typename Transform, typename... Transforms>
+		//	void unpackRenderableOptions(const Transform& transform, const Transforms& ... transforms)
+		//	{
+		//		static_assert(std::is_base_of <math::Transform, Transform>::value, "Transform must be of type math::transform!");
+		//		math::mat4f test = transform.toMatrix();
+		//		this->transform = test * this->transform;
+		//		unpackRenderableOptions(transforms...);
+		//	}
+		//
+		//	template <typename... Transforms>
+		//	Transform_Component(Transforms... transforms)
+		//	{
+		//		if constexpr (sizeof...(Transforms) > 0)
+		//			unpackRenderableOptions(transforms...);
+		//	};
+		//};
 
 		struct Camera_Component : public Component<Camera_Component>
 		{
@@ -127,5 +123,32 @@ namespace abyssengine {
 				view = math::mat4f::viewMatrix(position, position + front, up);
 			}
 		};
+
+		struct Mesh_Component : public Component<Mesh_Component>
+		{
+			std::string meshPath; // Path to resource which contains the mesh itself
+			GLuint textureID;
+			math::vec3f position;
+			math::vec3f scale; 
+			math::vec4f rotation;
+			bool flipNormals;
+
+			Mesh_Component(
+				const std::string& meshPath, 
+				const GLuint& textureID, 
+				const math::vec3f& position, 
+				const math::vec3f& scale, 
+				const bool& flipNormals = false, 
+				const math::vec4f& rotation = math::vec4f(0.0f, 0.0f, 0.0f, 0.0f)) 
+				: meshPath(meshPath), textureID(textureID), position(position), scale(scale), flipNormals(flipNormals), rotation(rotation) {};
+		};
 	}
 }
+
+/*
+	Når mesher lastes, blir de gitt en id (Kanskje også en type streng/navn).
+	Mesh componenter lagrer denne id'en, og en transform.
+	Når mesher skal tegnes, bruk instancing for hvert mesh, og sett ett uniform array med X transforms. 
+	Instancing skal da bruke transform uniformen i arrayet instanceid % (Antall tegnede mesh per instance drawcall).
+	Så kan man sette antall tegnede mesh per instance drawcall ut ifra hva som er raskest.
+*/

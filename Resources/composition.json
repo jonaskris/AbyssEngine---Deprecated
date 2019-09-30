@@ -1,7 +1,0 @@
-{
-  "Test": {
-    "Indices": "RectangleIndices.json",
-    "Vertices": "RectangleVertices.json",
-    "Texture": "DefaultTexture.png"
-  }
-}

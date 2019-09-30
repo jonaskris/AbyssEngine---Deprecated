@@ -8,6 +8,7 @@
 #include "../resourcetypes/Program.h"
 #include "../resourcetypes/Texture.h"
 #include "../resourcetypes/TextureAtlas.h"
+#include "../resourcetypes/Cubemap.h"
 
 namespace abyssengine {
 	namespace resources {
@@ -19,14 +20,15 @@ namespace abyssengine {
 					const Image& image = *static_cast<Image * const>(file);
 
 					return new Texture(image);
-				}
-				else if (file->getFileTypeIdentifier() == utils::TypeIdentifier<Json>::getIdentifier()) {
+				} else if (file->getFileTypeIdentifier() == utils::TypeIdentifier<Json>::getIdentifier()) {
 					const Json& json = *static_cast<Json * const>(file);
 
-					if (file->getPath().extension == "prog")
+					if (file->getPath().extension == "prog") // GLSL program
 						return new Program(json);
-					else if (file->getPath().extension == "texa")
+					else if (file->getPath().extension == "texa") // Texture atlas
 						return new TextureAtlas(json);
+					else if (file->getPath().extension == "cm")	// Cube map
+						return new Cubemap(json);
 				}
 			}
 			catch (const ResourceCreationException & resourceException) {

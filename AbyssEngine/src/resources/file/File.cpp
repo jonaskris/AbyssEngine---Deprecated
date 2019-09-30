@@ -15,7 +15,7 @@ namespace abyssengine {
 					if (path.extension == "bin") {
 						return new Bin{ path };
 					}
-					else if (path.extension == "json" || path.extension == "prog" || path.extension == "texa") {
+					else if (path.extension == "json" || path.extension == "prog" || path.extension == "texa" || path.extension == "cm") {
 						return new Json{ path };
 					}
 					else if (path.extension == "png") {

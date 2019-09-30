@@ -6,9 +6,11 @@
 #include "../entitysystem/defaultsystems/Graphics.h"
 #include "../entitysystem/defaultsystems/Input.h"
 #include "../entitysystem/defaultsystems/Testing.h"
+#include "../math/Geometry.h"
 #include "../resources/resourcemanager/ResourceManager.h"
 #include "../Defines.h"
 #include "../math/semantics/Time.h"
+#include "../resources/resourcetypes/Cubemap.h"
 
 namespace abyssengine {
 	WorldScene::WorldScene()
@@ -23,57 +25,50 @@ namespace abyssengine {
 
 	void WorldScene::generateScene()
 	{
-		// Register systems, systems are executed in the order they are registered.
+		auto resourcemanager = resources::ResourceManager::getInstance();
+
+		// Generate resources
+		math::Icosahedron::generateFirst();
+		math::Icosahedron::generate(1);
+		math::Icosahedron::generate(2);
+		math::Icosahedron::generate(3);
+		math::Icosahedron::generate(4);
+
+		// Register systems.
 		entityManager.registerSystem(new entitysystem::MouseInput());
 		entityManager.registerSystem(new entitysystem::KeyboardInput());
-		//entityManager.registerSystem(new entitysystem::Test_Changepos());
-		//entityManager.registerSystem(new entitysystem::Test_Movement());
 		entityManager.registerSystem(new entitysystem::Camera_Rotation_Control());
 		entityManager.registerSystem(new entitysystem::Camera_Position_Control());
+		entityManager.registerSystem(new entitysystem::Planet_Rotation());
 
-		// Axis
-		entityManager.newEntity(entitysystem::Line_Component{ math::vec3f{ 0.0f, 0.0f, 0.0f }, math::vec3f{ 1.0f, 0.0f, 0.0f }, math::vec4f{ 1.0f, 0.0f, 0.0f, 1.0f } });
-		entityManager.newEntity(entitysystem::Line_Component{ math::vec3f{ 0.0f, 0.0f, 0.0f }, math::vec3f{ 0.0f, 1.0f, 0.0f }, math::vec4f{ 0.0f, 1.0f, 0.0f, 1.0f } });
-		entityManager.newEntity(entitysystem::Line_Component{ math::vec3f{ 0.0f, 0.0f, 0.0f }, math::vec3f{ 0.0f, 0.0f, 1.0f }, math::vec4f{ 0.0f, 0.0f, 1.0f, 1.0f } });
-		
-		// Generate the scene
-		entityManager.newEntity(entitysystem::Line_Component{ math::vec3f{ 3.0f, -3.0f, 0.0f }, math::vec3f{ 3.0f, 3.0f, 0.0f }, math::vec4f{ 1.0f, 0.0f, 0.0f, 1.0f } });
-		entityManager.newEntity(entitysystem::Line_Component{ math::vec3f{ -3.0f, -3.0f, 0.0f }, math::vec3f{ 3.0f, -3.0f, 0.0f }, math::vec4f{ 1.0f, 0.0f, 0.0f, 1.0f } });
-		entityManager.newEntity(entitysystem::Line_Component{ math::vec3f{ 3.0f, 3.0f, 0.0f }, math::vec3f{ -3.0f, 3.0f, 0.0f }, math::vec4f{ 1.0f, 0.0f, 0.0f, 1.0f } });
-		entityManager.newEntity(entitysystem::Line_Component{ math::vec3f{ -3.0f, 3.0f, 0.0f }, math::vec3f{ -3.0f, -3.0f, 0.0f }, math::vec4f{ 1.0f, 0.0f, 0.0f, 1.0f } });
-		
-		float speed = 1.5f;
-		
-		//size_t countPoints = 10000;
-		//for (size_t i = 0; i < countPoints; i++)
-		//{
-		//	float angle = math::toRadians(((float)rand() / (float)RAND_MAX) * 360.0f);
-		//	entityManager.newEntity(Point_Component{ math::vec3f{ 0.0f, 0.0f, 0.0f}, math::vec4f{ 1.0f, 1.0f, 1.0f, 1.0f } }, Position_Component{ math::vec3f{ 0.0f, 0.0f, 0.0f } }, Velocity_Component{ math::vec3f{ sin(angle) * speed, cos(angle) * speed, 0.0f } });
-		//}
-		
-		resources::TextureAtlas* textureAtlas = resources::ResourceManager::getInstance()->getResource<resources::TextureAtlas>("testSheet1.texa");
+		// Create entities
+			// Camera
+				entityManager.newEntity(entitysystem::Camera_Component(), entitysystem::Position_Component(math::vec3f(0.0f, 0.0f, 3.0f)));
+			// Skybox
+				entityManager.newEntity(																	/// Stars
+					entitysystem::Mesh_Component(															// Skybox mesh				
+						"generated/icosahedron:3",																// Icosahedron mesh
+						resourcemanager->getResource<resources::Cubemap>("Space.cm")->getTextureID(),			// Cubemap
+						math::vec3f(0.0f, 0.0f, 0.0f),															// Position
+						math::vec3f(10.0f, 10.0f, 10.0f)));														// Scale
+			// Planets
+				entityManager.newEntity(																	/// Sun
+					entitysystem::Mesh_Component(															// Planet mesh				
+						"generated/icosahedron:3",																// Icosahedron mesh
+						resourcemanager->getResource<resources::Cubemap>("Sun.cm")->getTextureID(),				// Cubemap
+						math::vec3f(0.0f, 0.0f, 0.0f),															// Position
+						math::vec3f(1.0f, 1.0f, 1.0f), true));													// Scale (True: Invert normals)
 
-		/*
-		math::vec3f{ 
-						(6.0f / (float)sqrt(countSprites)) * i - (3) + (6.0f / (float)sqrt(countSprites)) / 2 , 
-						(6.0f / (float)sqrt(countSprites)) * j - (3) + (6.0f / (float)sqrt(countSprites)) / 2, 
-						-0.01f } 
-		*/
+				entityManager.newEntity(																	/// Earth
+					entitysystem::Mesh_Component(															// Planet mesh				
+						"generated/icosahedron:3",																// Icosahedron mesh
+						resourcemanager->getResource<resources::Cubemap>("Earth.cm")->getTextureID(),			// Cubemap
+						math::vec3f(5.0f, 0.0f, 0.0f),															// Position
+						math::vec3f(0.3f, 0.3f, 0.3f),															// Scale
+						false,
+						math::vec4f(0.0f, 0.0f, 1.0f, 0.0f)));
 
-		//entityManager.newEntity(
-		//	Sprite_Component{ textureAtlas, 0, 1.0f },
-		//	Transform_Component{ math::Translation{ math::vec3f{0.0f, 0.0f, 0.0f}} });
-
-		size_t countSprites = 5*5;
-		for (size_t i = 0; i < sqrt(countSprites); i++)
-			for (size_t j = 0; j < sqrt(countSprites); j++)
-				entityManager.newEntity(
-					entitysystem::Sprite_Component{ textureAtlas, i * j, 6.0f / (float)sqrt(countSprites) },
-					entitysystem::Transform_Component{ math::Translation{ math::vec3f{(6.0f / (float)sqrt(countSprites)) * i - (3) + (6.0f / (float)sqrt(countSprites)) / 2 , (6.0f / (float)sqrt(countSprites)) * j - (3) + (6.0f / (float)sqrt(countSprites)) / 2, -0.01f } } });
-	
-		entityManager.newEntity(entitysystem::Camera_Component(), entitysystem::Position_Component(math::vec3f(0.0f, 0.0f, 3.0f)));
 	}
-
 
 	void WorldScene::update(const math::Time& time)
 	{

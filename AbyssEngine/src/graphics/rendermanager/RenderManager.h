@@ -9,11 +9,13 @@
 #include "../../resources/resourcemanager/ResourceManager.h"
 #include "../../resources/resourcetypes/Program.h"
 #include "../../resources/resourcetypes/Texture.h"
+#include "../../resources/resourcetypes/Cubemap.h"
 #include "../../entitysystem/entitymanager/EntityManager.h"
 #include "../../entitysystem/defaultcomponents/Graphics.h"
 #include "../../entitysystem/defaultcomponents/Spatial.h"
 #include "../../scenes/Scene.h"
 #include "../VertexAttributeLocations.h"
+#include "../../resources/resourcetypes/Mesh.h"
 
 namespace abyssengine {
 	namespace graphics {
@@ -68,8 +70,8 @@ namespace abyssengine {
 		public:
 			RenderManager()
 			{
-				int width = (int)(SCREEN_WIDTH / (1.5f));
-				int height = (int)(SCREEN_HEIGHT / (1.5f));
+				int width = (int)(SCREEN_WIDTH * SCREEN_SCALE);
+				int height = (int)(SCREEN_HEIGHT * SCREEN_SCALE);
 
 				if (!glfwInit())
 					std::cout << "Failed to initialize GLFW!" << std::endl;
@@ -81,7 +83,10 @@ namespace abyssengine {
 				glEnable(GL_DEPTH_TEST);
 				//glEnable(GL_BLEND);
 				//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				glPointSize(3.0f);
 				glFrontFace(GL_CW);
+				glDisable(GL_CULL_FACE);
+				glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 				glClearColor(1.0f, 0.7f, 0.3f, 1.0f);
 			};
 
@@ -91,34 +96,73 @@ namespace abyssengine {
 
 			void render(const std::vector<Scene*> & scenes)
 			{
+				resources::ResourceManager* resourcemanager = resources::ResourceManager::getInstance();
+
 				// 1. geometry pass: render all geometric/color data to g-buffer 
 
 				framebuffer->bind();
 				window->clear();
 				
-				resources::Program& geometryProgram = *resources::ResourceManager::getInstance()->getResource<resources::Program>("GeometryPass.prog");
-				geometryProgram.enable();
-				
-				// Set projection and view matrix
+				/// Get scene info
 				entitysystem::EntityManager* entitymanager = scenes.at(0)->getEntityManager();
 				entitysystem::Camera_Component& camera = entitymanager->getUnitVector<entitysystem::Camera_Component>()->at(0);
 
-				geometryProgram.setUniformMat4("projection", math::mat4f::perspective(FOV, ASPECT_RATIO, NEAR, FAR));
-				geometryProgram.setUniformMat4("view", camera.view);
+				/// Render objects using diffuse map
+				resources::Program& diffuseGeometryProgram = *resourcemanager->getResource<resources::Program>("DiffuseGeometryPass.prog");
+				diffuseGeometryProgram.enable();
 				
-
+				// Set projection and view matrix
+				diffuseGeometryProgram.setUniformMat4("projection", math::mat4f::perspective(FOV, ASPECT_RATIO, NEAR, FAR));
+				diffuseGeometryProgram.setUniformMat4("view", camera.view);
+				diffuseGeometryProgram.setUniformMat4("model", math::mat4f::scale(math::vec3f(1.0f, 1.0f, 1.0f)));
+				
 				/// Render objects
+				//glActiveTexture(GL_TEXTURE0);
+				//glBindTexture(GL_TEXTURE_2D, resources::ResourceManager::getInstance()->getResource<resources::Texture>("DefaultTexture1.png")->getTextureID());
+				//GLuint texLoc = glGetUniformLocation(diffuseGeometryProgram.getID(), "texture_diffuse");
+				//glUniform1i(texLoc, 0);
+				//renderQuad();
 
-				geometryProgram.setUniformMat4("model", math::mat4f::scale(math::vec3f(1.0f, 1.0f, 1.0f)));
+				/// Render objects using cube map
+				resources::Program& cubemapGeometryProgram = *resourcemanager->getResource<resources::Program>("CubemapGeometryPass.prog");
+				cubemapGeometryProgram.enable();
 				
-				glActiveTexture(GL_TEXTURE0);
-				glBindTexture(GL_TEXTURE_2D, resources::ResourceManager::getInstance()->getResource<resources::Texture>("DefaultTexture1.png")->getTextureID());
-				GLuint texLoc = glGetUniformLocation(geometryProgram.getID(), "texture_diffuse");
-				glUniform1i(texLoc, 0);
-				renderQuad();
+				// Set projection and view matrix
+				cubemapGeometryProgram.setUniformMat4("projection", math::mat4f::perspective(FOV, ASPECT_RATIO, NEAR, FAR));
+				cubemapGeometryProgram.setUniformMat4("view", camera.view);
+				cubemapGeometryProgram.setUniformMat4("model", math::mat4f::identity());
+				
+				std::vector<entitysystem::Mesh_Component>* meshes = entitymanager->getUnitVector<entitysystem::Mesh_Component>();
+				
 
-				/// Render objects
 				
+				for (entitysystem::Mesh_Component& mesh : *meshes)
+				{
+					resources::MeshResource* meshResource = resourcemanager->getResource<resources::MeshResource>(mesh.meshPath);
+
+					// Calculate and set transform uniform
+					math::mat4f transform = math::mat4f::identity();
+
+					if (mesh.rotation.x > 0.1f || mesh.rotation.y > 0.1f || mesh.rotation.z > 0.1f)
+						transform = math::mat4f::rotate(mesh.rotation.w, math::toVec3f(mesh.rotation)) * math::mat4f::translate(mesh.position) * math::mat4f::scale(mesh.scale);
+					else
+						transform = math::mat4f::translate(mesh.position) * math::mat4f::scale(mesh.scale);
+
+					cubemapGeometryProgram.setUniformMat4("model", transform);
+
+					// Set texture
+					glActiveTexture(GL_TEXTURE0);
+					glBindTexture(GL_TEXTURE_CUBE_MAP, mesh.textureID);
+					GLuint texLoc = glGetUniformLocation(cubemapGeometryProgram.getID(), "texture_cubemap");
+					glUniform1i(texLoc, 0);
+
+					cubemapGeometryProgram.setUniform1b("flip_normals", mesh.flipNormals);
+
+					// Draw mesh
+					meshResource->getMesh().draw();
+				}
+
+
 				framebuffer->unBind();
 				
 				// 2. lighting pass: use g-buffer to calculate the scene's lighting.
@@ -140,10 +184,10 @@ namespace abyssengine {
 				glBindTexture(GL_TEXTURE_2D, framebuffer->albedoSpecular->getID());
 				
 				lightingProgram.setUniform3f("lights[0].Position", math::vec3f(0.0f, 0.0f, 0.0f));
-				lightingProgram.setUniform3f("lights[0].Color", math::vec3f(0.5f, 0.5f, 0.5f));
+				lightingProgram.setUniform3f("lights[0].Color", math::vec3f(1.0f, 1.0f, 0.5f));
 				float constant = 1.0f;
-				float linear = 1.0f;
-				float quadratic = 1.0f;
+				float linear = 0.0f;
+				float quadratic = 0.0f;
 				lightingProgram.setUniform1f("lights[0].Constant", constant);
 				lightingProgram.setUniform1f("lights[0].Linear", linear);
 				lightingProgram.setUniform1f("lights[0].Quadratic", quadratic);

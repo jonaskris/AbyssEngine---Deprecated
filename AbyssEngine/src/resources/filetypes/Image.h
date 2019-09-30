@@ -3,7 +3,6 @@
 #include <optional>
 #include "../file/File.h"
 #include "../file/FileException.h"
-//#include <FreeImage.h>
 #include <SOIL2.h>
 #include <stb_image.h>
 
