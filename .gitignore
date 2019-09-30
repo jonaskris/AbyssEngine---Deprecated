@@ -25,15 +25,15 @@
 *.smod
 
 # Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+#*.lai
+#*.la
+#*.a
+#*.lib
 
 # Executables
-*.exe
-*.out
-*.app
+#*.exe
+#*.out
+#*.app
 
 ### VisualStudio ###
 ## Ignore Visual Studio temporary files, build results, and
@@ -381,7 +381,6 @@ MigrationBackup/
 
 # End of https://www.gitignore.io/api/c++,visualstudio
 
-src/main/resources
 .idea
 documents
 target

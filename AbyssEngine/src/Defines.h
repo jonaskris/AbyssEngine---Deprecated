@@ -4,7 +4,7 @@
 #define WINDOW_NAME "AbyssEngine"
 #define SCREEN_WIDTH 1920.0
 #define SCREEN_HEIGHT 1080.0
-#define SCREEN_SCALE 0.8
+#define SCREEN_SCALE 0.9
 #define FOV 70
 #define ASPECT_RATIO SCREEN_WIDTH / SCREEN_HEIGHT
 #define NEAR 0.01
