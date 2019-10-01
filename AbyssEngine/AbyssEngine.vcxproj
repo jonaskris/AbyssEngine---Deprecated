@@ -71,29 +71,29 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)ext\freetype\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\FreeImage\include;C:\Users\Jonas\Desktop\AbyssEngine\Dependencies\SOIL\include;$(SolutionDir)Dependencies\JSON;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Jonas\Desktop\AbyssEngine\Dependencies\SOIL\lib;$(SolutionDir)Dependencies\GLFW\lib-vc2015;$(SolutionDir)Dependencies\GLEW\lib;$(SolutionDir)Dependencies\FreeImage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)ext\freetype\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\FreeImage\include;$(SolutionDir)Dependencies\SOIL\include;$(SolutionDir)Dependencies\JSON;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Dependencies\SOIL\lib;$(SolutionDir)Dependencies\GLFW\lib-vc2015;$(SolutionDir)Dependencies\GLEW\lib;$(SolutionDir)Dependencies\FreeImage\lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)builds\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)builds\intermediate\$(Configuration)\</IntDir>
     <ReferencePath>$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)ext\freetype\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\FreeImage\include;C:\Users\Jonas\Desktop\AbyssEngine\Dependencies\SOIL\include;$(SolutionDir)Dependencies\JSON;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Jonas\Desktop\AbyssEngine\Dependencies\SOIL\lib;$(SolutionDir)Dependencies\GLFW\lib-vc2015;$(SolutionDir)Dependencies\GLEW\lib;$(SolutionDir)Dependencies\FreeImage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)ext\freetype\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\FreeImage\include;$(SolutionDir)Dependencies\SOIL\include;$(SolutionDir)Dependencies\JSON;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Dependencies\SOIL\lib;$(SolutionDir)Dependencies\GLFW\lib-vc2015;$(SolutionDir)Dependencies\GLEW\lib;$(SolutionDir)Dependencies\FreeImage\lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)builds\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)builds\intermediate\$(Configuration)\</IntDir>
     <ReferencePath>$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)ext\freetype\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\FreeImage\include;C:\Users\Jonas\Desktop\AbyssEngine\Dependencies\SOIL\include;$(SolutionDir)Dependencies\JSON;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Jonas\Desktop\AbyssEngine\Dependencies\SOIL\lib;$(SolutionDir)Dependencies\GLFW\lib-vc2015;$(SolutionDir)Dependencies\GLEW\lib;$(SolutionDir)Dependencies\FreeImage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)ext\freetype\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\FreeImage\include;$(SolutionDir)Dependencies\SOIL\include;$(SolutionDir)Dependencies\JSON;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Dependencies\SOIL\lib;$(SolutionDir)Dependencies\GLFW\lib-vc2015;$(SolutionDir)Dependencies\GLEW\lib;$(SolutionDir)Dependencies\FreeImage\lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)builds\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)builds\intermediate\$(Configuration)\</IntDir>
     <ReferencePath>$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)ext\freetype\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\FreeImage\include;C:\Users\Jonas\Desktop\AbyssEngine\Dependencies\SOIL\include;$(SolutionDir)Dependencies\JSON;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Jonas\Desktop\AbyssEngine\Dependencies\SOIL\lib;$(SolutionDir)Dependencies\GLFW\lib-vc2015;$(SolutionDir)Dependencies\GLEW\lib;$(SolutionDir)Dependencies\FreeImage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)ext\freetype\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\FreeImage\include;$(SolutionDir)Dependencies\SOIL\include;$(SolutionDir)Dependencies\JSON;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Dependencies\SOIL\lib;$(SolutionDir)Dependencies\GLFW\lib-vc2015;$(SolutionDir)Dependencies\GLEW\lib;$(SolutionDir)Dependencies\FreeImage\lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)builds\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)builds\intermediate\$(Configuration)\</IntDir>
     <ReferencePath>$(ReferencePath)</ReferencePath>
