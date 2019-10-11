@@ -13,10 +13,8 @@ namespace abyssengine {
 		*/
 	{
 	public:
-		WorldScene();
-		~WorldScene();
+		WorldScene() { generateScene(); }
+		~WorldScene() { };
 		void generateScene();
-
-		void update(const math::Time& time);
 	};
 }

@@ -73,35 +73,6 @@ namespace abyssengine {
 			Sprite_Component(const resources::TextureAtlas* textureAtlas, const size_t& index, const float& scale) : Sprite_Component(textureAtlas->getTextureID(), textureAtlas->getUV(index), scale) {};
 		};
 
-		//struct Transform_Component : public Component<Transform_Component>
-		//{
-		//	math::mat4f transform = math::mat4f::identity();
-		//
-		//	template <typename Transform>
-		//	void unpackRenderableOptions(const Transform& transform)
-		//	{
-		//		static_assert(std::is_base_of <math::Transform, Transform>::value, "Transform must be of type math::transform!");
-		//		math::mat4f test = transform.toMatrix();
-		//		this->transform = test * this->transform;
-		//	}
-		//
-		//	template <typename Transform, typename... Transforms>
-		//	void unpackRenderableOptions(const Transform& transform, const Transforms& ... transforms)
-		//	{
-		//		static_assert(std::is_base_of <math::Transform, Transform>::value, "Transform must be of type math::transform!");
-		//		math::mat4f test = transform.toMatrix();
-		//		this->transform = test * this->transform;
-		//		unpackRenderableOptions(transforms...);
-		//	}
-		//
-		//	template <typename... Transforms>
-		//	Transform_Component(Transforms... transforms)
-		//	{
-		//		if constexpr (sizeof...(Transforms) > 0)
-		//			unpackRenderableOptions(transforms...);
-		//	};
-		//};
-
 		struct Camera_Component : public Component<Camera_Component>
 		{
 			math::vec3f position = math::vec3f(0.0f, 0.0f, 3.0f);
@@ -124,31 +95,40 @@ namespace abyssengine {
 			}
 		};
 
+		struct Target_Camera : public Component<Target_Camera>
+		{
+			math::vec3f position;
+			size_t entityIdTarget;
+			math::vec3f up = math::vec3f(0.0f, 0.0f, 1.0f);
+
+			math::mat4f view;
+
+			Target_Camera(const math::vec3f& position, const size_t& entityIdTarget) : position(position), entityIdTarget(entityIdTarget) { };
+
+		public:
+			void update(const math::vec3f& lookat)
+			{
+				view = math::mat4f::viewMatrix(position, lookat, up);
+			}
+
+			size_t getEntityIdTarget() { return entityIdTarget; }
+		};
+
 		struct Mesh_Component : public Component<Mesh_Component>
 		{
-			std::string meshPath; // Path to resource which contains the mesh itself
-			GLuint textureID;
-			math::vec3f position;
-			math::vec3f scale; 
-			math::vec4f rotation;
+			std::string meshPath;
 			bool flipNormals;
 
-			Mesh_Component(
-				const std::string& meshPath, 
-				const GLuint& textureID, 
-				const math::vec3f& position, 
-				const math::vec3f& scale, 
-				const bool& flipNormals = false, 
-				const math::vec4f& rotation = math::vec4f(0.0f, 0.0f, 0.0f, 0.0f)) 
-				: meshPath(meshPath), textureID(textureID), position(position), scale(scale), flipNormals(flipNormals), rotation(rotation) {};
+			Mesh_Component(const std::string& meshPath, const bool& flipNormals = false ) : meshPath(meshPath), flipNormals(flipNormals) {};
+		};
+
+		struct Texture_Component : public Component<Texture_Component>
+		{
+			size_t textureId;
+
+			Texture_Component(const size_t& textureId) : textureId(textureId) {};
+
+			size_t getTextureid() const { return textureId; }
 		};
 	}
 }
-
-/*
-	Når mesher lastes, blir de gitt en id (Kanskje også en type streng/navn).
-	Mesh componenter lagrer denne id'en, og en transform.
-	Når mesher skal tegnes, bruk instancing for hvert mesh, og sett ett uniform array med X transforms. 
-	Instancing skal da bruke transform uniformen i arrayet instanceid % (Antall tegnede mesh per instance drawcall).
-	Så kan man sette antall tegnede mesh per instance drawcall ut ifra hva som er raskest.
-*/

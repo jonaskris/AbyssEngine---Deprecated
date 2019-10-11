@@ -1,52 +1,60 @@
 #pragma once
 #include "../Linalg.h"
 #include "Time.h"
-#include "Attribute.h"
+#include "../../utils/TypeIdentifier.h"
 
 namespace abyssengine {
 	namespace math {
-		struct Transform 
+		struct Transform {};
+
+		struct AbsoluteTransform : public Transform
 		{ 
 			virtual mat4f toMatrix() const = 0;
 		};
 
-		struct Translation : public Transform
+		struct Position : public AbsoluteTransform
 		{
-			vec3f axis;
+			vec3f vec;
 
-			Translation(const vec3f& axis) : axis(axis) {};
-			Translation(const vec2f& axis) : axis(toVec3f(axis, 0.0f)) {};
-
-			Position operator*(const Time& time) const { return Position{ axis * time.value }; }
+			Position(const vec3f& vec) : vec(vec) {};
+			Position(const vec2f& vec) : vec(toVec3f(vec, 0.0f)) {};
 
 			mat4f toMatrix() const override 
 			{ 
-				return mat4f::translate(axis); 
+				return mat4f::translate(vec);
 			}
 		};
 
-		struct Rotation : public Transform
+		struct Rotation : public AbsoluteTransform
 		{
-			vec4f axisAngle; // axis: xyz, angle: w
+			vec4f vec; // axis: xyz, angle: w
 
-			Rotation(const vec3f& axis, const float& angle) : axisAngle(toVec4f(axis, angle)) {};
-			Rotation(const vec4f& axisAngle) : axisAngle(axisAngle) {};
+			Rotation(const vec3f& axis, const float& angle) : vec(toVec4f(axis, angle)) {};
+			Rotation(const vec4f& vec) : vec(vec) {};
 
-			Orientation operator*(const Time& time) const { return Orientation{ math::vec3f(axisAngle.x, axisAngle.y, axisAngle.z) * axisAngle.w * time.value }; }
-
-			mat4f toMatrix() const override { return mat4f::rotate(axisAngle.w, math::vec3f(axisAngle.x, axisAngle.y, axisAngle.z)); }
+			mat4f toMatrix() const override { return mat4f::rotate(vec.w, math::vec3f(vec.x, vec.y, vec.z)); }
 		};
 
-		struct Scaling : public Transform
+		struct Scale : public AbsoluteTransform
 		{
-			vec3f axis;
+			vec3f vec;
 
-			Scaling(const vec3f& axis) : axis(axis) {};
-			Scaling(const vec2f& axis) : axis(toVec3f(axis, 0.0f)) {};
+			Scale(const vec3f& vec) : vec(vec) {};
+			Scale(const vec2f& vec) : vec(toVec3f(vec, 0.0f)) {};
 
-			Scale operator*(const Time& time) const { return Scale{ axis * time.value }; }
+			mat4f toMatrix() const override { return mat4f::scale(vec); }
+		};
 
-			mat4f toMatrix() const override { return mat4f::scale(axis); }
+		struct RelativeTransform : public Transform
+		{
+			static const enum Type {
+				POSITION, ROTATION, SCALE
+			};
+
+			size_t relativeEntityId;
+			RelativeTransform::Type type;
+
+			RelativeTransform(const size_t& relativeEntityId, RelativeTransform::Type type) : relativeEntityId(relativeEntityId), type(type) {};
 		};
 	}
 }

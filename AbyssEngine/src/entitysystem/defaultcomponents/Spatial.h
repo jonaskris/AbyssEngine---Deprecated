@@ -1,33 +1,82 @@
 #pragma once
+#include <utility>
+#include "../../utils/TypeIdentifier.h"
 #include "../components/Component.h"
 #include "../../math/linalg.h"
-#include "../../math/semantics/Attribute.h"
 #include "../../math/semantics/Transform.h"
 
 namespace abyssengine {
 	namespace entitysystem {
-		struct Position_Component : public Component<Position_Component>
+		struct Transform_Component : public Component<Transform_Component>
 		{
-			math::Position position;
+			std::vector<std::pair<math::RelativeTransform, size_t>> relativeTransforms;	// Updates transforms at index
+			std::vector<math::mat4f> transforms;
 
-			Position_Component() : position(math::vec3f{ 0.0f, 0.0f, 0.0f }) {}
-			Position_Component(const math::Position& position) : position(position) {}
+			template <typename Transform>
+			void unpackRenderableOptions(const Transform& transform)
+			{
+				static_assert(std::is_base_of<math::Transform, Transform>::value, "Transform must be of type math::Transform!");
+
+				if constexpr (std::is_base_of<math::RelativeTransform, Transform>::value) {
+					transforms.push_back(math::mat4f::identity());
+					relativeTransforms.push_back(std::pair<math::RelativeTransform, size_t>(transform, transforms.size() - 1));
+				} else {
+					transforms.push_back(transform.toMatrix());
+				}
+			}
+		
+			template <typename Transform, typename... Transforms>
+			void unpackRenderableOptions(const Transform& transform, const Transforms& ... transforms)
+			{
+				static_assert(std::is_base_of<math::Transform, Transform>::value, "Transform must be of type math::Transform!");
+
+				if constexpr (std::is_base_of<math::RelativeTransform, Transform>::value) {
+					transforms.push_back(math::mat4f::identity());
+					relativeTransforms.push_back(std::pair<math::RelativeTransform, size_t>(transform, this->transforms.size() - 1));
+				} else {
+					transforms.push_back(transform.toMatrix());
+				}
+
+				unpackRenderableOptions(transforms...);
+			}
+		
+			template <typename... Transforms>
+			Transform_Component(Transforms... transforms)
+			{
+				if constexpr (sizeof...(Transforms) > 0)
+					unpackRenderableOptions(transforms...);
+			};
+
+			void update(EntityManager* entityManager)
+			{
+				for (std::pair<math::RelativeTransform, size_t>& transform : relativeTransforms)
+				{
+					Transform_Component& relativeTransform = entityManager->getUnits<Transform_Component>(transform.first.relativeEntityId).first[0];
+
+					switch(transform.first.type)
+					{
+						case math::RelativeTransform::Type::POSITION:
+							transforms[transform.second] = relativeTransform.toMatrix().decomposeToTranslation();
+							break;
+						case math::RelativeTransform::Type::ROTATION:
+							transforms[transform.second] = relativeTransform.toMatrix().decomposeToRotation();
+							break;
+						case math::RelativeTransform::Type::SCALE:
+							transforms[transform.second] = relativeTransform.toMatrix().decomposeToScale();
+							break;
+					}
+				}
+			}
+
+			math::mat4f toMatrix()
+			{
+				math::mat4f returnMatrix = math::mat4f::identity();
+
+				for (auto transform : transforms)
+					returnMatrix = transform * returnMatrix;
+
+				return returnMatrix;
+			}
 		};
-
-		struct Scale_Component : public Component<Scale_Component>
-		{
-			math::Scale scale;
-
-			Scale_Component() : scale(math::vec3f{ 1.0f, 1.0f, 1.0f }) {}
-			Scale_Component(const math::Scale& scale) : scale(scale) {}
-		};
-
-		//struct Velocity_Component : public Component<Velocity_Component>
-		//{
-		//	math::Velocity velocity;
-		//
-		//	Velocity_Component() : velocity(math::vec3f{ 0.0f, 0.0f, 0.0f }) {}
-		//	Velocity_Component(const math::Velocity& velocity) : velocity(velocity) {}
-		//};
 	}
 }

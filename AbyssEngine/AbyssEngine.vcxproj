@@ -249,6 +249,7 @@
     <ClInclude Include="src\entitysystem\defaultsystems\Graphics.h" />
     <ClInclude Include="src\entitysystem\defaultsystems\Input.h" />
     <ClInclude Include="src\entitysystem\components\Component.h" />
+    <ClInclude Include="src\entitysystem\defaultsystems\Spatial.h" />
     <ClInclude Include="src\entitysystem\defaultsystems\Testing.h" />
     <ClInclude Include="src\entitysystem\entitymanager\EachCallable.h" />
     <ClInclude Include="src\entitysystem\entitymanager\EntityManager.h" />
@@ -296,7 +297,6 @@
     <ClInclude Include="src\input\mouse\observers\MouseObserver.h" />
     <ClInclude Include="src\math\Linalg.h" />
     <ClInclude Include="src\math\Semantics.h" />
-    <ClInclude Include="src\math\semantics\Attribute.h" />
     <ClInclude Include="src\math\linalg\matrices\mat3d.h" />
     <ClInclude Include="src\math\linalg\matrices\mat4d.h" />
     <ClInclude Include="src\math\semantics\Time.h" />

@@ -37,18 +37,47 @@ namespace abyssengine {
 			vec4f multiply(const vec4f& vec) const
 			{
 				vec4f returnVector;
-
-				float x = vec.x;
-				float y = vec.y;
-				float z = vec.z;
-				float w = vec.w;
-
-				returnVector.x = vec.x * elements[0] + vec.x * elements[4] + vec.x * elements[8] + vec.x * elements[12];
-				returnVector.y = vec.y * elements[1] + vec.y * elements[5] + vec.y * elements[9] + vec.y * elements[13];
-				returnVector.z = vec.z * elements[2] + vec.z * elements[6] + vec.z * elements[10] + vec.z * elements[14];
-				returnVector.w = vec.w * elements[3] + vec.w * elements[7] + vec.w * elements[11] + vec.w * elements[15];
-
+			
+				returnVector.x = vec.x * elements[0] + vec.y * elements[4] + vec.z * elements[8] + vec.w * elements[12];
+				returnVector.y = vec.x * elements[1] + vec.y * elements[5] + vec.z * elements[9] + vec.w * elements[13];
+				returnVector.z = vec.x * elements[2] + vec.y * elements[6] + vec.z * elements[10] + vec.w * elements[14];
+				returnVector.w = vec.x * elements[3] + vec.y * elements[7] + vec.z * elements[11] + vec.w * elements[15];
+			
 				return returnVector;
+			}
+
+			mat4f decomposeToTranslation()
+			{
+				mat4f returnMatrix = identity();				
+
+				returnMatrix.columns[3].x = columns[3].x;		
+				returnMatrix.columns[3].y = columns[3].y;
+				returnMatrix.columns[3].z = columns[3].z;
+
+				return returnMatrix;
+			}
+
+			mat4f decomposeToScale()
+			{
+				mat4f returnMatrix = identity();
+
+				returnMatrix.columns[0].x = columns[0].magnitude();
+				returnMatrix.columns[1].y = columns[1].magnitude();
+				returnMatrix.columns[2].z = columns[2].magnitude();
+
+				return returnMatrix;
+			}
+
+			mat4f decomposeToRotation()
+			{
+				mat4f returnMatrix = identity();
+				mat4f scaleMatrix = decomposeToScale();
+
+				returnMatrix.columns[0] = columns[0] / scaleMatrix.columns[0].x;
+				returnMatrix.columns[1] = columns[1] / scaleMatrix.columns[1].y;
+				returnMatrix.columns[2] = columns[2] / scaleMatrix.columns[2].z;
+
+				return returnMatrix;
 			}
 
 			vec4f operator*(const vec4f& vec) const { return multiply(vec); }
@@ -91,15 +120,15 @@ namespace abyssengine {
 				float z = axis.z;
 
 				returnMatrix.elements[0 + 0 * 4] = x * x * omc + c;
-				returnMatrix.elements[0 + 1 * 4] = y * x * omc + z * s;
-				returnMatrix.elements[0 + 2 * 4] = x * z * omc - y * s;
+				returnMatrix.elements[1 + 0 * 4] = y * x * omc + z * s;
+				returnMatrix.elements[2 + 0 * 4] = x * z * omc - y * s;
 
-				returnMatrix.elements[1 + 0 * 4] = x * y * omc - z * s;
+				returnMatrix.elements[0 + 1 * 4] = x * y * omc - z * s;
 				returnMatrix.elements[1 + 1 * 4] = y * y * omc + c;
-				returnMatrix.elements[1 + 2 * 4] = y * z * omc + x * s;
+				returnMatrix.elements[2 + 1 * 4] = y * z * omc + x * s;
 
-				returnMatrix.elements[2 + 0 * 4] = x * z * omc + y * s;
-				returnMatrix.elements[2 + 1 * 4] = y * z * omc - x * s;
+				returnMatrix.elements[0 + 2 * 4] = x * z * omc + y * s;
+				returnMatrix.elements[1 + 2 * 4] = y * z * omc - x * s;
 				returnMatrix.elements[2 + 2 * 4] = z * z * omc + c;
 
 				return returnMatrix;

@@ -12,7 +12,7 @@ namespace abyssengine {
 	public:
 		virtual ~Scene();
 
-		virtual void update(const math::Time& time) = 0;
+		virtual void update(const math::Time& time) { entityManager.update(time); };
 
 		entitysystem::EntityManager* getEntityManager();
 	};

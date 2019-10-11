@@ -38,15 +38,10 @@ namespace abyssengine {
 			{
 				vec4d returnVector;
 
-				double x = vec.x;
-				double y = vec.y;
-				double z = vec.z;
-				double w = vec.w;
-
-				returnVector.x = vec.x * elements[0] + vec.x * elements[4] + vec.x * elements[8] + vec.x * elements[12];
-				returnVector.y = vec.y * elements[1] + vec.y * elements[5] + vec.y * elements[9] + vec.y * elements[13];
-				returnVector.z = vec.z * elements[2] + vec.z * elements[6] + vec.z * elements[10] + vec.z * elements[14];
-				returnVector.w = vec.w * elements[3] + vec.w * elements[7] + vec.w * elements[11] + vec.w * elements[15];
+				returnVector.x = vec.x * elements[0] + vec.y * elements[4] + vec.z * elements[8] + vec.w * elements[12];
+				returnVector.y = vec.x * elements[1] + vec.y * elements[5] + vec.z * elements[9] + vec.w * elements[13];
+				returnVector.z = vec.x * elements[2] + vec.y * elements[6] + vec.z * elements[10] + vec.w * elements[14];
+				returnVector.w = vec.x * elements[3] + vec.y * elements[7] + vec.z * elements[11] + vec.w * elements[15];
 
 				return returnVector;
 			}

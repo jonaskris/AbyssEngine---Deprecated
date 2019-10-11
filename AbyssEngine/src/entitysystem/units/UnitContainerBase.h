@@ -1,4 +1,5 @@
 #pragma once
+#include <utility>
 
 namespace abyssengine {
 	namespace entitysystem {
@@ -12,7 +13,7 @@ namespace abyssengine {
 		{
 		protected:
 			virtual void insertUnitVirtual(void const* unit) = 0;
-
+			virtual std::pair<void*, size_t> getUnitsVirtual(const size_t& entityId) = 0;
 		public:
 			virtual ~UnitContainerBase() {};
 
@@ -29,6 +30,17 @@ namespace abyssengine {
 				insertUnitVirtual((void* const)& unit);
 				return true;
 			};
+
+			template <typename UnitType>
+			std::pair<UnitType*, size_t> getUnits(const size_t& entityId)
+			{
+				if (!storesUnitType<UnitType>())
+					return std::pair<UnitType*, size_t>(nullptr, 0);
+
+				std::pair<void*, size_t> group = getUnitsVirtual(entityId);
+
+				return std::pair<UnitType*, size_t>((UnitType*)group.first, group.second);
+			}
 
 			template <typename UnitType>
 			bool storesUnitType()

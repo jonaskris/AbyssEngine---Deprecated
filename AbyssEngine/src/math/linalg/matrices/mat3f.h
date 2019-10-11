@@ -35,10 +35,10 @@ namespace abyssengine {
 			vec3f multiply(const vec3f& vec)
 			{
 				vec3f returnVector;
-									
-				returnVector.x = vec.x * elements[0] + vec.x * elements[3] + vec.x * elements[6];
-				returnVector.y = vec.y * elements[1] + vec.y * elements[4] + vec.y * elements[7];
-				returnVector.z = vec.z * elements[2] + vec.z * elements[5] + vec.z * elements[8];
+
+				returnVector.x = vec.x * elements[0] + vec.y * elements[4] + vec.z * elements[8];
+				returnVector.y = vec.x * elements[1] + vec.y * elements[5] + vec.z * elements[9];
+				returnVector.z = vec.x * elements[2] + vec.y * elements[6] + vec.z * elements[10];
 
 				return returnVector;
 			}

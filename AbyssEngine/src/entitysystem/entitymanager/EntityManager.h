@@ -360,6 +360,23 @@ namespace abyssengine {
 					unitContainers.at(i)->preUpdate();
 			}
 
+			template <typename UnitType>
+			std::pair<UnitType*, size_t> getUnits(const size_t& entityId)
+			{
+				static_assert(std::is_base_of<UnitBase, UnitType>::value, "UnitType must be derived from Unit!");
+				
+				UnitType* returnUnit = nullptr;
+
+				for (size_t i = 0; i < unitContainers.size(); i++)
+				{
+					if (unitContainers.at(i)->storesUnitType<UnitType>())
+					{
+						return unitContainers.at(i)->getUnits<UnitType>(entityId);
+					}
+				}
+				return std::pair<UnitType*, size_t>(nullptr, 0);
+			}
+
 			/*
 				Retrieves vector to all units by type.
 			*/

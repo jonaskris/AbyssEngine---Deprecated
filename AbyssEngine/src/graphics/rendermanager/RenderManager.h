@@ -105,7 +105,10 @@ namespace abyssengine {
 				
 				/// Get scene info
 				entitysystem::EntityManager* entitymanager = scenes.at(0)->getEntityManager();
+				//entitysystem::Target_Camera& camera = entitymanager->getUnitVector<entitysystem::Target_Camera>()->at(0);
+				//camera.update(entitymanager->getUnits<entitysystem::Position_Component>(camera.getEntityIdTarget()).first->position.vec);
 				entitysystem::Camera_Component& camera = entitymanager->getUnitVector<entitysystem::Camera_Component>()->at(0);
+				camera.update();
 
 				/// Render objects using diffuse map
 				resources::Program& diffuseGeometryProgram = *resourcemanager->getResource<resources::Program>("DiffuseGeometryPass.prog");
@@ -114,7 +117,7 @@ namespace abyssengine {
 				// Set projection and view matrix
 				diffuseGeometryProgram.setUniformMat4("projection", math::mat4f::perspective(FOV, ASPECT_RATIO, NEAR, FAR));
 				diffuseGeometryProgram.setUniformMat4("view", camera.view);
-				diffuseGeometryProgram.setUniformMat4("model", math::mat4f::scale(math::vec3f(1.0f, 1.0f, 1.0f)));
+				diffuseGeometryProgram.setUniformMat4("model", math::mat4f::identity());
 				
 				/// Render objects
 				//glActiveTexture(GL_TEXTURE0);
@@ -130,31 +133,31 @@ namespace abyssengine {
 				// Set projection and view matrix
 				cubemapGeometryProgram.setUniformMat4("projection", math::mat4f::perspective(FOV, ASPECT_RATIO, NEAR, FAR));
 				cubemapGeometryProgram.setUniformMat4("view", camera.view);
-				cubemapGeometryProgram.setUniformMat4("model", math::mat4f::identity());
 				
 				std::vector<entitysystem::Mesh_Component>* meshes = entitymanager->getUnitVector<entitysystem::Mesh_Component>();
-				
-
 				
 				for (entitysystem::Mesh_Component& mesh : *meshes)
 				{
 					resources::MeshResource* meshResource = resourcemanager->getResource<resources::MeshResource>(mesh.meshPath);
+					entitysystem::Transform_Component* transformComponent = entitymanager->getUnits<entitysystem::Transform_Component>(mesh.getEntityId()).first;
 
 					// Calculate and set transform uniform
 					math::mat4f transform = math::mat4f::identity();
-
-					if (mesh.rotation.x > 0.1f || mesh.rotation.y > 0.1f || mesh.rotation.z > 0.1f)
-						transform = math::mat4f::rotate(mesh.rotation.w, math::toVec3f(mesh.rotation)) * math::mat4f::translate(mesh.position) * math::mat4f::scale(mesh.scale);
-					else
-						transform = math::mat4f::translate(mesh.position) * math::mat4f::scale(mesh.scale);
+					
+					if (transformComponent)
+						transform = transformComponent->toMatrix();
 
 					cubemapGeometryProgram.setUniformMat4("model", transform);
 
-					// Set texture
-					glActiveTexture(GL_TEXTURE0);
-					glBindTexture(GL_TEXTURE_CUBE_MAP, mesh.textureID);
-					GLuint texLoc = glGetUniformLocation(cubemapGeometryProgram.getID(), "texture_cubemap");
-					glUniform1i(texLoc, 0);
+					entitysystem::Texture_Component* texture = entitymanager->getUnits<entitysystem::Texture_Component>(mesh.getEntityId()).first;
+
+					if (texture)
+					{
+						glActiveTexture(GL_TEXTURE0);
+						glBindTexture(GL_TEXTURE_CUBE_MAP, texture->getTextureid());
+						GLuint texLoc = glGetUniformLocation(cubemapGeometryProgram.getID(), "texture_cubemap");
+						glUniform1i(texLoc, 0);
+					}
 
 					cubemapGeometryProgram.setUniform1b("flip_normals", mesh.flipNormals);
 

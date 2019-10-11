@@ -33,6 +33,15 @@ namespace abyssengine {
 				else
 					queue.push_back(*((UnitType* const)unit));
 			}
+
+			virtual std::pair<void*, size_t> getUnitsVirtual(const size_t& entityId) override
+			{
+				//static_assert(std::is_base_of<OwnedSpecifier, UnitType>::value, "UnitType must be derived from OwnedSpecifier!");
+
+				std::pair<size_t, size_t> group = utils::binarySearchGroup(units, entityId, 0, units.size(), [](const UnitType & unit) { return unit.getEntityId(); });
+				return std::pair<void*, size_t>((void*)&(units.at(group.first)), group.second);
+			}
+
 		public:
 			UnitContainer() {};
 

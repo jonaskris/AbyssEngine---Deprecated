@@ -70,7 +70,7 @@ namespace abyssengine {
 					std::string errorString = std::string(error.begin(), error.end()); // Convert char vector to string
 					errorString.erase(std::remove(errorString.begin(), errorString.end(), '\n'), errorString.end()); // Remove newlines
 
-					throw FileCreationException(std::string("OpenGL failed to link program! Error: ") + errorString);
+					throw ResourceCreationException(std::string("OpenGL failed to link program! Error: ") + errorString);
 				}
 
 				glValidateProgram(programID);
@@ -90,7 +90,7 @@ namespace abyssengine {
 					std::string errorString = std::string(error.begin(), error.end()); // Convert char vector to string
 					errorString.erase(std::remove(errorString.begin(), errorString.end(), '\n'), errorString.end()); // Remove newlines
 
-					throw FileCreationException(std::string("OpenGL failed to validate program! Error: ") + errorString);
+					throw ResourceCreationException(std::string("OpenGL failed to validate program! Error: ") + errorString);
 				}
 			}
 		public:
