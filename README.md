@@ -28,7 +28,7 @@ Dependencies: GLEW, GLFW, SOIL, FreeType and Nlohmann's JSON library.
     * ~~Narrow-phase~~
 * **~~Audio~~**
 ## Usage (Example scene)
-<img src='https://i.imgur.com/sDcIEn3.gif' title='Solar system scene' width='' alt='Solar system scene'/>
+<img src="Solar_system_scene.gif?raw=true" width="400px">
 ### Defining components:
 ```
 struct Orbit_Component : public entitysystem::Component<Orbit_Component>
