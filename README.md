@@ -7,7 +7,7 @@ Dependencies: GLEW, GLFW, SOIL, FreeType and Nlohmann's JSON library.
 
 ## Features
 * **Graphics**
-    * Deferred rendering with OpenGL
+    * Deferred rendering with OpenGL.
 * **Entity-Component-System (ECS)**
     * A Data-Oriented architectural pattern that favours composition over inheritance.
     * Entities are solely defined by the components it exists of, and are identified by an entityId which its components stores.
@@ -63,7 +63,7 @@ private:
 };
 ```
 
-### Setting up a scene
+### Setting up a scene:
 
 ```
 void WorldScene::generateScene()
