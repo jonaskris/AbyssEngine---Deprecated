@@ -19,16 +19,22 @@ namespace abyssengine {
 
 			mat3f& multiply(const mat3f& other)
 			{
-				for (int y = 0; y < 3; y++)
-					for (int x = 0; x < 3; x++)
+				mat3f temp;
+
+				for (size_t row = 0; row < 3; row++)
+				{
+					for (size_t column = 0; column < 3; column++)
 					{
 						float sum = 0.0f;
-						for (int e = 0; e < 3; e++)
+						for (size_t e = 0; e < 3; e++)
 						{
-							sum += elements[x + e * 3] * other.elements[e + y * 3];
+							sum += elements[row + e * 3] * other.elements[e + column * 3];
 						}
-						elements[x + y * 3] = sum;
+						temp.elements[row + column * 3] = sum;
 					}
+				}
+
+				memcpy(elements, temp.elements, 3 * 3 * sizeof(float));
 				return *this;
 			}
 

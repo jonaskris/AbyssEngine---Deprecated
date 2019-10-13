@@ -135,7 +135,7 @@ namespace abyssengine {
 				glUniform4f(getUniformLocation(name), vector.x, vector.y, vector.z, vector.w);
 			}
 
-			void setUniformMat4(const GLchar* name, const math::mat4f & matrix)
+			void setUniformMat4(const GLchar* name, const math::mat4f& matrix)
 			{
 				glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, matrix.elements);
 			}

@@ -19,18 +19,22 @@ namespace abyssengine {
 
 			mat4f& multiply(const mat4f& other)
 			{
-				for (int y = 0; y < 4; y++)
+				mat4f temp;
+
+				for (size_t row = 0; row < 4; row++)
 				{
-					for (int x = 0; x < 4; x++)
+					for (size_t column = 0; column < 4; column++)
 					{
 						float sum = 0.0f;
-						for (int e = 0; e < 4; e++)
+						for (size_t e = 0; e < 4; e++)
 						{
-							sum += elements[x + e * 4] * other.elements[e + y * 4];
+							sum += elements[row + e * 4] * other.elements[e + column * 4];
 						}
-						elements[x + y * 4] = sum;
+						temp.elements[row + column * 4] = sum;
 					}
 				}
+
+				memcpy(elements, temp.elements, 4 * 4 * sizeof(float));
 				return *this;
 			}
 
@@ -42,7 +46,7 @@ namespace abyssengine {
 				returnVector.y = vec.x * elements[1] + vec.y * elements[5] + vec.z * elements[9] + vec.w * elements[13];
 				returnVector.z = vec.x * elements[2] + vec.y * elements[6] + vec.z * elements[10] + vec.w * elements[14];
 				returnVector.w = vec.x * elements[3] + vec.y * elements[7] + vec.z * elements[11] + vec.w * elements[15];
-			
+
 				return returnVector;
 			}
 
@@ -98,66 +102,87 @@ namespace abyssengine {
 			static mat4f translate(const vec3f& translation)
 			{
 				mat4f returnMatrix = identity();
-
+			
 				returnMatrix.columns[3].x = translation.x;
 				returnMatrix.columns[3].y = translation.y;
 				returnMatrix.columns[3].z = translation.z;
-
+			
 				return returnMatrix;
 			}
 
 			static mat4f rotate(const float& angle, const vec3f& axis)
 			{
 				mat4f returnMatrix = identity();
-
+			
 				float r = math::toRadians(angle);
-				float c = cos(r);
-				float s = sin(r);
+				float c = cosf(r);
+				float s = sinf(r);
 				float omc = 1.0f - c;
-
+				
 				float x = axis.x;
 				float y = axis.y;
 				float z = axis.z;
-
-				returnMatrix.elements[0 + 0 * 4] = x * x * omc + c;
-				returnMatrix.elements[1 + 0 * 4] = y * x * omc + z * s;
-				returnMatrix.elements[2 + 0 * 4] = x * z * omc - y * s;
-
-				returnMatrix.elements[0 + 1 * 4] = x * y * omc - z * s;
-				returnMatrix.elements[1 + 1 * 4] = y * y * omc + c;
-				returnMatrix.elements[2 + 1 * 4] = y * z * omc + x * s;
-
-				returnMatrix.elements[0 + 2 * 4] = x * z * omc + y * s;
-				returnMatrix.elements[1 + 2 * 4] = y * z * omc - x * s;
-				returnMatrix.elements[2 + 2 * 4] = z * z * omc + c;
-
+			
+				returnMatrix.columns[0].x = x * x * omc + c;
+				returnMatrix.columns[0].y = x * y * omc + z * s;
+				returnMatrix.columns[0].z = x * z * omc - y * s;
+				returnMatrix.columns[0].w = 0.0f;
+			
+				returnMatrix.columns[1].x = x * y * omc - z * s;
+				returnMatrix.columns[1].y = y * y * omc + c;
+				returnMatrix.columns[1].z = y * z * omc + x * s;
+				returnMatrix.columns[1].w = 0.0f;
+			
+				returnMatrix.columns[2].x = x * z * omc + y * s;
+				returnMatrix.columns[2].y = y * z * omc - x * s;
+				returnMatrix.columns[2].z = z * z * omc + c;
+				returnMatrix.columns[2].w = 0.0f;
+			
+				returnMatrix.columns[3].x = 0.0f;
+				returnMatrix.columns[3].y = 0.0f;
+				returnMatrix.columns[3].z = 0.0f;
+				returnMatrix.columns[3].w = 1.0f;
+			
 				return returnMatrix;
 			}
 
 			static mat4f scale(const vec3f& factor)
 			{
 				mat4f returnMatrix = identity();
-
+			
 				returnMatrix.columns[0].x = factor.x;
 				returnMatrix.columns[1].y = factor.y;
 				returnMatrix.columns[2].z = factor.z;
-
+			
 				return returnMatrix;
 			}
 
 			static mat4f perspective(float fov, float aspectRatio, float near, float far)
 			{
 				mat4f returnMatrix = mat4f();
-
-				float angle = (fov / 180.0f) * (float)M_PI;
-				float f = 1.0f / tan(angle * 0.5f);
-
-				returnMatrix.elements[0 + 0 * 4] = f / aspectRatio;
-				returnMatrix.elements[1 + 1 * 4] = f;
-				returnMatrix.elements[2 + 2 * 4] = (far + near) / (near - far);
-				returnMatrix.elements[3 + 2 * 4] = -1.0f;
-				returnMatrix.elements[2 + 3 * 4] = (2.0f * far * near) / (near - far);
-
+			
+				fov = math::toRadians(fov);
+			
+				returnMatrix.columns[0].x = 1 / (aspectRatio * tanf(fov / 2));
+				returnMatrix.columns[0].y = 0;
+				returnMatrix.columns[0].z = 0;
+				returnMatrix.columns[0].w = 0;
+			
+				returnMatrix.columns[1].x = 0;
+				returnMatrix.columns[1].y = 1 / (tanf(fov / 2));
+				returnMatrix.columns[1].z = 0;
+				returnMatrix.columns[1].w = 0;
+			
+				returnMatrix.columns[2].x = 0;
+				returnMatrix.columns[2].y = 0;
+				returnMatrix.columns[2].z = -(far + near) / (far - near);
+				returnMatrix.columns[2].w = -1;
+			
+				returnMatrix.columns[3].x = 0;
+				returnMatrix.columns[3].y = 0;
+				returnMatrix.columns[3].z = -(2 * far * near) / (far - near);
+				returnMatrix.columns[3].w = 0;
+			
 				return returnMatrix;
 			}
 
@@ -178,26 +203,46 @@ namespace abyssengine {
 
 			static mat4f viewMatrix(const vec3f& cameraPos, const vec3f& lookAtPos, const vec3f& up)
 			{
-				mat4f returnMatrix = identity();
-				vec3f f = (lookAtPos - cameraPos).normalize();
-				vec3f u = up.normalize();
-				vec3f s = f.cross(u).normalize();
-				u = s.cross(f);
+				//mat4f returnMatrix = identity();
 
-				returnMatrix.elements[0 + 0 * 4] = s.x;
-				returnMatrix.elements[0 + 1 * 4] = s.y;
-				returnMatrix.elements[0 + 2 * 4] = s.z;
-				returnMatrix.elements[1 + 0 * 4] = u.x;
-				returnMatrix.elements[1 + 1 * 4] = u.y;
-				returnMatrix.elements[1 + 2 * 4] = u.z;
-				returnMatrix.elements[2 + 0 * 4] = -f.x;
-				returnMatrix.elements[2 + 1 * 4] = -f.y;
-				returnMatrix.elements[2 + 2 * 4] = -f.z;
-				returnMatrix.elements[0 + 3 * 4] = -s.dot(cameraPos);
-				returnMatrix.elements[1 + 3 * 4] = -u.dot(cameraPos);
-				returnMatrix.elements[2 + 3 * 4] = f.dot(cameraPos);
+				vec3f zaxis = (cameraPos - lookAtPos).normalize();
+				vec3f xaxis = (up.cross(zaxis)).normalize();
+				vec3f yaxis = zaxis.cross(xaxis);
+
+
+				mat4f orientation = math::mat4f::identity();
+				orientation.columns[0] = math::vec4f(xaxis.x, yaxis.x, zaxis.x, 0.0f);
+				orientation.columns[1] = math::vec4f(xaxis.y, yaxis.y, zaxis.y, 0.0f);
+				orientation.columns[2] = math::vec4f(xaxis.z, yaxis.z, zaxis.z, 0.0f);
+				orientation.columns[3] = math::vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+
+
+				mat4f translation = math::mat4f::identity();
+				translation.columns[0] = math::vec4f(1.0f, 0.0, 0.0f, 0.0f);
+				translation.columns[1] = math::vec4f(0.0f, 1.0f, 0.0f, 0.0f);
+				translation.columns[2] = math::vec4f(0.0f, 0.0f, 1.0f, 0.0f);
+				translation.columns[3] = math::vec4f(-cameraPos.x, -cameraPos.y, -cameraPos.z, 1.0f);
+				//vec3f f = (lookAtPos - cameraPos).normalize();
+				//vec3f u = up.normalize();
+				//vec3f s = f.cross(u).normalize();
+				//u = s.cross(f);
+				//
+				//returnMatrix.elements[0 + 0 * 4] = s.x;
+				//returnMatrix.elements[0 + 1 * 4] = s.y;
+				//returnMatrix.elements[0 + 2 * 4] = s.z;
+				//returnMatrix.elements[1 + 0 * 4] = u.x;
+				//returnMatrix.elements[1 + 1 * 4] = u.y;
+				//returnMatrix.elements[1 + 2 * 4] = u.z;
+				//returnMatrix.elements[2 + 0 * 4] = -f.x;
+				//returnMatrix.elements[2 + 1 * 4] = -f.y;
+				//returnMatrix.elements[2 + 2 * 4] = -f.z;
+				//returnMatrix.elements[0 + 3 * 4] = -s.dot(cameraPos);
+				//returnMatrix.elements[1 + 3 * 4] = -u.dot(cameraPos);
+				//returnMatrix.elements[2 + 3 * 4] = f.dot(cameraPos);
 				
-				return returnMatrix;
+
+
+				return orientation * translation;
 			}
 		};
 	}

@@ -105,10 +105,10 @@ namespace abyssengine {
 				
 				/// Get scene info
 				entitysystem::EntityManager* entitymanager = scenes.at(0)->getEntityManager();
-				//entitysystem::Target_Camera& camera = entitymanager->getUnitVector<entitysystem::Target_Camera>()->at(0);
-				//camera.update(entitymanager->getUnits<entitysystem::Position_Component>(camera.getEntityIdTarget()).first->position.vec);
-				entitysystem::Camera_Component& camera = entitymanager->getUnitVector<entitysystem::Camera_Component>()->at(0);
-				camera.update();
+				entitysystem::Target_Camera& camera = entitymanager->getUnitVector<entitysystem::Target_Camera>()->at(0);
+				camera.update(entitymanager->getUnits<entitysystem::Transform_Component>(camera.getEntityIdTarget()).first->toMatrix().decomposeToTranslation() * math::vec4f(0.0f, 0.0f, 0.0f, 1.0f));
+				//entitysystem::Camera_Component& camera = entitymanager->getUnitVector<entitysystem::Camera_Component>()->at(0);
+				//camera.update();
 
 				/// Render objects using diffuse map
 				resources::Program& diffuseGeometryProgram = *resourcemanager->getResource<resources::Program>("DiffuseGeometryPass.prog");

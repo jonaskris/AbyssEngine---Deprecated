@@ -111,6 +111,7 @@ namespace abyssengine {
 				view = math::mat4f::viewMatrix(position, lookat, up);
 			}
 
+			void update(const math::vec4f& lookat) { update(math::toVec3f(lookat)); }
 			size_t getEntityIdTarget() { return entityIdTarget; }
 		};
 

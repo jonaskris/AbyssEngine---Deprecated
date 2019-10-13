@@ -15,35 +15,30 @@
 
 namespace abyssengine {
 
-	//struct Orbit_Component : public entitysystem::Component<Orbit_Component>
-	//{
-	//	size_t entityIdOrbitTarget;
-	//	float orbitVelocityDegrees;
-	//
-	//	Orbit_Component(const size_t& entityIdOrbitTarget, const float& orbitVelocityDegrees = 0.1f)
-	//		: entityIdOrbitTarget(entityIdOrbitTarget), orbitVelocityDegrees(orbitVelocityDegrees) {};
-	//};
-	//
-	//class Orbit_System : public entitysystem::System<Orbit_Component, entitysystem::Position_Component>
-	//{
-	//private:
-	//	void update(const math::Time& time) override
-	//	{
-	//		updateEntities(time);
-	//	}
-	//
-	//	void updateEntity(const math::Time& time, entitysystem::UnitGroup& units) override
-	//	{
-	//		Orbit_Component& orbit = units.get<Orbit_Component>().first[0];
-	//		entitysystem::Position_Component& position = units.get<entitysystem::Position_Component>().first[0];
-	//
-	//		entitysystem::Position_Component& orbitTargetPosition = entityManager->getUnits<entitysystem::Position_Component>(orbit.entityIdOrbitTarget).first[0];
-	//		
-	//		position.position.vec -= orbitTargetPosition.position.vec;
-	//		position.position.vec = math::toVec3f(math::mat4f::rotate(orbit.orbitVelocityDegrees, math::vec3f(0.0f, 0.0f, 1.0f)) * math::toVec4f(position.position.vec, 1.0f));
-	//		position.position.vec += orbitTargetPosition.position.vec;
-	//	}
-	//};
+	struct Orbit_Component : public entitysystem::Component<Orbit_Component>
+	{
+		float orbitSpeed;
+
+		Orbit_Component(const float& orbitSpeed) : orbitSpeed(orbitSpeed) {};
+	};
+
+class Orbit_System : public entitysystem::System<entitysystem::Transform_Component, Orbit_Component>
+{
+private:
+	void update(const math::Time& time) override
+	{
+		updateEntities(time);
+	}
+
+	void updateEntity(const math::Time& time, entitysystem::UnitGroup& units) override
+	{
+		entitysystem::Transform_Component& transform = units.get<entitysystem::Transform_Component>().first[0];
+		Orbit_Component& orbit = units.get<Orbit_Component>().first[0];
+
+		if (transform.transforms.size() > 2)
+			transform.transforms.at(2) = math::mat4f::rotate(orbit.orbitSpeed, math::vec3f(0.0f, 0.0f, 1.0f)) * transform.transforms.at(2);
+	}
+};
 
 	void WorldScene::generateScene()
 	{
@@ -52,60 +47,67 @@ namespace abyssengine {
 		auto resourcemanager = resources::ResourceManager::getInstance();
 
 		// Generate resources
-		math::Icosahedron::generate(4);
+		math::Icosahedron::generate(4); // Generates sphere mesh used for planets and skybox.
 
-		// Register systems.
+		// Register systems
 		entityManager.registerSystem(new MouseInput());
 		entityManager.registerSystem(new KeyboardInput());
 		entityManager.registerSystem(new Camera_Rotation_Control());
 		entityManager.registerSystem(new Camera_Position_Control());
+		entityManager.registerSystem(new Orbit_System());
 		entityManager.registerSystem(new Transform_Updater());
-		//entityManager.registerSystem(new Orbit_System());
 
 		// Create entities
 			// Skybox
-				entityManager.newEntity(																			/// Stars
+				entityManager.newEntity(																		
 					entitysystem::Transform_Component(
 						math::Position(math::vec3f(0.0f, 0.0f, 0.0f)),
 						math::Scale(math::vec3f(10.0f, 10.0f, 10.0f))
 					),
-					Mesh_Component("generated/icosahedron:3"),														// Sphere mesh
-					Texture_Component(resourcemanager->getResource<resources::Cubemap>("Space.cm")->getTextureID())	// Cubemap texture
+					Mesh_Component("generated/icosahedron:3"),
+					Texture_Component(resourcemanager->getResource<resources::Cubemap>("Space.cm")->getTextureID())
 				);
 			// Planets
 				size_t sunId =
-				entityManager.newEntity(																			/// Sun
-					entitysystem::Transform_Component(math::Position(math::vec3f(0.0f, 0.0f, 0.0f))),
-					Mesh_Component("generated/icosahedron:3", true),												// Sphere mesh (true: flip normals)
-					Texture_Component(resourcemanager->getResource<resources::Cubemap>("Sun.cm")->getTextureID())	// Cubemap texture
+				entityManager.newEntity(
+					entitysystem::Transform_Component(
+						math::Scale(math::vec3f(0.5f)),
+						math::Position(math::vec3f(0.0f, 0.0f, 0.0f))
+					),
+					Mesh_Component("generated/icosahedron:3", true),												
+					Texture_Component(resourcemanager->getResource<resources::Cubemap>("Sun.cm")->getTextureID())
 				);
 								
 				size_t earthId =
-				entityManager.newEntity(																			/// Earth
+					entityManager.newEntity(																			
 					entitysystem::Transform_Component(
-						math::Position(math::vec3f(2.0f, 0.0f, 0.0f)),
-						math::Rotation(math::vec3f(0.0f, 0.0f, 1.0f), 90.0f),
-						math::RelativeTransform(sunId, math::RelativeTransform::Type::POSITION)
+						math::Scale(math::vec3f(0.5f)),
+						math::Position(math::vec3f(3.0f, 0.0f, 0.0f)),
+						math::Rotation(math::vec3f(0.0f, 0.0f, 1.0f), 0.0f),
+						math::RelativeTransform(sunId, math::RelativeTransform::POSITION)
 					),
-					Mesh_Component("generated/icosahedron:3"),														// Sphere mesh
-					Texture_Component(resourcemanager->getResource<resources::Cubemap>("Earth.cm")->getTextureID())// Cubemap texture
-					//Orbit_Component(sunId),																		// Orbit around sun
-					//Relative_Component(sunId)
+					Mesh_Component("generated/icosahedron:3"),														
+					Texture_Component(resourcemanager->getResource<resources::Cubemap>("Earth.cm")->getTextureID()),
+					Orbit_Component(0.1f)
 				);
 
-				//size_t moonId =
-				//entityManager.newEntity(																			/// Moon
-				//	Position_Component(math::vec3f(6.0f, 0.0f, 0.0f)),												// Position
-				//	Scale_Component(math::vec3f(0.1f)),																// Scale
-				//	Mesh_Component("generated/icosahedron:3"),														// Sphere mesh
-				//	Texture_Component(resourcemanager->getResource<resources::Cubemap>("Moon.cm")->getTextureID()), // Cubemap texture
-				//	Orbit_Component(earthId),																		// Orbit around earth
-				//	Relative_Component(earthId)
-				//);
+				size_t moonId =
+				entityManager.newEntity(																		
+					entitysystem::Transform_Component(
+						math::Scale(math::vec3f(0.2f)),
+						math::Position(math::vec3f(1.0f, 0.0f, 0.0f)),
+						math::Rotation(math::vec3f(0.0f, 0.0f, 1.0f), 0.0f),
+						math::RelativeTransform(earthId, math::RelativeTransform::POSITION)
+					),
+					Mesh_Component("generated/icosahedron:3"),														
+					Texture_Component(resourcemanager->getResource<resources::Cubemap>("Moon.cm")->getTextureID()), 
+					Orbit_Component(0.2f)
+				);
 			// Camera
-				entityManager.newEntity(
-					entitysystem::Camera_Component(), 
-					entitysystem::Transform_Component(math::Position(math::vec3f(0.0f, 0.0f, 3.0f))));
-				//entityManager.newEntity(Target_Camera(math::vec3f(-7.0f, 0.0f, 0.0f), moonId));
+				entityManager.newEntity(Target_Camera(math::vec3f(-5.0f, 0.0f, 0.0f), moonId));
 	}
 }
+
+//entityManager.newEntity(
+//	entitysystem::Camera_Component(), 
+//	entitysystem::Transform_Component(math::Position(math::vec3f(0.0f, 0.0f, 3.0f))));

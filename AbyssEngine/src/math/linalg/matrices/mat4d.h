@@ -19,18 +19,22 @@ namespace abyssengine {
 
 			mat4d& multiply(const mat4d& other)
 			{
-				for (int y = 0; y < 4; y++)
+				mat4d temp;
+
+				for (size_t row = 0; row < 4; row++)
 				{
-					for (int x = 0; x < 4; x++)
+					for (size_t column = 0; column < 4; column++)
 					{
 						double sum = 0.0;
-						for (int e = 0; e < 4; e++)
+						for (size_t e = 0; e < 4; e++)
 						{
-							sum += elements[x + e * 4] * other.elements[e + y * 4];
+							sum += elements[row + e * 4] * other.elements[e + column * 4];
 						}
-						elements[x + y * 4] = sum;
+						temp.elements[row + column * 4] = sum;
 					}
 				}
+
+				memcpy(elements, temp.elements, 4 * 4 * sizeof(double));
 				return *this;
 			}
 

@@ -53,6 +53,8 @@ namespace abyssengine {
 				{
 					Transform_Component& relativeTransform = entityManager->getUnits<Transform_Component>(transform.first.relativeEntityId).first[0];
 
+					relativeTransform.update(entityManager);
+
 					switch(transform.first.type)
 					{
 						case math::RelativeTransform::Type::POSITION:
@@ -70,11 +72,10 @@ namespace abyssengine {
 
 			math::mat4f toMatrix()
 			{
-				math::mat4f returnMatrix = math::mat4f::identity();
+				math::mat4f returnMatrix = transforms[0];
 
-				for (auto transform : transforms)
-					returnMatrix = transform * returnMatrix;
-
+				for (size_t i = 1; i < transforms.size(); i++)
+					returnMatrix = transforms[i] * returnMatrix;
 				return returnMatrix;
 			}
 		};
