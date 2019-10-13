@@ -29,7 +29,9 @@ Dependencies: GLEW, GLFW, SOIL, FreeType and Nlohmann's JSON library.
 * **~~Audio~~**
 ## Usage (Example scene)
 <img src="Solar_system_scene.gif?raw=true" width="600px">
+
 ### Defining components:
+
 ```
 struct Orbit_Component : public entitysystem::Component<Orbit_Component>
 {
@@ -40,6 +42,7 @@ struct Orbit_Component : public entitysystem::Component<Orbit_Component>
 ```
 
 ### Defining systems:
+
 ```
 class Orbit_System : public entitysystem::System<entitysystem::Transform_Component, Orbit_Component>
 {
@@ -61,6 +64,7 @@ private:
 ```
 
 ### Setting up a scene
+
 ```
 void WorldScene::generateScene()
 {
