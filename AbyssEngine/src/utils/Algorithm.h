@@ -84,5 +84,36 @@ namespace abyssengine {
 			vec.push_back(newElement);
 			return vec.size() - 1;
 		}
+
+		template <typename T, typename TypeToKey>
+		void swap(int* a, int* b)
+		{
+			int t = *a;
+			*a = *b;
+			*b = t;
+		}
+
+		template <typename T, typename TypeToKey>
+		void quickSort(std::vector<int>& vec)
+		{
+			if (low < high)
+			{
+				int pivot = table[high];
+				int left = (low - 1);
+
+				for (int i = low; i < high; i++)
+				{
+					if (table[i] <= pivot)
+					{
+						left++;
+						swap(&table[left], &table[i]);
+					}
+				}
+				swap(&table[left + 1], &table[high]);
+
+				quickSort(table, low, (left + 1) - 1, length);
+				quickSort(table, (left + 1) + 1, high, length);
+			}
+		}
 	}
 }
