@@ -1,3 +1,6 @@
+The project has been abandoned indefinitely, and is instead developed under the repository with the same name in the Rust language.
+Motivation for abandonment is to develop the project from ground-up with multithreading in mind.
+
 # AbyssEngine
 
 The purpose of the project is to gain experience with creating a fully fleshed out
